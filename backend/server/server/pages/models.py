@@ -4,9 +4,9 @@ from django.core.exceptions import ValidationError
 
 
 class Media(models.Model):
-    h1 = models.CharField(max_length=60, blank=True)  # Разрешаем пустые значения
-    title = models.CharField(max_length=80)
-    description = models.CharField(max_length=160)
+    h1 = models.CharField(max_length=60, blank=True)
+    title = models.CharField(max_length=80, blank=True)
+    description = models.CharField(max_length=160, blank=True)
     header = models.CharField(max_length=200)
     content = models.TextField()
     image = models.ImageField(upload_to='media_images/')
@@ -23,13 +23,17 @@ class Media(models.Model):
             raise ValidationError("Header должен быть до 200 символов.")
 
     def save(self, *args, **kwargs):
-        # Если h1 пустой, генерируем его на основе title
+        if not self.description:
+            self.description = self.header[:160]
+        if not self.title:
+            self.title = self.description[:80]
         if not self.h1:
-            self.h1 = self.title[:60]  # Ограничиваем длину до 60 символов
-        super().save(*args, **kwargs)  # Сохраняем объект
+            self.h1 = self.title[:60]
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
-        return self.h1
+        return self.title
 
     class Meta:
         verbose_name = "Медиа статья"

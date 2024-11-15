@@ -12,6 +12,10 @@
       <change beforePath="$PROJECT_DIR$/../pages/templates/pages/index.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../pages/templates/pages/layout.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../pages/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,6 +33,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -115,7 +120,7 @@
       <workItem from="1731584776036" duration="5342000" />
       <workItem from="1731654470995" duration="1029000" />
       <workItem from="1731656419271" duration="6182000" />
-      <workItem from="1731664410577" duration="1153000" />
+      <workItem from="1731664410577" duration="3226000" />
     </task>
     <servers />
   </component>
