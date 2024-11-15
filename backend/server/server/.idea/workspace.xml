@@ -4,19 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c0d0d5e-3c10-4b15-9ab2-ea14d070505e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../database/templates/database/database.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../database/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../manage.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pages/templates/pages/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pages/templates/pages/layout.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pages/urls.py" beforeDir="false" />
+    <list default="true" id="2c0d0d5e-3c10-4b15-9ab2-ea14d070505e" name="Changes" comment="update db">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,11 +114,24 @@
       <workItem from="1731584776036" duration="5342000" />
       <workItem from="1731654470995" duration="1029000" />
       <workItem from="1731656419271" duration="6182000" />
-      <workItem from="1731664410577" duration="3226000" />
+      <workItem from="1731664410577" duration="12643000" />
     </task>
+    <task id="LOCAL-00001" summary="update db">
+      <option name="closed" value="true" />
+      <created>1731667830570</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1731667830571</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update db" />
+    <option name="LAST_COMMIT_MESSAGE" value="update db" />
   </component>
 </project>

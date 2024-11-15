@@ -9,7 +9,6 @@ def home(request):
 def media(request):
     pass
 
-
 def biography(request):
     return JsonResponse({"gh": "хуй"})
 
