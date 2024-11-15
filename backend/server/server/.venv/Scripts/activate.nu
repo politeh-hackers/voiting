@@ -32,7 +32,7 @@ export-env {
       }
     }
 
-    let virtual_env = 'D:\voiting\backend\server\back\.venv'
+    let virtual_env = 'D:\voiting\backend\server\server\.venv'
     let bin = 'Scripts'
 
     let is_windows = ($nu.os-info.family) == 'windows'

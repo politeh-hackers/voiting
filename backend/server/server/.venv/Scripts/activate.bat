@@ -1,4 +1,4 @@
-@set "VIRTUAL_ENV=D:\voiting\backend\server\back\.venv"
+@set "VIRTUAL_ENV=D:\voiting\backend\server\server\.venv"
 
 @set "VIRTUAL_ENV_PROMPT="
 @if NOT DEFINED VIRTUAL_ENV_PROMPT (
