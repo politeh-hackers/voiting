@@ -1,9 +1,9 @@
 from django.db import models
+from django.db.models import CharField
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-from .services import validate_basic_fields, populate_basic_fields, validate_header_length
-
+from django.db import IntegrityError
 
 class Basic(models.Model):
     h1 = models.CharField(max_length=60, blank=True)
@@ -16,7 +16,6 @@ class Basic(models.Model):
     class Meta:
         abstract = True
 
-
 class Media(Basic):
     header = models.CharField("заголовок", max_length=200)
     content = models.TextField("контент")
@@ -28,16 +27,17 @@ class Media(Basic):
         verbose_name_plural = "медиа"
         ordering = ['-date_created']
 
-
 class Actual(Media):
     class Meta:
         verbose_name = "актуальные"
         verbose_name_plural = "актуальные"
         ordering = ['-date_created']
 
-
 class Category(models.Model):
     name = models.CharField("название категории", max_length=100, unique=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -45,7 +45,6 @@ class Category(models.Model):
     class Meta:
         verbose_name = "категория"
         verbose_name_plural = "категории"
-
 
 class Appeal(Basic):
     STATUS_CHOICES = [
@@ -63,16 +62,19 @@ class Appeal(Basic):
     on_website = models.BooleanField("isActive", default=False)
     date = models.DateField("Date", default=timezone.now)
 
-    #static
-    text = models.CharField()
-    photos = models.CharField(null=True)
-    official_response = models.CharField(null=True)
+    # static
+    text = models.CharField(max_length=500)
+    photos = models.CharField(max_length=255, null=True)
+    official_response = models.CharField(max_length=500, null=True)
 
-    #relation
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=False)
-
+    # relation
+    category = models.ManyToManyField(Category, blank=True)
 
     class Meta:
         ordering = ['-date']
         verbose_name = "Обращение"
         verbose_name_plural = "Обращения"
+
+
+
+
