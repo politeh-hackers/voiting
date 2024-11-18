@@ -1,6 +1,6 @@
 from typing import Protocol, List
 
-from django.db.models import QuerySet
+
 
 
 class BaseServiceProtocol(Protocol):

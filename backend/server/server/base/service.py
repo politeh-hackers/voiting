@@ -1,8 +1,5 @@
 from typing import TypeVar, Generic, List, Dict
-from django.db import models
-from django.db.models import QuerySet
-import json
-from django.http import HttpResponse
+
 from base.abstractions import BaseServiceProtocol
 
 class BaseService(BaseServiceProtocol):
