@@ -1,24 +1,23 @@
 from typing import TypeVar, Generic, List, Dict
 
 from base.abstractions import BaseServiceProtocol
+from django.db import models
 
-class BaseService(BaseServiceProtocol):
-    def __init__(self, model):
-        self._model = model
+
+T = TypeVar("T", bound=models.Model)
+
+class BaseService(Generic[T]):
+    model = T
 
     def get_all(self) -> List[dict]:
-        all_objects = list(self._model.objects.values())
-        return all_objects
+        return list(self.model.objects.values())
 
     def create(self, data: Dict) -> None:
-        return self._model.objects.create(**data)
+        return self.model.objects.create(**data)
 
     def update(self, data: dict) -> None:
-        return self._model.objects.filter(data=data).update(**data)
+        return self.model.objects.filter(data=data).update(**data)
 
     def delete(self, model_id: int) -> None:
-        instance = self._model.objects.get(id=model_id)
+        instance = self.model.objects.get(id=model_id)
         instance.delete()
-
-    def get_by(self, **filters: dict) -> List:
-        return list(self._model.objects.filter(**filters))

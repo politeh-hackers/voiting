@@ -8,7 +8,7 @@ from base.service import BaseService
 from pages.models import MediaTag, ActualTag
 
 
-class BaseValidationService(BaseService):
+class BaseValidationService:
     """Базовый сервис для общей валидации."""
 
     def validate_field_length(self, field_name, min_length, max_length, data):
@@ -75,7 +75,7 @@ class BaseValidationService(BaseService):
     def generate_description(self):
         return "Default Description"
 
-class MediaService(BaseValidationService):
+class MediaService(BaseValidationService, BaseService):
     """Сервис для работы с медиа контентом."""
 
     def validation(self, data):
@@ -99,7 +99,7 @@ class MediaService(BaseValidationService):
 
         return super().create(**data)
 
-class ActualService(BaseValidationService):
+class ActualService(BaseValidationService, BaseService):
     """Сервис для работы с актуальными статьями."""
 
     def validation(self, data):
@@ -129,7 +129,7 @@ class ActualService(BaseValidationService):
         # Генерация дефолтного description длиной от 80 до 160 символов
         return "Default description that meets the required length of 80-160 characters"[:160]  # Ensure it doesn't exceed 160 chars
 
-class AppealService(BaseValidationService):
+class AppealService(BaseValidationService, BaseService):
     """Сервис для работы с апелляциями."""
 
     def validation(self, data):
@@ -164,7 +164,7 @@ class AppealService(BaseValidationService):
 
         return super().create(**data)
 
-class CategoryService(BaseValidationService):
+class CategoryService(BaseValidationService, BaseService):
 
     def validation(self, data):
         self.validate_field_length("category", 1, 100, data)

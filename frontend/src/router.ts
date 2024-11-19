@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { create } from 'domain'
 import Main from './components/Main.vue'
 import Base from './components/Base.vue'
 import Form from './components/HelloWorld.vue'
+
 export default createRouter(
     {
         history: createWebHistory(),

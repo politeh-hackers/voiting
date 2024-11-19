@@ -1,16 +1,36 @@
-<script setup lang="ts">
-import InputText from "primevue/inputtext";
-import Button from "primevue/button";
-</script>
-
 <template>
-  <h1>Текущие обращения:</h1>
+  <div>
+    <h1>Posts</h1>
+    <ul>
+      <li v-for="post in posts" :key="post.id">
+        <h2>{{ post.title }}</h2>
+        <p>{{ post?.content }}</p>
+      </li>
+    </ul>
+  </div>
 </template>
 
-<style scoped>
-h1{
-  margin: 0;
-}
+<script>
+import axios from 'axios';
 
-
-</style>
+export default {
+  data() {
+    return {
+      posts: [],
+    };
+  },
+  mounted() {
+    this.fetchPosts();
+  },
+  methods: {
+    async fetchPosts() {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/admin/');
+        this.posts = response.data;
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    },
+  },
+};
+</script>
