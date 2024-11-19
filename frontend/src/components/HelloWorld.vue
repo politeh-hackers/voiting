@@ -3,34 +3,36 @@
     <h1>Posts</h1>
     <ul>
       <li v-for="post in posts" :key="post.id">
+        <p>{{JSON.stringify(posts)}}}</p>
         <h2>{{ post.title }}</h2>
         <p>{{ post?.content }}</p>
       </li>
     </ul>
+
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import {PostService} from "../api/service.ts";
+import {onMounted} from "vue";
+
+const service = new PostService()
 
 export default {
-  data() {
+  data(){
     return {
-      posts: [],
-    };
+      posts: null
+    }
   },
   mounted() {
-    this.fetchPosts();
+    this.posts = this.loadPosts("admin")
   },
   methods: {
-    async fetchPosts() {
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/admin/');
-        this.posts = response.data;
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
-    },
-  },
-};
+    async loadPosts(prefix) {
+      return await service.getAll(prefix);
+    }
+  }
+}
+
 </script>

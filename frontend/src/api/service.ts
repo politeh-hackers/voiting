@@ -30,4 +30,4 @@ export interface Post extends BaseUUIDSchema {
     title: string
 }
 
-export class PostService<Post> {}
+export class PostService extends ApiService<Post> {}

@@ -6,17 +6,11 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const text = ref('')
 const text1 = ref('')
-const correctUsername = 'admin';
-const correctPassword = '12345';
+// const correctUsername = 'admin';
+// const correctPassword = '12345';
 const login = () => {
-  if (text.value === correctUsername && text1.value === correctPassword) {
-    // Если данные введены верно, переходим на страницу dashboard
     router.push({name:'Base'})
-  } else {
-    // Если данные неверные, можно показать ошибку
-    alert('Неверное имя пользователя или пароль');
-  }
-};
+}
 </script>
 
 <template>
