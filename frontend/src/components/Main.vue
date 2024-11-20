@@ -21,7 +21,7 @@ const login = () => {
 
 <template>
   <div class="main__menu">
-    <span>Admin panel</span>
+    <span class="main__text">Admin panel</span>
     <InputText v-model="text" name="login" placeholder="Login"/>
     <InputText v-model="text1" name="password" placeholder="password" type="password"/>
     <Button label="Log in" @click="login"/>
@@ -30,11 +30,20 @@ const login = () => {
 
 <style scoped>
 .main__menu{
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   gap:30px;
-  height: 80vh;
+  height: 100vh;
+  background-image: url(https://images.unsplash.com/photo-1708549566274-638eb2d2108b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTd8fHxlbnwwfHx8fHw%3D) ;
+  background-size: cover;        /* Растягивает изображение на весь экран */
+  background-repeat: no-repeat;  /* Убирает повторение изображения */
+  background-position: center;
 }
+.main__text {
+  font-size: 24px;
+}
+
 </style>
