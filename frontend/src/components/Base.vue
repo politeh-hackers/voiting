@@ -29,7 +29,8 @@ const router = useRouter();
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   color: green;
   margin: 0;
-  padding: 0;
+  padding: 0px;
+ 
   
 }
 /* Основной контейнер */
@@ -43,12 +44,12 @@ const router = useRouter();
 
 /* Левая панель */
 .sidebar {
-  width: 30%; /* Занимает 30% ширины */
-  background-color: #f4f4f4; /* Светлый фон */
+  width: 20%; 
+  background-color: #f4f4f4; 
   padding: 20px;
   display: flex;
-  flex-direction: column; /* Кнопки располагаются вертикально */
-  gap: 10px; /* Отступы между кнопками */
+  flex-direction: column; 
+  gap: 10px; 
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   align-items: center;
   gap: 30px;
@@ -56,13 +57,14 @@ const router = useRouter();
 
 /* Правая область */
 .content {
-  width: 70%; /* Занимает 70% ширины */
+  width: 80%; 
   padding: 20px;
-  overflow-y: auto; /* Скроллинг, если контент слишком длинный */
+  overflow-y: auto; 
   background-color: #fff;
 }
 h1{
   margin: 0;
   padding: 0;
 }
+
 </style>
