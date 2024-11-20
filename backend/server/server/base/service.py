@@ -9,6 +9,9 @@ T = TypeVar("T", bound=models.Model)
 class BaseService(Generic[T]):
     model = T
 
+    def __init__(self, model: T):
+        self.model = model
+
     def get_all(self) -> List[dict]:
         return list(self.model.objects.values())
 

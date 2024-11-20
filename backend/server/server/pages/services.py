@@ -125,6 +125,7 @@ class ActualService(BaseValidationService, BaseService):
         self.cleanup_tags("actual_tags", data.get("actual_tags", []), ActualTag)
         # Call the create method with the data dictionary
         return super().create(data)  # Pass the dictionary directly without unpacking
+
     def generate_description(self):
         # Генерация дефолтного description длиной от 80 до 160 символов
         return "Default description that meets the required length of 80-160 characters"[:160]  # Ensure it doesn't exceed 160 chars
@@ -167,5 +168,5 @@ class AppealService(BaseValidationService, BaseService):
 class CategoryService(BaseValidationService, BaseService):
 
     def validation(self, data):
-        self.validate_field_length("category", 1, 100, data)
+        self.validate_field_length("name", 1, 100, data)
 

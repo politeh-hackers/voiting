@@ -6,7 +6,7 @@ from .models import Category, Appeal, Actual
 from .models import Media
 from django.http import HttpRequest, HttpResponse
 
-from .services import MediaService, AppealService, ActualService
+from .services import MediaService, AppealService, ActualService, CategoryService
 import json
 
 
@@ -15,7 +15,7 @@ def home(request):
 
 
 def test(request: HttpRequest):
-    test_service = ActualService(model=Actual)
+    test_service = CategoryService(model=Category)
     if request.method == "GET":
         return JsonResponse(test_service.get_all(), safe=False)
     if request.method == "POST":
