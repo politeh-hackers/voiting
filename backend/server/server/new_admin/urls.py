@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import PostListView, TestList
+from .views import PostListView, TestList, TestId, TestMediaTag
 
 urlpatterns = [
-    path('', TestList.as_view(), name='post-list'),
+    path('', TestMediaTag.as_view(), name='post-list'),
+    path('<int:test_id>', TestId.as_view())
 ]
