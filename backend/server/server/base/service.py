@@ -20,8 +20,8 @@ class BaseService(Generic[T]):
     def create(self, data: Dict) -> None:
         return self.model.objects.create(**data)
 
-    def update(self, data: dict) -> None:
-        return self.model.objects.filter(data=data).update(**data)
+    def update(self, model_id: int, data: dict) -> None:
+        return self.model.objects.filter(id=model_id).update(**data)
 
     def delete(self, model_id: int) -> None:
         instance = self.model.objects.get(id=model_id)
