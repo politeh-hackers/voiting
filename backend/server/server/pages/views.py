@@ -1,3 +1,5 @@
+from idlelib.rpc import request_queue
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
@@ -22,5 +24,10 @@ def test(request: HttpRequest):
          data = json.loads(request.body)
          test_service.validation(data)
          test_service.create(data)
+         return JsonResponse(test_service.get_all(), safe=False)
+    if request.method == "DELETE":
+         body = json.loads(request.body)
+         test_id = body.get("id")
+         test_service.delete(model_id=int(test_id))
          return JsonResponse(test_service.get_all(), safe=False)
 

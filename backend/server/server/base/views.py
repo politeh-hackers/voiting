@@ -12,5 +12,3 @@ class BaseView(Generic[T], APIView):
     def get_queryset(self):
         return self.model.objects.get_queryset()
 
-
-
