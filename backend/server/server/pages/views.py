@@ -10,7 +10,7 @@ from django.http import HttpRequest, HttpResponse
 
 from .services import MediaService, AppealService, ActualService, CategoryService
 import json
-
+import uuid
 
 def home(request):
     return HttpResponse("<h1>ХУЙ</h1>")
@@ -50,10 +50,10 @@ def CategoryView(request: HttpRequest):
     if request.method == "DELETE":
         body = json.loads(request.body)
         test_id = body.get("id")
-        test_service.delete(model_id=int(test_id))
+        test_service.delete(model_id=uuid.UUID(test_id))
         return JsonResponse(test_service.get_all(), safe=False)
     if request.method == "PATCH":
         body = json.loads(request.body)
         test_id = body.get("id")
-        test_service.update(model_id=int(test_id), data=body)
+        test_service.update(model_id=uuid.UUID(test_id), data=body)
         return JsonResponse(test_service.get_all(), safe=False)

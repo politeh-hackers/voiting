@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 from base.abstractions import BaseServiceProtocol
 from django.db import models
+import uuid
 
 
 T = TypeVar("T", bound=models.Model)
@@ -20,10 +21,10 @@ class BaseService(Generic[T]):
     def create(self, data: Dict) -> None:
         return self.model.objects.create(**data)
 
-    def update(self, model_id: int, data: dict) -> None:
+    def update(self, model_id: uuid.UUID, data: dict) -> None:
         return self.model.objects.filter(id=model_id).update(**data)
 
-    def delete(self, model_id: int) -> None:
+    def delete(self, model_id: uuid.UUID) -> None:
         instance = self.model.objects.get(id=model_id)
         instance.delete()
 

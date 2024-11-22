@@ -1,8 +1,14 @@
 from django.db import models
 from django.utils import timezone
+import uuid
 
+class BaseUUID(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
 
-class Basic(models.Model):
+    class Meta:
+        abstract = True  # Делаем этот класс абстрактным
+
+class Basic(BaseUUID):  # Теперь наследует только от BaseUUID
     h1 = models.CharField(max_length=60, blank=True)
     title = models.CharField(max_length=80, blank=True)
     description = models.CharField(max_length=160, blank=True)
@@ -10,10 +16,7 @@ class Basic(models.Model):
     def __str__(self):
         return self.title
 
-    class Meta:
-        abstract = True
-
-class MediaTag(models.Model):
+class MediaTag(BaseUUID):  # Наследует только от BaseUUID
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
@@ -24,7 +27,7 @@ class MediaTag(models.Model):
         verbose_name_plural = "media tags"
         ordering = ['name']
 
-class ActualTag(models.Model):
+class ActualTag(BaseUUID):  # Наследует только от BaseUUID
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
@@ -35,7 +38,7 @@ class ActualTag(models.Model):
         verbose_name_plural = "actual tags"
         ordering = ['name']
 
-class Category(models.Model):
+class Category(BaseUUID):  # Наследует только от BaseUUID
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
@@ -45,7 +48,7 @@ class Category(models.Model):
         verbose_name = "category"
         verbose_name_plural = "categories"
 
-class Media(Basic):
+class Media(Basic):  # Наследует только от Basic
     header = models.CharField(max_length=200)
     content = models.TextField()
     photos = models.CharField(max_length=255, null=True, blank=True)
@@ -61,8 +64,8 @@ class Media(Basic):
     def __str__(self):
         return self.header
 
-class Actual(Basic):
-    header = models.CharField( max_length=200)
+class Actual(Basic):  # Наследует только от Basic
+    header = models.CharField(max_length=200)
     content = models.TextField()
     photos = models.CharField(max_length=255, null=True, blank=True)
     date_created = models.DateTimeField(default=timezone.now)
@@ -74,7 +77,7 @@ class Actual(Basic):
         verbose_name_plural = "actual"
         ordering = ['-date_created']
 
-class Appeal(Basic):
+class Appeal(Basic):  # Наследует только от Basic
 
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
