@@ -8,6 +8,11 @@ class BaseUUID(models.Model):
     class Meta:
         abstract = True  # Делаем этот класс абстрактным
 
+class Admins(BaseUUID):
+    login = models.CharField(max_length=50, unique=True)
+    password = models.CharField(max_length=100)
+
+
 class Basic(BaseUUID):  # Теперь наследует только от BaseUUID
     h1 = models.CharField(max_length=60, blank=True)
     title = models.CharField(max_length=80, blank=True)

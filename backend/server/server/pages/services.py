@@ -103,3 +103,8 @@ class CategoryService(BaseValidationService, BaseService):
     def validation(self, data):
         self.validate_field_length("name", 1, 100, data)
 
+class AdminsService(BaseValidationService, BaseService):
+
+    def validation(self, data):
+        self.validate_field_length("login", 8, 50, data)
+        self.validate_field_length("password", 8, 100, data)
