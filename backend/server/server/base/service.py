@@ -1,11 +1,15 @@
 from typing import TypeVar, Generic, List, Dict
 from datetime import datetime
+
+from django.http import JsonResponse
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from base.abstractions import BaseServiceProtocol
 from django.db import models
 import uuid
+import re
 
+from users.models import Admins
 
 T = TypeVar("T", bound=models.Model)
 
@@ -94,3 +98,22 @@ class BaseValidationService:
 
     def generate_description(self):
         return "Default Description"
+
+    def validate_password_strength(self, password, data):
+        # Проверка длины пароля
+        if len(data[password]) < 8:
+            raise ValidationError('Пароль должен содержать минимум 8 символов.')
+
+        # Проверка наличия цифры
+        if not any(char.isdigit() for char in data[password]):
+            raise ValidationError('Пароль должен содержать хотя бы одну цифру.')
+
+        # Проверка наличия специального символа
+        special_characters = "!@#$%^&*(),.?\":{}|<>"
+        if not any(char in special_characters for char in data[password]):
+            raise ValidationError('Пароль должен содержать хотя бы один специальный символ.')
+
+    def validate_login(self, login, data):
+
+        if len(data[login]) < 8:
+            raise ValidationError('Пароль должен содержать минимум 8 символов.')

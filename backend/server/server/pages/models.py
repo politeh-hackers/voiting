@@ -8,11 +8,6 @@ class BaseUUID(models.Model):
     class Meta:
         abstract = True  # Делаем этот класс абстрактным
 
-class Admins(BaseUUID):
-    login = models.CharField(max_length=50, unique=True)
-    password = models.CharField(max_length=100)
-
-
 class Basic(BaseUUID):  # Теперь наследует только от BaseUUID
     h1 = models.CharField(max_length=60, blank=True)
     title = models.CharField(max_length=80, blank=True)
@@ -53,7 +48,7 @@ class Category(BaseUUID):  # Наследует только от BaseUUID
         verbose_name = "category"
         verbose_name_plural = "categories"
 
-class Media(Basic):  # Наследует только от Basic
+class Media(Basic, BaseUUID):  # Наследует только от Basic
     header = models.CharField(max_length=200)
     content = models.TextField()
     photos = models.CharField(max_length=255, null=True, blank=True)
@@ -69,7 +64,7 @@ class Media(Basic):  # Наследует только от Basic
     def __str__(self):
         return self.header
 
-class Actual(Basic):  # Наследует только от Basic
+class Actual(Basic, BaseUUID):  # Наследует только от Basic
     header = models.CharField(max_length=200)
     content = models.TextField()
     photos = models.CharField(max_length=255, null=True, blank=True)
@@ -82,7 +77,7 @@ class Actual(Basic):  # Наследует только от Basic
         verbose_name_plural = "actual"
         ordering = ['-date_created']
 
-class Appeal(Basic):  # Наследует только от Basic
+class Appeal(Basic, BaseUUID):  # Наследует только от Basic
 
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
