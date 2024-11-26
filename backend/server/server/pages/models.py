@@ -51,7 +51,7 @@ class Category(BaseUUID):  # Наследует только от BaseUUID
 class Media(Basic, BaseUUID):  # Наследует только от Basic
     header = models.CharField(max_length=200)
     content = models.TextField()
-    photos = models.CharField(max_length=255, null=True, blank=True)
+    photos = models.ImageField(upload_to='media_photos/', null=True, blank=True)
     date_created = models.DateTimeField(default=timezone.now)
 
     media_tags = models.ManyToManyField("MediaTag", blank=True)

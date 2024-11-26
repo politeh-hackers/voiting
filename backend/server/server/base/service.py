@@ -8,7 +8,7 @@ from base.abstractions import BaseServiceProtocol
 from django.db import models
 import uuid
 import re
-
+from django.core.files.images import get_image_dimensions
 from users.models import Admins
 
 T = TypeVar("T", bound=models.Model)
@@ -72,9 +72,22 @@ class BaseValidationService:
             raise ValidationError({field_name: "Поле 'content' обязательно."})
 
     def validate_photos(self, field_name, data):
-        """Проверка фотографий (если они указаны)."""
-        if data.get(field_name) and len(data[field_name]) > 255:
-            raise ValidationError({field_name: "Слишком длинное имя файла для фотографии."})
+        photo = data.get(field_name)
+
+        if photo:
+            if not photo.content_type.startswith('image/'):
+                raise ValidationError({field_name: "Файл должен быть изображением."})
+
+            if len(photo.name) > 255:
+                raise ValidationError({field_name: "Слишком длинное имя файла для фотографии."})
+
+            max_size = 5 * 1024 * 1024  # 5 MB
+            if photo.size > max_size:
+                raise ValidationError({field_name: "Файл слишком большой. Максимальный размер: 5 МБ."})
+
+            width, height = get_image_dimensions(photo)
+            if width > 1920 or height > 1080:
+                raise ValidationError({field_name: "Размер изображения должен быть не больше 1920x1080 пикселей."})
 
     def generate_default_fields(self, data):
         """Генерация значений по умолчанию для полей, если они не указаны."""
