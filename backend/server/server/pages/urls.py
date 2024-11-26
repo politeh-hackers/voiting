@@ -5,7 +5,7 @@ from .views import *
 urlpatterns = [
     path('', views.home, name='home'),
 
-    path('admin/media', views.MediaView.as_view()),
+    path('common/upload-image/', views.MediaView.as_view()),
     path('admin/media/<uuid:model_id>', views.MediaView.as_view()),
 
     path('admin/actual', ActualView.as_view()),

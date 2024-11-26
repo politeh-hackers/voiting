@@ -16,7 +16,7 @@ export const initEditor = (element: HTMLElement, data: any = null) => {
     formData.append('image', image);
     formData.append('csrfmiddlewaretoken', JSCookie.get('csrftoken')!);
 
-    return fetch('/api/upload-image/', {
+    return fetch('admin/media', {
       method: 'post',
       body: formData
     }).then((response) => {

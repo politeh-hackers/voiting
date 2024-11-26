@@ -15,6 +15,13 @@ import uuid
 def home(request):
     return HttpResponse("<h1>ХУЙ</h1>")
 
+import json
+import uuid
+from django.http import JsonResponse, HttpRequest
+from django.views import View
+from .models import Media
+from .services import MediaService  # Предположим, что у вас есть MediaService
+
 class MediaView(View):
     test_service = MediaService(model=Media)
 
@@ -22,10 +29,28 @@ class MediaView(View):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
     def post(self, request: HttpRequest):
-        data = json.loads(request.body)
-        self.test_service.validation(data)
-        self.test_service.create(data)
-        return JsonResponse(self.test_service.get_all(), safe=False)
+        # Получаем текст и изображение из запроса
+        header = request.POST.get('header', '')
+        content_text = request.POST.get('content', '')
+        photo = request.FILES.get('image')
+
+        if not photo or not header or not content_text:
+            return JsonResponse({"error": "Необходимо указать заголовок, текст и загрузить изображение."}, status=400)
+
+        # Формируем JSON-объект для сохранения
+        content = {
+            'text': content_text,
+            'image_url': photo.url  # Используйте метод для получения URL изображения
+        }
+
+        # Сохраняем новый объект Media
+        media_instance = Media.objects.create(
+            header=header,
+            content=content,
+            photos=photo  # Сохраняем изображение в отдельном поле
+        )
+
+        return JsonResponse({"success": True, "data": media_instance.content}, status=201)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         try:

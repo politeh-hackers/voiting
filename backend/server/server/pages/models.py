@@ -48,12 +48,10 @@ class Category(BaseUUID):  # Наследует только от BaseUUID
         verbose_name = "category"
         verbose_name_plural = "categories"
 
-class Media(Basic, BaseUUID):  # Наследует только от Basic
+class Media(models.Model):
     header = models.CharField(max_length=200)
-    content = models.TextField()
-    photos = models.ImageField(upload_to='media_photos/', null=True, blank=True)
+    content = models.JSONField()  # Хранит текст и URL изображения в формате JSON
     date_created = models.DateTimeField(default=timezone.now)
-
     media_tags = models.ManyToManyField("MediaTag", blank=True)
 
     class Meta:
