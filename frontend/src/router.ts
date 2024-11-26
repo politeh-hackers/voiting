@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Main from './components/Main.vue'
 import Base from './components/Base.vue'
-import Form from './components/HelloWorld.vue'
+import Form from './components/Category.vue'
+import Media from './components/Media.vue'
 
 export default createRouter(
     {
@@ -20,6 +21,11 @@ export default createRouter(
                         name: 'Form',
                         path: '/Form', // Дочерний маршрут (без начального "/")
                         component: Form, // Компонент HelloWorld.vue
+                    },
+                    {
+                        name: 'Media',
+                        path: '/Media', // Дочерний маршрут (без начального "/")
+                        component: Media, // Компонент HelloWorld.vue
                     },
                 ],
             }

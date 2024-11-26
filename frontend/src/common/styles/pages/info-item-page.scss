@@ -1,0 +1,18 @@
+.info-item-page_block__picture{
+    max-height: 600px;
+    width: 100%;
+    img{
+        width: 100%;
+        max-height: 600px;
+        -o-object-fit: cover;
+           object-fit: cover;
+    }
+}
+
+.info-item-page_block{
+    background-color: white;
+}
+
+.info-item-page_block__content{
+    padding: 25px 180px;
+}
