@@ -1,5 +1,7 @@
+import os
 from idlelib.rpc import request_queue
-
+from django.conf import settings
+from django.conf.urls.static import static
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import View
@@ -7,7 +9,7 @@ from base.service import BaseService
 from .models import Category, Appeal, Actual, MediaTag
 from .models import Media
 from django.http import HttpRequest, HttpResponse
-
+from static import images
 from .services import MediaService, AppealService, ActualService, CategoryService
 import json
 import uuid
@@ -29,28 +31,17 @@ class MediaView(View):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
     def post(self, request: HttpRequest):
-        # Получаем текст и изображение из запроса
-        header = request.POST.get('header', '')
-        content_text = request.POST.get('content', '')
-        photo = request.FILES.get('image')
+        data = json.loads(request.body)
 
-        if not photo or not header or not content_text:
-            return JsonResponse({"error": "Необходимо указать заголовок, текст и загрузить изображение."}, status=400)
+        image_path = os.path.join('images', data['content'])
+        with open(image_path, 'wb') as image_file:
+            image_file.write(data['content'])
 
-        # Формируем JSON-объект для сохранения
-        content = {
-            'text': content_text,
-            'image_url': photo.url  # Используйте метод для получения URL изображения
-        }
 
-        # Сохраняем новый объект Media
-        media_instance = Media.objects.create(
-            header=header,
-            content=content,
-            photos=photo  # Сохраняем изображение в отдельном поле
-        )
+        self.test_service.create(data)
 
-        return JsonResponse({"success": True, "data": media_instance.content}, status=201)
+
+        return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         try:

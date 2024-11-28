@@ -1,6 +1,8 @@
 from django.urls import path, include
 from . import views
 from .views import *
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -17,4 +19,4 @@ urlpatterns = [
     path('admin/appeal', AppealView.as_view()),
     path('admin/appeal/<uuid:model_id>', AppealView.as_view()),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
