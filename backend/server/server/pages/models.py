@@ -52,7 +52,7 @@ class Media(models.Model):
     header = models.CharField(max_length=200)
     content = models.JSONField()  # Хранит текст и URL изображения в формате JSON
     date_created = models.DateTimeField(default=timezone.now)
-    media_tags = models.ManyToManyField("MediaTag", blank=True)
+    # media_tags = models.ManyToManyField("MediaTag", blank=True)
 
     class Meta:
         verbose_name = "media"
