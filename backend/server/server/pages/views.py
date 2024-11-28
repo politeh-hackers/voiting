@@ -128,10 +128,13 @@ class CategoryView(View):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
     def post(self, request: HttpRequest):
-        data = json.loads(request.body)
-        self.test_service.validation(data)
-        self.test_service.create(data)
-        return JsonResponse(self.test_service.get_all(), safe=False)
+        try:
+            data = json.loads(request.body)
+            self.test_service.validation(data)
+            self.test_service.create(data)
+            return JsonResponse(None, safe=False)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         try:

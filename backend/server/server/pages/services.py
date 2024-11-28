@@ -2,7 +2,6 @@
 import re
 from datetime import datetime
 
-import self
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from base.service import BaseService, BaseValidationService
@@ -30,8 +29,6 @@ class MediaService(BaseValidationService, BaseService):
         self.generate_default_fields(data)
         self.cleanup_tags("media_tags", data.get("media_tags", []), MediaTag)
 
-        return super().create(**data)
-
 class ActualService(BaseValidationService, BaseService):
 
     def validation(self, data):
@@ -56,7 +53,6 @@ class ActualService(BaseValidationService, BaseService):
 
         self.cleanup_tags("actual_tags", data.get("actual_tags", []), ActualTag)
 
-        return super().create(data)
 
     def generate_description(self):
         # Генерация дефолтного description длиной от 80 до 160 символов
@@ -84,7 +80,6 @@ class AppealService(BaseValidationService, BaseService):
                 validator()
 
         self.generate_default_fields(data)
-        return super().create(data)
 
     def validate_phone(self, data):
         if not re.match(r"^\+375\d{9}$", data["phone"]):
@@ -114,5 +109,4 @@ class CategoryService(BaseValidationService, BaseService):
 
     def validation(self, data):
         self.validate_field_length("name", 1, 100, data)
-        return super().create(data)
 
