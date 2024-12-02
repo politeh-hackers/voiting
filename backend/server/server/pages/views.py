@@ -1,28 +1,22 @@
 import os
-from idlelib.rpc import request_queue
-from django.conf import settings
-from django.conf.urls.static import static
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
-from django.views import View
-from base.service import BaseService
+from collections.abc import Buffer
+from django.core.handlers.wsgi import WSGIRequest
 from .models import Category, Appeal, Actual, MediaTag
-from .models import Media
 from django.http import HttpRequest, HttpResponse
-from static import images
 from .services import MediaService, AppealService, ActualService, CategoryService
-import json
-import uuid
-
-def home(request):
-    return HttpResponse("<h1>ХУЙ</h1>")
-
 import json
 import uuid
 from django.http import JsonResponse, HttpRequest
 from django.views import View
 from .models import Media
-from .services import MediaService  # Предположим, что у вас есть MediaService
+from .services import MediaService
+from dataclasses import dataclass
+from django import forms
+
+
+class MediaViewUploadForm(forms.Form):
+    content = forms.FileField(allow_empty_file=False)
+
 
 class MediaView(View):
     test_service = MediaService(model=Media)
@@ -30,17 +24,15 @@ class MediaView(View):
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
-    def post(self, request: HttpRequest):
-        data = json.loads(request.body)
-
-        image_path = os.path.join('images', data['content'])
+    def post(self, request: WSGIRequest):
+        data = request.FILES["content"]
+        data_str = str(data)
+        image_path = os.path.join('static/images', data_str)
         with open(image_path, 'wb') as image_file:
-            image_file.write(data['content'])
+            for chunk in data.chunks():
+                image_file.write(chunk)
 
-
-        self.test_service.create(data)
-
-
+        # self.test_service.create(data)
         return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):

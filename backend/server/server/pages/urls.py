@@ -5,9 +5,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('', views.home, name='home'),
-
-    path('common/upload-image/', views.MediaView.as_view()),
+    path('admin/media', views.MediaView.as_view()),
     path('admin/media/<uuid:model_id>', views.MediaView.as_view()),
 
     path('admin/actual', ActualView.as_view()),
