@@ -59,6 +59,10 @@ import json
 
 class ImageView(View):
     test_service = MediaService(model=Media)
+
+    def get(self, request: HttpRequest):
+        return JsonResponse(self.test_service.get_all(), safe=False)
+
     def post(self, request):
         # Проверяем тип контента запроса
         if request.content_type == 'application/json':
