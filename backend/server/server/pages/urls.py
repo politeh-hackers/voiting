@@ -17,4 +17,6 @@ urlpatterns = [
     path('admin/appeal', AppealView.as_view()),
     path('admin/appeal/<uuid:model_id>', AppealView.as_view()),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+    path('admin/test', ImageView.as_view()),
+]

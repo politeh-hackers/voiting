@@ -1,6 +1,8 @@
 import os
 from collections.abc import Buffer
 from django.core.handlers.wsgi import WSGIRequest
+from django.template.context_processors import request
+
 from .models import Category, Appeal, Actual, MediaTag
 from django.http import HttpRequest, HttpResponse
 from .services import MediaService, AppealService, ActualService, CategoryService
@@ -35,6 +37,7 @@ class MediaView(View):
         # self.test_service.create(data)
         return JsonResponse({"url": f"http://localhost:8000/static/images/{data_str}", "name": data_str, "size": 123, "type": ""}, safe=False)
 
+
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         try:
             self.test_service.delete(model_id=model_id)
@@ -49,6 +52,31 @@ class MediaView(View):
             return JsonResponse(self.test_service.get_all(), safe=False)
         except (ValueError, TypeError):
             return JsonResponse({"error": "Invalid UUID"}, status=400)
+
+from django.http import JsonResponse
+from django.views import View
+import json
+
+class ImageView(View):
+    test_service = MediaService(model=Media)
+    def post(self, request):
+        # Проверяем тип контента запроса
+        if request.content_type == 'application/json':
+            data = json.loads(request.body.decode('utf-8'))
+        else:
+            # Если это QueryDict, конвертируем его в словарь
+            data = request.POST.dict()  # Преобразуем QueryDict в обычный словарь
+
+        # Убеждаемся, что данные являются словарём
+        if not isinstance(data, dict):
+            return JsonResponse({'error': 'Data must be a JSON object'}, status=400)
+
+        self.test_service.create(data)  # Распаковываем словарь в аргументы
+
+        # Возвращаем все записи
+        return JsonResponse(self.test_service.get_all(), safe=False)
+
+
 
 class ActualView(View):
     test_service = ActualService(model=Actual)

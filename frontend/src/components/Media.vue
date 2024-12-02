@@ -31,20 +31,40 @@ const post = ref<Post>({
 
 const postService = new PostService();
 const baseAdmin = "admin";
-const prefix = "media";
+const prefix = "test";
 
 const addPost = async () => {
-  // Сохранение текущего контента из редактора в post.content
-  post.value.content = await editorInstance.save().then((data: any) => JSON.stringify(data));
+  // Save the current content from the editor into post.content
+  post.value.content = await editorInstance.save().then((data) => JSON.stringify(data));
 
-  await postService.create(post.value, prefix, baseAdmin);
+  let content = new FormData();
+  content.append("content", post.value.content);
 
-  // Очистка полей
+  // Send the request using HTTP
+  fetch("http://localhost:8000/admin/test", {
+    method: "POST",
+    body: content
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Network response was not ok: ' + response.statusText);
+    }
+  })
+  .then(data => {
+    console.log('Success:', data); // Log the success response
+  })
+  .catch(error => {
+    console.error('Error:', error); // Handle any errors
+  });
+
+  // Clear fields
   post.value.header = "";
   post.value.content = "";
   post.value.date_created = new Date();
 
-  // Очистка редактора
+  // Clear the editor
   editorInstance.clear();
 };
 

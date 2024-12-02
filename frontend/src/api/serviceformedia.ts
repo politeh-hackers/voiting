@@ -16,7 +16,7 @@ export class ApiService<T> {
         return jsonData as T[]
     }
 
-    public async create(data: T, prefix: string, baseAdmin:string): Promise<void | Error> {
+    public async create(data: T | FormData, prefix: string, baseAdmin:string): Promise<void | Error> {
         
         const response = await fetch(`${this.baseUrl}/${baseAdmin}/${prefix}`, {
             method: 'POST',
