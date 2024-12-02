@@ -11,32 +11,39 @@ import CardTool, { CardToolData, CardType } from './tools/card';
 import JSCookie from '../common/utils/cookie';
 
 export const initEditor = (element: HTMLElement, data: any = null) => {
-  const uploadImage = (image: File) => {const reader = new FileReader();
+  const uploadImage = (image: File) => {
+    const formData = new FormData();
+    formData.append('image', image);
+    formData.append('csrfmiddlewaretoken', JSCookie.get('csrftoken')!);
 
-    return new Promise<any>((resolve, reject) => {
-      reader.onloadend = () => {
-        const dataUrl = reader.result as string; // Получаем URL изображения
-
-        // Возвращаем успешный ответ с dataURL, который будет отображаться в редакторе
-        resolve({
-          success: 1,
-          file: {
-            url: dataUrl, // Прямо отображаем изображение из dataURL
-          },
-        });
-      };
-
-      reader.onerror = (error) => {
-        reject({
-          success: 0,
-          file: null,
-        });
-      };
-
-      // Читаем файл как dataURL
-      reader.readAsDataURL(image);
-    });
-  };
+    return fetch('http://127.0.0.1:8000/admin/media', {
+        method: 'post',
+        body: formData
+    }).then((response) => {
+        if (!response.ok) {
+            if (response.status == 400) {
+                alert('Картинка слишком большая, уменьшите картинку и повторите попытку')
+            } else if (response.status == 403) {
+                alert('Отказано в доступе при загрузке картинок. Свяжитесь с администратором')
+            }
+            return null
+        } else {
+            return response.json();
+        }
+    }).then((data) => {
+        if (data) {
+            return {
+                success: 1,
+                file: data
+            };
+        } else {
+            return {
+                success: 0,
+                file: null
+            }
+        }
+    })
+};
 
 
   const editor = new EditorJS({
@@ -77,7 +84,7 @@ export const initEditor = (element: HTMLElement, data: any = null) => {
         class: ImageTool,
         config: {
           endpoints: {
-            byFile: '/common/upload-image'
+            byFile: 'http://localhost:8000/admin/media'
           },
           uploader: {
             uploadByFile: uploadImage

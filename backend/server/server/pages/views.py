@@ -25,7 +25,7 @@ class MediaView(View):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
     def post(self, request: WSGIRequest):
-        data = request.FILES["content"]
+        data = request.FILES["image"]
         data_str = str(data)
         image_path = os.path.join('static/images', data_str)
         with open(image_path, 'wb') as image_file:
@@ -33,7 +33,7 @@ class MediaView(View):
                 image_file.write(chunk)
 
         # self.test_service.create(data)
-        return JsonResponse(None, safe=False)
+        return JsonResponse({"url": f"http://localhost:8000/static/images/{data_str}", "name": data_str, "size": 123, "type": ""}, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         try:
