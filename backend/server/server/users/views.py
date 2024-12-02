@@ -1,5 +1,5 @@
 from django.http import JsonResponse, HttpRequest
-from pydantic import ValidationError
+
 
 from users.services import AdminsService
 from .models import Admins
