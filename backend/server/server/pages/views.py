@@ -18,12 +18,12 @@ class MediaView(View):
         self.test_service.create(data)
         return JsonResponse(self.test_service.get_all(), safe=False)
 
-    def delete(self, request: HttpRequest, model_id: uuid.UUID):
-        try:
-            self.test_service.delete(model_id=model_id)
-            return JsonResponse(self.test_service.get_all(), safe=False, status=204)
-        except (ValueError, TypeError):
-            return JsonResponse({"error": "Invalid UUID"}, status=400)
+    def delete(self, request: HttpRequest, file_name: str):
+        image_path = os.path.join('static/images', file_name)
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
+        return JsonResponse(None, safe=False)
 
 
 class ImageView(View):
@@ -47,20 +47,7 @@ class ImageView(View):
                 "type": data.content_type
             }, safe=False)
 
-    def delete(self, request: HttpRequest, file_name: str):
-        try:
-            # Генерация полного пути к файлу
-            image_path = os.path.join('static/images', file_name)
 
-            # Проверка существования файла
-            if os.path.exists(image_path):
-                os.remove(image_path)  # Удаление файла
-                return JsonResponse({"message": f"File {file_name} deleted successfully"}, status=200)
-            else:
-                return JsonResponse({"error": f"File {file_name} not found"}, status=404)
-
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
 
 
     # def delete(self, request: HttpRequest, model_id: uuid.UUID):
