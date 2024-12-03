@@ -1,5 +1,11 @@
 import os
+from gc import get_objects
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.handlers.wsgi import WSGIRequest
+from django.shortcuts import get_object_or_404
+
+from server import settings
 from .models import Category, Appeal, Actual, Media
 from .services import MediaService, AppealService, ActualService, CategoryService
 import uuid
@@ -10,6 +16,7 @@ import json
 class MediaView(View):
     test_service = MediaService(model=Media)
 
+
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
@@ -18,11 +25,17 @@ class MediaView(View):
         self.test_service.create(data)
         return JsonResponse(self.test_service.get_all(), safe=False)
 
-    def delete(self, request: HttpRequest, file_name: str):
-        image_path = os.path.join('static/images', file_name)
-        if os.path.exists(image_path):
-            os.remove(image_path)
-
+    def delete(self, request: HttpRequest, model_id: uuid.UUID):
+        id = get_object_or_404(Media, id=model_id)
+        content = id.content
+        if content:
+            for block in json.loads(content).get("blocks", []):
+                if block.get("type") == "image":
+                    file_name = block["data"]["file"]["name"]
+                    image_path = os.path.join('static/images', file_name)
+                    if os.path.exists(image_path):
+                        os.remove(image_path)
+        self.test_service.delete(model_id=model_id)
         return JsonResponse(None, safe=False)
 
 
@@ -46,6 +59,13 @@ class ImageView(View):
                 "size": data.size,
                 "type": data.content_type
             }, safe=False)
+
+    def delete(self, request: HttpRequest, file_name: str):
+        image_path = os.path.join('static/images', file_name)
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
+        return JsonResponse(None, safe=False)
 
 
 
