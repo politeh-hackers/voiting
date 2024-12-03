@@ -39,6 +39,8 @@ const addPost = async () => {
 
   let content = new FormData();
   content.append("content", post.value.content);
+  content.append("header", post.value.header);
+ 
 
   // Send the request using HTTP
   fetch("http://localhost:8000/admin/test", {
