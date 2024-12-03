@@ -11,6 +11,23 @@ import CardTool, { CardToolData, CardType } from './tools/card';
 import JSCookie from '../common/utils/cookie';
 
 export const initEditor = (element: HTMLElement, data: any = null) => {
+  let previousData: any = { blocks: [] };
+  const deleteImage = (fileUrl: string) => {const imageName = fileUrl.split('/').pop(); // например, если fileUrl = 'http://localhost:8000/uploads/myimage.jpg', то imageName будет 'myimage.jpg'
+
+    return fetch(`http://127.0.0.1:8000/admin/image/${imageName}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        
+
+      },
+      body: JSON.stringify({ file_url: fileUrl })
+    }).then((response) => {
+      if (!response.ok) {
+        alert('Ошибка при удалении изображения. Свяжитесь с администратором.');
+      }
+    });
+  };
   const uploadImage = (image: File) => {
     const formData = new FormData();
     formData.append('image', image);
@@ -88,6 +105,11 @@ export const initEditor = (element: HTMLElement, data: any = null) => {
           },
           uploader: {
             uploadByFile: uploadImage
+          },
+          onRemove: (data) => {
+            if (data.file && data.file.url) {
+              deleteImage(data.file.url);
+            }
           }
         }
       },
@@ -122,10 +144,27 @@ export const initEditor = (element: HTMLElement, data: any = null) => {
     },
     data: data?.blocks ? data : { blocks: [] },
     onChange() {
-        editor.save().then((data) => {
-            // Тут можно обновить скрытое поле с данными
+      editor.save().then((currentData) => {
+        const previousImages = previousData.blocks
+          .filter((block) => block.type === 'image')
+          .map((block) => block.data.file.url);
+  
+        const currentImages = currentData.blocks
+          .filter((block) => block.type === 'image')
+          .map((block) => block.data.file.url);
+  
+        const deletedImages = previousImages.filter(
+          (url) => !currentImages.includes(url)
+        );
+  
+        // Удаляем все удаленные изображения с сервера
+        deletedImages.forEach((url) => deleteImage(url));
+  
+        // Обновляем предыдущее состояние
+        previousData = currentData;
           });
     },
+    
     i18n: {
         messages: {
             ui: {
