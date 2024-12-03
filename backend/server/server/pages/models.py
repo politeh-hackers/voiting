@@ -6,15 +6,7 @@ class BaseUUID(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
 
     class Meta:
-        abstract = True  # Делаем этот класс абстрактным
-
-class Basic(BaseUUID):  # Теперь наследует только от BaseUUID
-    h1 = models.CharField(max_length=60, blank=True)
-    title = models.CharField(max_length=80, blank=True)
-    description = models.CharField(max_length=160, blank=True)
-
-    def __str__(self):
-        return self.title
+        abstract = True
 
 class MediaTag(BaseUUID):  # Наследует только от BaseUUID
     name = models.CharField(max_length=100, unique=True)
@@ -48,11 +40,14 @@ class Category(BaseUUID):  # Наследует только от BaseUUID
         verbose_name = "category"
         verbose_name_plural = "categories"
 
-class Media(models.Model):
+class Media(BaseUUID):
+    h1 = models.CharField(max_length=60, blank=True)
+    title = models.CharField(max_length=80, blank=True)
+    description = models.CharField(max_length=160, blank=True)
     header = models.CharField(max_length=200)
     content = models.JSONField()  # Хранит текст и URL изображения в формате JSON
     date_created = models.DateTimeField(default=timezone.now)
-    # media_tags = models.ManyToManyField("MediaTag", blank=True)
+    media_tags = models.ManyToManyField("MediaTag", blank=True)
 
     class Meta:
         verbose_name = "media"
@@ -62,7 +57,10 @@ class Media(models.Model):
     def __str__(self):
         return self.header
 
-class Actual(Basic, BaseUUID):  # Наследует только от Basic
+class Actual(BaseUUID):  # Наследует только от Basic
+    h1 = models.CharField(max_length=60, blank=True)
+    title = models.CharField(max_length=80, blank=True)
+    description = models.CharField(max_length=160, blank=True)
     header = models.CharField(max_length=200)
     content = models.TextField()
     photos = models.CharField(max_length=255, null=True, blank=True)
@@ -75,7 +73,10 @@ class Actual(Basic, BaseUUID):  # Наследует только от Basic
         verbose_name_plural = "actual"
         ordering = ['-date_created']
 
-class Appeal(Basic, BaseUUID):  # Наследует только от Basic
+class Appeal(BaseUUID):
+    h1 = models.CharField(max_length=60, blank=True)
+    title = models.CharField(max_length=80, blank=True)
+    description = models.CharField(max_length=160, blank=True)
 
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),

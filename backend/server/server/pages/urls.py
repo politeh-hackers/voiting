@@ -8,6 +8,9 @@ urlpatterns = [
     path('admin/media', views.MediaView.as_view()),
     path('admin/media/<uuid:model_id>', views.MediaView.as_view()),
 
+    path('admin/image', ImageView.as_view()),
+
+
     path('admin/actual', ActualView.as_view()),
     path('admin/actual/<uuid:model_id>', ActualView.as_view()),
 
@@ -17,6 +20,4 @@ urlpatterns = [
     path('admin/appeal', AppealView.as_view()),
     path('admin/appeal/<uuid:model_id>', AppealView.as_view()),
 
-
-    path('admin/test', ImageView.as_view()),
 ]

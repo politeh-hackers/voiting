@@ -43,7 +43,7 @@ const addPost = async () => {
  
 
   // Send the request using HTTP
-  fetch("http://localhost:8000/admin/test", {
+  fetch("http://localhost:8000/admin/media", {
     method: "POST",
     body: content
   })
