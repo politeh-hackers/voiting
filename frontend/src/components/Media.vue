@@ -20,6 +20,26 @@
             class="header__input"
           />
         </div>
+        <div class="summary">
+          <InputText
+            v-model="post.summary"
+            placeholder="Краткое описание"
+            class="summary_input"
+          />
+        </div>
+
+        <!-- Используем компонент FileUpload для загрузки изображения -->
+        <div class="image-upload">
+          <label for="image-upload">Загрузить изображение:</label>
+          <FileUpload
+            name="main_photo"
+            :url="'http://localhost:8000/admin/image'" 
+            accept="image/*"
+            :auto="true"
+            @upload="onImageUpload"
+            chooseLabel="Выбрать изображение"
+          />
+        </div>
 
         <div ref="editorContainer" class="content-editor"></div>
 
@@ -46,19 +66,18 @@
                   <div class="news-title">{{ newsItem.header }}</div>
                 </div>
 
-                <div class="news-content" v-html="renderBlocks(newsItem.content)"></div>
               </div>
 
               <!-- Изображение новости справа -->
               <div class="image-container">
                 <!-- Проверка на наличие изображения в контенте -->
                 <img 
-                  v-if="newsItem.image" 
+                  v-if="newsItem.main_photo" 
                   class="news-image" 
-                  :src="`http://localhost:8000/static/images/${newsItem.image}`" 
+                  :src="`http://localhost:8000/static/images/${newsItem.main_photo}`" 
                   :alt="newsItem.header"
                 />
-                <div v-if="newsItem.image" class="tag-overlay">
+                <div v-if="newsItem.main_photo" class="tag-overlay">
                   <Tag :value="'News'" severity="info"></Tag>
                 </div>
               </div>
@@ -77,10 +96,13 @@ import DatePicker from "primevue/datepicker";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
 import DataView from "primevue/dataview";
+import FileUpload from "primevue/fileupload"; // Импортируем компонент FileUpload
 import { PostService, Post } from "../api/serviceformedia";
 import { initEditor } from "../editor.js/editor-init";
 
 const post = ref<Post>({
+  summary: "",
+  main_photo: "",
   header: "",
   content: "",
   date_created: new Date(),
@@ -93,22 +115,28 @@ let editorInstance: any = null;
 const newsList = ref<Post[]>([]); // Список новостей
 const postService = new PostService();
 
+// Функция для обработки загрузки изображения
+const onImageUpload = (event: any) => {
+  // При успешной загрузке изображения
+  const uploadedImage = event.files[0];
+  if (uploadedImage) {
+    post.value.main_photo = uploadedImage.name; // Сохраняем имя изображения в объект post
+  }
+};
+
 const renderBlocks = (content: string): string => {
   try {
     const parsedContent = JSON.parse(content);
 
-    // Проверяем, что блоки есть и это массив
     if (parsedContent.blocks && Array.isArray(parsedContent.blocks)) {
       return parsedContent.blocks
         .map((block) => {
           if (block.type === "image" && block.data.file && block.data.file.url) {
-            // Рендер блока изображения
             return `<img src="${block.data.file.url}" alt="image" style="max-width: 100%; margin-bottom: 10px;" />`;
           }
-          // Можно добавить другие блоки по мере необходимости
           return "";
         })
-        .join(""); // Склеиваем все блоки в строку
+        .join("");
     }
   } catch (error) {
     console.error("Error parsing content:", error);
@@ -139,6 +167,11 @@ const addPost = async () => {
   content.append("content", post.value.content);
   content.append("header", post.value.header);
 
+  // Добавление изображения, если оно есть
+  if (post.value.main_photo) {
+    content.append("main_photo", post.value.main_photo);
+  }
+
   try {
     const response = await fetch("http://localhost:8000/admin/media", {
       method: "POST",
@@ -148,20 +181,14 @@ const addPost = async () => {
     if (response.ok) {
       console.log("Post added successfully");
       loadNews(); // Обновление списка новостей
+      post.value.header = "";
+      visible.value = false; // Закрытие формы
     } else {
       console.error("Error adding post:", response.statusText);
     }
   } catch (error) {
     console.error("Error:", error);
   }
-
-  post.value = {
-    header: "",
-    content: "",
-    date_created: new Date(),
-  };
-
-  editorInstance.clear();
 };
 
 const initializeEditor = () => {
@@ -224,30 +251,26 @@ onMounted(() => {
 .news-content {
   font-size: 1rem;
   color: #555;
-  margin: 0;
-  max-width: 50px;
-  max-height: 50px;
 }
-img {
-  width: 50px;        /* Устанавливаем ширину изображения */
-  height: 50px;       /* Устанавливаем высоту изображения */
-  object-fit: cover;  /* Изображение будет обрезано, чтобы заполнить контейнер */
-  border-radius: 5px; /* Добавим скругление углов, если нужно */
+
+.image-upload {
+  margin-top: 10px;
 }
+
 .image-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
-  height: 50px;
+  width: 150px;
+  height: 150px;
   margin: 0 auto;
   padding-left: 1rem;
 }
 
 .news-image {
-  width: 50px;  /* Устанавливаем ширину изображения 50px */
-  height: 50px; /* Устанавливаем высоту изображения 50px */
-  object-fit: cover; /* Изображение не будет искажаться, сохраняются пропорции */
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
   border-radius: 0.5rem;
 }
 
@@ -258,21 +281,5 @@ img {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 0.25rem;
   padding: 0.5rem;
-}
-
-@media (min-width: 768px) {
-  .news-item {
-    flex-direction: row;
-    gap: 2rem;
-  }
-
-  .news-info {
-    flex-grow: 1;
-  }
-
-  .image-container {
-    max-width: 50px; /* Ограничиваем контейнер до 50px */
-    padding-left: 1.5rem;
-  }
 }
 </style>
