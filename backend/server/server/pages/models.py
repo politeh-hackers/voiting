@@ -46,7 +46,7 @@ class Media(BaseUUID):
     description = models.CharField(max_length=160, blank=True)
     header = models.CharField(max_length=200)
     summary = models.CharField(max_length=100, blank=True)
-    main_photo = models.ImageField(upload_to='static/images', blank=True)
+    main_photo = models.TextField(blank=True)
     content = models.JSONField()
     date_created = models.DateTimeField(default=timezone.now)
     media_tags = models.ManyToManyField("MediaTag", blank=True)
