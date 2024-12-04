@@ -28,7 +28,6 @@
           />
         </div>
 
-        <!-- Используем компонент FileUpload для загрузки изображения -->
         <div class="image-upload">
           <label for="image-upload">Загрузить изображение:</label>
           <FileUpload
@@ -51,36 +50,43 @@
       </div>
     </Dialog>
 
+    <!-- Заголовки для карточек новостей, которые больше не будут повторяться -->
+    
+
     <!-- DataView для отображения списка новостей -->
     <DataView :value="newsList" paginator :rows="5" dataKey="'id'">
       <template #list="slotProps">
         <div class="news-container">
-          <div v-for="(newsItem, index) in slotProps.items" :key="newsItem.id">
-            <div class="news-item" :class="{ 'border-top': index !== 0 }">
-              <!-- Контент новости слева -->
-              <div class="news-info">
-                <div class="news-header">
-                  <span class="news-date">
-                    {{ new Date(newsItem.date_created).toLocaleDateString() }}
-                  </span>
-                  <div class="news-title">{{ newsItem.header }}</div>
-                </div>
-
-              </div>
-
-              <!-- Изображение новости справа -->
-              <div class="image-container">
-                <!-- Проверка на наличие изображения в контенте -->
-                <img 
-                  v-if="newsItem.main_photo" 
-                  class="news-image" 
-                  :src="`http://localhost:8000/static/images/${newsItem.main_photo}`" 
-                  :alt="newsItem.header"
-                />
-                <div v-if="newsItem.main_photo" class="tag-overlay">
-                  <Tag :value="'News'" severity="info"></Tag>
-                </div>
-              </div>
+          <div v-for="(newsItem) in slotProps.items" :key="newsItem.id" class="news-item">
+            <div class="image-block">
+              <img 
+                v-if="newsItem.main_photo" 
+                class="news-image" 
+                :src="`http://localhost:8000/static/images/${newsItem.main_photo}`" 
+                :alt="newsItem.header"
+              />
+            </div>
+            <div class="title-block">
+              <div class="news-title">{{ newsItem.header }}</div>
+            </div>
+            <div class="date-block">
+              <span class="news-date">
+                {{ new Date(newsItem.date_created).toLocaleDateString() }}
+              </span>
+            </div>
+            <div class="action-buttons">
+              <Button 
+                icon="pi pi-pencil" 
+                label="Редактировать" 
+                class="p-button-warning p-mr-2" 
+                @click="editPost(newsItem)" 
+              />
+              <Button 
+                icon="pi pi-trash" 
+                label="Удалить" 
+                class="p-button-danger" 
+                @click="deletePost(newsItem.id)" 
+              />
             </div>
           </div>
         </div>
@@ -88,6 +94,7 @@
     </DataView>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
@@ -159,6 +166,7 @@ const loadNews = async () => {
 };
 
 const addPost = async () => {
+  
   post.value.content = await editorInstance
     .save()
     .then((data) => JSON.stringify(data));
@@ -182,9 +190,38 @@ const addPost = async () => {
       console.log("Post added successfully");
       loadNews(); // Обновление списка новостей
       post.value.header = "";
+      post.value.summary = "";
       visible.value = false; // Закрытие формы
     } else {
       console.error("Error adding post:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+// Редактирование новости
+const editPost = (newsItem: Post) => {
+  post.value = { ...newsItem }; // Заполняем форму данными новости
+  visible.value = true; // Открываем диалог
+  editorInstance.setData(newsItem.content); // Заполняем редактор контентом
+  if(visible.value = false){
+    post.value.header = ""
+    post.value.date_created = new Date()
+  }
+};
+
+// Удаление новости
+const deletePost = async (postId: string) => {
+  try {
+    const response = await fetch(`http://localhost:8000/admin/media/${postId}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      console.log("Post deleted successfully");
+      loadNews(); // Обновление списка новостей
+    } else {
+      console.error("Error deleting post:", response.statusText);
     }
   } catch (error) {
     console.error("Error:", error);
@@ -202,11 +239,22 @@ onMounted(() => {
 });
 </script>
 
+
 <style lang="scss">
-.content-editor {
-  border: 1px solid #ccc;
-  padding: 10px;
-  min-height: 200px;
+.news-header {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr; /* Оформляем как сетку с 4 колонками */
+  gap: 20px;
+  font-weight: bold;
+  padding: 10px 0;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.news-header .image-label,
+.news-header .title-label,
+.news-header .date-label,
+.news-header .actions-label {
+  text-align: center; /* Выравнивание по центру */
 }
 
 .news-container {
@@ -216,30 +264,30 @@ onMounted(() => {
 
 .news-item {
   display: flex;
-  flex-direction: column;
+  align-items: center; /* Выравнивание по центру по вертикали */
   padding: 1.5rem;
   gap: 1rem;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.border-top {
-  border-top: 1px solid #e0e0e0;
+.image-block {
+  flex: 0 0 auto; /* Не растягивать изображение */
+  margin-right: 1rem;
+  border-right: 1px solid #e0e0e0; /* Линия справа от изображения */
+  padding-right: 1rem;
 }
 
-.news-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 100%;
+.title-block {
+  flex: 1; /* Заголовок будет занимать доступное пространство */
+  border-right: 1px solid #e0e0e0; /* Линия справа от заголовка */
+  padding-right: 1rem;
 }
 
-.news-header {
-  display: flex;
-  flex-direction: column;
-}
-
-.news-date {
+.date-block {
   font-size: 0.875rem;
   color: #888;
+  border-right: 1px solid #e0e0e0; /* Линия справа от даты */
+  padding-right: 1rem;
 }
 
 .news-title {
@@ -248,30 +296,26 @@ onMounted(() => {
   margin-top: 0.5rem;
 }
 
-.news-content {
-  font-size: 1rem;
-  color: #555;
+.news-date {
+  font-size: 0.875rem;
+  color: #888;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.news-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 0.5rem;
 }
 
 .image-upload {
   margin-top: 10px;
-}
-
-.image-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 150px;
-  height: 150px;
-  margin: 0 auto;
-  padding-left: 1rem;
-}
-
-.news-image {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 0.5rem;
 }
 
 .tag-overlay {
@@ -281,5 +325,13 @@ onMounted(() => {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 0.25rem;
   padding: 0.5rem;
+}
+
+.image-label,
+.title-label,
+.date-label,
+.actions-label {
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 </style>
