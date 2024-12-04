@@ -138,4 +138,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
+
+
 ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Использование базы данных для хранения сессий
+SESSION_COOKIE_AGE = 1209600  # 2 недели по умолчанию
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Сессия не завершится при закрытии браузера (если 'remember me')

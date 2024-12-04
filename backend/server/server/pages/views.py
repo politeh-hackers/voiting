@@ -1,17 +1,13 @@
+import json
 import os
-from gc import get_objects
-
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import get_object_or_404
-
-from server import settings
 from .models import Category, Appeal, Actual, Media
 from .services import MediaService, AppealService, ActualService, CategoryService
 import uuid
 from django.http import JsonResponse, HttpRequest
 from django.views import View
-import json
+
 
 class MediaView(View):
     test_service = MediaService(model=Media)
@@ -37,7 +33,6 @@ class MediaView(View):
                         os.remove(image_path)
         self.test_service.delete(model_id=model_id)
         return JsonResponse(None, safe=False)
-
 
 class ImageView(View):
     test_service = MediaService(model=Media)
