@@ -34,6 +34,14 @@ class MediaView(View):
         self.test_service.delete(model_id=model_id)
         return JsonResponse(None, safe=False)
 
+    def patch(self, request: HttpRequest, model_id: uuid.UUID):
+        try:
+            body = json.loads(request.body)
+            self.test_service.update(model_id=model_id, data=body)
+            return JsonResponse(self.test_service.get_all(), safe=False)
+        except (ValueError, TypeError):
+            return JsonResponse({"error": "Invalid UUID"}, status=400)
+
 class ImageView(View):
     test_service = MediaService(model=Media)
 
@@ -57,8 +65,6 @@ class ImageView(View):
                 "size": data.size,
                 "type": data.content_type
             }, safe=False)
-
-    
 
     def delete(self, request: HttpRequest, file_name: str):
         image_path = os.path.join('static/images', file_name)
