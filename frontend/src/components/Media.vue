@@ -1,39 +1,84 @@
 <template>
-  <div class="card flex justify-center">
-    <Button class="content__view" label="Добавить новость" @click="visible = true" />
-    <Dialog v-model:visible="visible" @show="initializeEditor" modal header="Добавить новость" :style="{ width: '60rem' }">
-      
+  <div class="card flex flex-column">
+    <Button
+      class="content__view"
+      label="Добавить новость"
+      @click="visible = true"
+    />
+    <Dialog
+      v-model:visible="visible"
+      @show="initializeEditor"
+      modal
+      header="Добавить новость"
+      :style="{ width: '60rem' }"
+    >
       <div class="content__main">
-      <div class="header">
-        <InputText
-          v-model="post.header"
-          placeholder="header"
-          class="header__input"
-        ></InputText>
-      </div>
+        <div class="header">
+          <InputText
+            v-model="post.header"
+            placeholder="Заголовок"
+            class="header__input"
+          />
+        </div>
 
-      <!-- Контейнер для EditorJS -->
-      <div ref="editorContainer" class="content-editor"></div>
+        <div ref="editorContainer" class="content-editor"></div>
 
-      <div class="date__picker">
-        <DatePicker v-model="post.date_created" />
+        <div class="date__picker">
+          <DatePicker v-model="post.date_created" />
+        </div>
+
+        <Button icon="pi pi-check" @click="addPost" />
       </div>
-      <!-- <InputText v-model="post.media_tags" placeholder="header" class="header__input"></InputText> -->
-      <Button icon="pi pi-check" @click="addPost"></Button>
-    </div>
     </Dialog>
-    
+
+    <!-- DataView для отображения списка новостей -->
+    <DataView :value="newsList" paginator :rows="5" dataKey="'id'">
+      <template #list="slotProps">
+        <div class="news-container">
+          <div v-for="(newsItem, index) in slotProps.items" :key="newsItem.id">
+            <div class="news-item" :class="{ 'border-top': index !== 0 }">
+              <!-- Контент новости слева -->
+              <div class="news-info">
+                <div class="news-header">
+                  <span class="news-date">
+                    {{ new Date(newsItem.date_created).toLocaleDateString() }}
+                  </span>
+                  <div class="news-title">{{ newsItem.header }}</div>
+                </div>
+
+                <div class="news-content" v-html="renderBlocks(newsItem.content)"></div>
+              </div>
+
+              <!-- Изображение новости справа -->
+              <div class="image-container">
+                <!-- Проверка на наличие изображения в контенте -->
+                <img 
+                  v-if="newsItem.image" 
+                  class="news-image" 
+                  :src="`http://localhost:8000/static/images/${newsItem.image}`" 
+                  :alt="newsItem.header"
+                />
+                <div v-if="newsItem.image" class="tag-overlay">
+                  <Tag :value="'News'" severity="info"></Tag>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </DataView>
   </div>
 </template>
 
 <script setup lang="ts">
-import { PostService, Post } from "../api/serviceformedia";
+import { ref, onMounted } from "vue";
 import InputText from "primevue/inputtext";
-import { onMounted, ref, watch } from "vue";
-import { initEditor } from "../editor.js/editor-init"; // Импорт функции инициализации
 import DatePicker from "primevue/datepicker";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
+import DataView from "primevue/dataview";
+import { PostService, Post } from "../api/serviceformedia";
+import { initEditor } from "../editor.js/editor-init";
 
 const post = ref<Post>({
   header: "",
@@ -41,99 +86,193 @@ const post = ref<Post>({
   date_created: new Date(),
 });
 
-const postService = new PostService();
-const baseAdmin = "admin";
-const prefix = "test";
-
 const visible = ref(false);
+const editorContainer = ref<HTMLElement | null>(null);
+let editorInstance: any = null;
+
+const newsList = ref<Post[]>([]); // Список новостей
+const postService = new PostService();
+
+const renderBlocks = (content: string): string => {
+  try {
+    const parsedContent = JSON.parse(content);
+
+    // Проверяем, что блоки есть и это массив
+    if (parsedContent.blocks && Array.isArray(parsedContent.blocks)) {
+      return parsedContent.blocks
+        .map((block) => {
+          if (block.type === "image" && block.data.file && block.data.file.url) {
+            // Рендер блока изображения
+            return `<img src="${block.data.file.url}" alt="image" style="max-width: 100%; margin-bottom: 10px;" />`;
+          }
+          // Можно добавить другие блоки по мере необходимости
+          return "";
+        })
+        .join(""); // Склеиваем все блоки в строку
+    }
+  } catch (error) {
+    console.error("Error parsing content:", error);
+  }
+  return "";
+};
+
+// Загрузка списка новостей
+const loadNews = async () => {
+  try {
+    const response = await fetch("http://localhost:8000/admin/media");
+    if (response.ok) {
+      newsList.value = await response.json();
+    } else {
+      console.error("Failed to load news:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error loading news:", error);
+  }
+};
+
 const addPost = async () => {
-  // Save the current content from the editor into post.content
   post.value.content = await editorInstance
     .save()
     .then((data) => JSON.stringify(data));
 
-  let content = new FormData();
+  const content = new FormData();
   content.append("content", post.value.content);
   content.append("header", post.value.header);
 
-  // Send the request using HTTP
-  fetch("http://localhost:8000/admin/media", {
-    method: "POST",
-    body: content,
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("Network response was not ok: " + response.statusText);
-      }
-    })
-    .then((data) => {
-      console.log("Success:", data); // Log the success response
-    })
-    .catch((error) => {
-      console.error("Error:", error); // Handle any errors
+  try {
+    const response = await fetch("http://localhost:8000/admin/media", {
+      method: "POST",
+      body: content,
     });
 
-  // Clear fields
-  post.value.header = "";
-  post.value.content = "";
-  post.value.date_created = new Date();
+    if (response.ok) {
+      console.log("Post added successfully");
+      loadNews(); // Обновление списка новостей
+    } else {
+      console.error("Error adding post:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
 
-  // Clear the editor
+  post.value = {
+    header: "",
+    content: "",
+    date_created: new Date(),
+  };
+
   editorInstance.clear();
 };
 
-// Ссылка на контейнер редактора
-const editorContainer = ref<HTMLElement | null>(null);
-// Экземпляр редактора
-let editorInstance: any = null;
-
-// Инициализация редактора при монтировании компонента
 const initializeEditor = () => {
   if (editorContainer.value) {
-    console.log("Initializing editor...");
-    editorInstance = initEditor(
-      editorContainer.value,
-      JSON.parse(post.value.content || "{}")
-    );
+    editorInstance = initEditor(editorContainer.value, {});
   }
 };
 
-// Наблюдение за изменением post.content
-watch(
-  () => post.value.content,
-  (newContent) => {
-    if (editorInstance) {
-      // Обновление контента редактора при изменении post.content
-      editorInstance.render(JSON.parse(newContent || "{}"));
-    }
-  }
-);
+onMounted(() => {
+  loadNews(); // Загрузка новостей при монтировании
+});
 </script>
 
-
 <style lang="scss">
-/* Стили для редактора */
 .content-editor {
   border: 1px solid #ccc;
   padding: 10px;
   min-height: 200px;
 }
-.header {
+
+.news-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.news-item {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  gap: 1rem;
+}
+
+.border-top {
+  border-top: 1px solid #e0e0e0;
+}
+
+.news-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.news-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.news-date {
+  font-size: 0.875rem;
+  color: #888;
+}
+
+.news-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.news-content {
+  font-size: 1rem;
+  color: #555;
+  margin: 0;
+  max-width: 50px;
+  max-height: 50px;
+}
+img {
+  width: 50px;        /* Устанавливаем ширину изображения */
+  height: 50px;       /* Устанавливаем высоту изображения */
+  object-fit: cover;  /* Изображение будет обрезано, чтобы заполнить контейнер */
+  border-radius: 5px; /* Добавим скругление углов, если нужно */
+}
+.image-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  padding-left: 1rem;
 }
-.header__input {
-  width: 100%;
+
+.news-image {
+  width: 50px;  /* Устанавливаем ширину изображения 50px */
+  height: 50px; /* Устанавливаем высоту изображения 50px */
+  object-fit: cover; /* Изображение не будет искажаться, сохраняются пропорции */
+  border-radius: 0.5rem;
 }
-.content__main {
-  display: flex; /* Добавляем flex-контейнер */
-  flex-direction: column;
-  gap: 10px;
+
+.tag-overlay {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
 }
-.content__view{
-  width: 100%;
+
+@media (min-width: 768px) {
+  .news-item {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .news-info {
+    flex-grow: 1;
+  }
+
+  .image-container {
+    max-width: 50px; /* Ограничиваем контейнер до 50px */
+    padding-left: 1.5rem;
+  }
 }
 </style>

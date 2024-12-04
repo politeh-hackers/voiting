@@ -51,6 +51,7 @@ export class ApiService<T> {
 }
 
 export interface Post extends BaseUUIDSchema {
+    
     header:string
     content:string
     date_created:Date
