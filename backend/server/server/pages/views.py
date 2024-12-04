@@ -35,12 +35,9 @@ class MediaView(View):
         return JsonResponse(None, safe=False)
 
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
-        try:
-            body = json.loads(request.body)
-            self.test_service.update(model_id=model_id, data=body)
-            return JsonResponse(self.test_service.get_all(), safe=False)
-        except (ValueError, TypeError):
-            return JsonResponse({"error": "Invalid UUID"}, status=400)
+        data = json.loads(request.body)
+        self.test_service.update(model_id=model_id, data=data)
+        return JsonResponse(self.test_service.get_all(), safe=False)
 
 class ImageView(View):
     test_service = MediaService(model=Media)
