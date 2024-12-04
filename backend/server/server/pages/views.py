@@ -41,7 +41,10 @@ class ImageView(View):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
     def post(self, request: WSGIRequest):
-        data = request.FILES["image"]
+        if "main_photo" in request.FILES:
+            data = request.FILES["main_photo"]
+        elif "image" in request.FILES:
+            data = request.FILES["image"]
         data_str = str(data)
         image_path = os.path.join('static/images', data_str)
         with open(image_path, 'wb') as image_file:
@@ -55,20 +58,7 @@ class ImageView(View):
                 "type": data.content_type
             }, safe=False)
 
-    def post_main_photo(self, request: WSGIRequest):
-        data = request.FILES["main_photo"]
-        data_str = str(data)
-        image_path = os.path.join('static/images', data_str)
-        with open(image_path, 'wb') as image_file:
-            for chunk in data.chunks():
-                image_file.write(chunk)
-        return JsonResponse(
-            {
-                "url": f"http://localhost:8000/static/images/{data_str}",
-                "name": data_str,
-                "size": data.size,
-                "type": data.content_type
-            }, safe=False)
+    
 
     def delete(self, request: HttpRequest, file_name: str):
         image_path = os.path.join('static/images', file_name)
