@@ -11,6 +11,7 @@
       modal
       header="Добавить новость"
       :style="{ width: '60rem' }"
+      class="dialog-main"
     >
       <div class="content__main">
         <div class="header">
@@ -32,7 +33,7 @@
           <label for="image-upload">Загрузить изображение:</label>
           <FileUpload
             name="main_photo"
-            :url="'http://localhost:8000/admin/image'" 
+            :url="'http://localhost:8000/admin/image'"
             accept="image/*"
             :auto="true"
             @upload="onImageUpload"
@@ -49,20 +50,71 @@
         <Button icon="pi pi-check" @click="addPost" />
       </div>
     </Dialog>
+    <Dialog
+      v-model:visible="visibledt"
+      @show="initializeEditor"
+      modal
+      header="Добавить новость"
+      :style="{ width: '60rem' }"
+      class="dialog-edit"
+    >
+      <div class="content__main">
+        <div class="header">
+          <InputText
+            v-model="post.header"
+            placeholder="Заголовок"
+            class="header__input"
+          />
+        </div>
+        <div class="summary">
+          <InputText
+            v-model="post.summary"
+            placeholder="Краткое описание"
+            class="summary_input"
+          />
+        </div>
 
-    <!-- Заголовки для карточек новостей, которые больше не будут повторяться -->
-    
+        <div class="image-upload">
+          <label for="image-upload">Загрузить изображение:</label>
+          <FileUpload
+            name="main_photo"
+            :url="'http://localhost:8000/admin/image'"
+            accept="image/*"
+            :auto="true"
+            @upload="onImageUpload"
+            chooseLabel="Выбрать изображение"
+          />
+        </div>
 
-    <!-- DataView для отображения списка новостей -->
-    <DataView :value="newsList" paginator :rows="5" dataKey="'id'">
+        <div ref="editorContainer" class="content-editor"></div>
+
+        <div class="date__picker">
+          <DatePicker v-model="post.date_created" />
+        </div>
+
+        <Button icon="pi pi-check" @click="SaveEditedPost" />
+      </div>
+    </Dialog>
+
+    <DataView
+      :value="newsList"
+      paginator
+      :rows="5"
+      dataKey="'id'"
+      class="main-dataview"
+    >
       <template #list="slotProps">
         <div class="news-container">
-          <div v-for="(newsItem) in slotProps.items" :key="newsItem.id" class="news-item">
+          <div
+            v-for="newsItem in slotProps.items"
+            :key="newsItem.id"
+            class="news-item"
+          >
             <div class="image-block">
-              <img 
-                v-if="newsItem.main_photo" 
-                class="news-image" 
-                :src="`http://localhost:8000/static/images/${newsItem.main_photo}`" 
+              <img
+                v-if="newsItem.main_photo"
+                class="news-image"
+                :src="`http://localhost:8000/static/images/${newsItem.main_photo}`"
                 :alt="newsItem.header"
               />
             </div>
@@ -75,17 +127,17 @@
               </span>
             </div>
             <div class="action-buttons">
-              <Button 
-                icon="pi pi-pencil" 
-                label="Редактировать" 
-                class="p-button-warning p-mr-2" 
-                @click="editPost(newsItem)" 
+              <Button
+                icon="pi pi-pencil"
+                label="Редактировать"
+                class="p-button-warning p-mr-2"
+                @click="editPost(newsItem)"
               />
-              <Button 
-                icon="pi pi-trash" 
-                label="Удалить" 
-                class="p-button-danger" 
-                @click="deletePost(newsItem.id)" 
+              <Button
+                icon="pi pi-trash"
+                label="Удалить"
+                class="p-button-danger"
+                @click="deletePost(newsItem.id)"
               />
             </div>
           </div>
@@ -116,6 +168,7 @@ const post = ref<Post>({
 });
 
 const visible = ref(false);
+const visibledt = ref(false);
 const editorContainer = ref<HTMLElement | null>(null);
 let editorInstance: any = null;
 
@@ -131,6 +184,58 @@ const onImageUpload = (event: any) => {
   }
 };
 
+const SaveEditedPost = async () => {
+  if (!post.value.id) {
+    console.error("Post ID is missing");
+    return;
+  }
+
+  // Получаем обновленный контент из редактора
+  post.value.content = await editorInstance
+    .save()
+    .then((data) => JSON.stringify(data));
+
+  const postData = {
+    content: post.value.content,
+    header: post.value.header,
+    summary: post.value.summary,
+    main_photo: post.value.main_photo, // При необходимости отправьте изображение
+  };
+
+  try {
+    // Отправка PATCH-запроса с JSON
+    const response = await fetch(
+      `http://localhost:8000/admin/media/${post.value.id}`,
+      {
+        method: "PATCH", // Используем PATCH для обновления
+        headers: {
+          "Content-Type": "application/json", // Указываем, что данные передаются в формате JSON
+        },
+        body: JSON.stringify(postData), // Преобразуем данные в JSON-строку
+      }
+    );
+
+    if (response.ok) {
+      console.log("Post edited successfully");
+      loadNews(); // Обновление списка новостей
+      post.value = {
+        // Сбрасываем форму
+        summary: "",
+        main_photo: "",
+        header: "",
+        content: "",
+        date_created: new Date(),
+      };
+      visibledt.value = false; // Закрытие диалога после сохранения изменений
+    } else {
+      const errorData = await response.json();
+      console.error("Error updating post:", errorData);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
 const renderBlocks = (content: string): string => {
   try {
     const parsedContent = JSON.parse(content);
@@ -138,7 +243,11 @@ const renderBlocks = (content: string): string => {
     if (parsedContent.blocks && Array.isArray(parsedContent.blocks)) {
       return parsedContent.blocks
         .map((block) => {
-          if (block.type === "image" && block.data.file && block.data.file.url) {
+          if (
+            block.type === "image" &&
+            block.data.file &&
+            block.data.file.url
+          ) {
             return `<img src="${block.data.file.url}" alt="image" style="max-width: 100%; margin-bottom: 10px;" />`;
           }
           return "";
@@ -166,7 +275,6 @@ const loadNews = async () => {
 };
 
 const addPost = async () => {
-  
   post.value.content = await editorInstance
     .save()
     .then((data) => JSON.stringify(data));
@@ -174,6 +282,7 @@ const addPost = async () => {
   const content = new FormData();
   content.append("content", post.value.content);
   content.append("header", post.value.header);
+  content.append("summary", post.value.summary);
 
   // Добавление изображения, если оно есть
   if (post.value.main_photo) {
@@ -201,22 +310,45 @@ const addPost = async () => {
 };
 
 // Редактирование новости
-const editPost = (newsItem: Post) => {
-  post.value = { ...newsItem }; // Заполняем форму данными новости
-  visible.value = true; // Открываем диалог
-  editorInstance.setData(newsItem.content); // Заполняем редактор контентом
-  if(visible.value = false){
-    post.value.header = ""
-    post.value.date_created = new Date()
-  }
+const editPost = (newsItem) => {
+  post.value.id = newsItem.id;
+  post.value.header = newsItem.header;
+  post.value.summary = newsItem.summary;
+  post.value.main_photo = newsItem.main_photo;
+  post.value.content = newsItem.content;
+
+  visibledt.value = true; // Открываем диалог
+
+  setTimeout(() => {
+    try {
+      // Преобразуем строку в объект и передаем только блоки
+      const editorData = {
+        blocks: JSON.parse(newsItem.content).blocks,
+      };
+
+      if (editorInstance) {
+        editorInstance.clear();
+        editorInstance.render(editorData);
+      } else {
+        initializeEditor();
+        editorInstance.render(editorData);
+      }
+    } catch (error) {
+      console.error("Error rendering editor data:", error);
+    }
+  }, 100);
 };
 
 // Удаление новости
 const deletePost = async (postId: string) => {
   try {
-    const response = await fetch(`http://localhost:8000/admin/media/${postId}`, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      `http://localhost:8000/admin/media/${postId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    deleteImage("http://localhost:8000/admin/media");
     if (response.ok) {
       console.log("Post deleted successfully");
       loadNews(); // Обновление списка новостей
@@ -227,7 +359,21 @@ const deletePost = async (postId: string) => {
     console.error("Error:", error);
   }
 };
+const deleteImage = (fileUrl: string) => {
+  const imageName = fileUrl.split("/").pop();
 
+  return fetch(`http://127.0.0.1:8000/admin/image/${imageName}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ file_url: fileUrl }),
+  }).then((response) => {
+    if (!response.ok) {
+      alert("Ошибка при удалении изображения. Свяжитесь с администратором.");
+    }
+  });
+};
 const initializeEditor = () => {
   if (editorContainer.value) {
     editorInstance = initEditor(editorContainer.value, {});
