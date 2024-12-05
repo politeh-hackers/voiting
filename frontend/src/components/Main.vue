@@ -18,7 +18,7 @@ const login = async () => {
   formState.value.errorMessage = '';
 
   try {
-    const response = await axios.post('http://127.0.0.1:8000/login', {
+    const response = await axios.post('http://127.0.0.1:8000/admin/login', {
       login: formState.value.login,
       password: formState.value.password,
     });

@@ -50,7 +50,7 @@ class ImageView(View):
             data = request.FILES["main_photo"]
         elif "image" in request.FILES:
             data = request.FILES["image"]
-        data_str = str(data)
+        data_str = str(data) 
         image_path = os.path.join('static/images', data_str)
         with open(image_path, 'wb') as image_file:
             for chunk in data.chunks():

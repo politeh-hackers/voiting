@@ -34,7 +34,7 @@ export default createRouter(
             },
             {
                 name: 'Admin',
-                path: '/Admin',
+                path: '/login',
                 component: Admin,
 
             }
