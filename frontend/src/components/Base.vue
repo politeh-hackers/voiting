@@ -9,6 +9,7 @@ import { InputIcon } from "primevue";
 import { IconField } from "primevue";
 import { SplitButton } from "primevue";
 import { Avatar } from "primevue";
+import SpeedDial from 'primevue/speeddial';
 
 const router = useRouter();
 const items = ref([
@@ -39,9 +40,9 @@ const items2 = ref([
       <!-- Правая область для отображения содержимого -->
       <div class="content">
         <div class="card">
-      <Toolbar>
-          <template #end> <SplitButton label="Настройки" :model="items2"></SplitButton></template>
-      </Toolbar>
+      <div>
+          <SpeedDial :model="items2" direction="up" style="position: absolute; left: calc(2%); bottom: 3%" />
+      </div>
   </div>
         <RouterView />
       </div>
@@ -95,6 +96,3 @@ h1 {
   padding: 0;
 }
 </style>
-
-
-

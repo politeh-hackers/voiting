@@ -12,10 +12,12 @@ const formState = ref({
   login: '',
   password: '',
   errorMessage: '',
+  successMessage: '',
 });
 
 const login = async () => {
   formState.value.errorMessage = '';
+  formState.value.successMessage = '';
 
   try {
     const response = await axios.post('http://127.0.0.1:8000/admin/login', {
@@ -24,7 +26,12 @@ const login = async () => {
     });
 
     if (response.data.success) {
-      router.push({ name: 'Base' });
+      formState.value.successMessage = 'Авторизация успешна!';
+      formState.value.errorMessage = '';
+
+      setTimeout(() => {
+        router.push({ name: 'Base' });
+      }, 1000);
     } else {
       formState.value.errorMessage = response.data.message;
     }
@@ -45,8 +52,21 @@ const login = async () => {
         <InputText v-model="formState.password" type="password" placeholder="Пароль" />
       </div>
       <div class="form-group message-container">
-        <Message v-if="formState.errorMessage" severity="error" size="small" variant="simple">
+        <!-- Сообщение об ошибке -->
+        <Message 
+          v-if="formState.errorMessage" 
+          severity="error" 
+          size="small" 
+          variant="simple">
           {{ formState.errorMessage }}
+        </Message>
+        <!-- Сообщение об успехе -->
+        <Message 
+          v-if="formState.successMessage" 
+          severity="success" 
+          size="small" 
+          variant="simple">
+          {{ formState.successMessage }}
         </Message>
       </div>
       <Button type="submit" label="Войти" />

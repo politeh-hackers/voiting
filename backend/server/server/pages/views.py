@@ -10,6 +10,7 @@ from django.views import View
 
 
 class MediaView(View):
+
     test_service = MediaService(model=Media)
 
 
@@ -22,7 +23,38 @@ class MediaView(View):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
-        id = get_object_or_404(Media, id=model_id)
+        media_instance = get_object_or_404(Media, id=model_id)
+        main_photo = media_instance.main_photo
+        if main_photo:
+            main_photo_path = os.path.join('static/images', main_photo)
+            if os.path.exists(main_photo_path):
+                os.remove(main_photo_path)
+        content = media_instance.content
+        if content:
+            for block in json.loads(content).get("blocks", []):
+                if block.get("type") == "image":
+                    file_name = block["data"]["file"]["name"]
+                    image_path = os.path.join('static/images', file_name)
+                    if os.path.exists(image_path):
+                        os.remove(image_path)
+        self.test_service.delete(model_id=model_id)
+
+        return JsonResponse(None, safe=False)
+
+class ActualView(View):
+
+    test_service = ActualService(model=Actual)
+
+    def get(self, request: HttpRequest):
+        return JsonResponse(self.test_service.get_all(), safe=False)
+
+    def post(self, request):
+        data = request.POST.dict()
+        self.test_service.create(data)
+        return JsonResponse(self.test_service.get_all(), safe=False)
+
+    def delete(self, request: HttpRequest, model_id: uuid.UUID):
+        id = get_object_or_404(Actual, id=model_id)
         content = id.content
         if content:
             for block in json.loads(content).get("blocks", []):
@@ -40,7 +72,8 @@ class MediaView(View):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
 class ImageView(View):
-    test_service = MediaService(model=Media)
+    
+    test_service = MediaService(model=Media) or ActualService(model=Actual)
 
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
@@ -87,33 +120,6 @@ class ImageView(View):
     #         return JsonResponse(self.test_service.get_all(), safe=False)
     #     except (ValueError, TypeError):
     #         return JsonResponse({"error": "Invalid UUID"}, status=400)
-
-class ActualView(View):
-    test_service = ActualService(model=Actual)
-
-    def get(self, request: HttpRequest):
-        return JsonResponse(self.test_service.get_all(), safe=False)
-
-    def post(self, request: HttpRequest):
-        data = json.loads(request.body)
-        self.test_service.validation(data)
-        self.test_service.create(data)
-        return JsonResponse(self.test_service.get_all(), safe=False)
-
-    def delete(self, request: HttpRequest, model_id: uuid.UUID):
-        try:
-            self.test_service.delete(model_id=model_id)
-            return JsonResponse(self.test_service.get_all(), safe=False, status=204)
-        except (ValueError, TypeError):
-            return JsonResponse({"error": "Invalid UUID"}, status=400)
-
-    def patch(self, request: HttpRequest, model_id: uuid.UUID):
-        try:
-            body = json.loads(request.body)
-            self.test_service.update(model_id=model_id, data=body)
-            return JsonResponse(self.test_service.get_all(), safe=False)
-        except (ValueError, TypeError):
-            return JsonResponse({"error": "Invalid UUID"}, status=400)
 
 class AppealView(View):
     test_service = AppealService(model=Appeal)

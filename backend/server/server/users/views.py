@@ -35,3 +35,6 @@ class Registration(View):
 
         Admins.objects.create(login=login, password=password)
         return JsonResponse({"success": True})
+
+
+    

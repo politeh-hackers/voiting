@@ -3,7 +3,10 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Message from 'primevue/message';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
+
+const router = useRouter();
 
 const formState = ref({
   login: '',
@@ -25,7 +28,12 @@ const register = async () => {
     if (response.data.success) {
       formState.value.successMessage = 'Регистрация успешна!';
       formState.value.errorMessage = '';
+
+      setTimeout(() => {
+        router.push({ name: 'Base' });
+      }, 1000);
     } else {
+      // Отображаем ошибки, полученные от сервера
       formState.value.errorMessage = response.data.message;
     }
   } catch (error) {
@@ -45,10 +53,21 @@ const register = async () => {
         <InputText v-model="formState.password" type="password" placeholder="Пароль" />
       </div>
       <div class="form-group message-container">
-        <Message v-if="formState.errorMessage" severity="error" size="small" variant="simple">
+        <!-- Показываем сообщение об ошибке, если оно есть -->
+        <Message 
+          v-if="formState.errorMessage" 
+          severity="error" 
+          size="small" 
+          variant="simple">
           {{ formState.errorMessage }}
         </Message>
-        <Message v-if="formState.successMessage" severity="success" size="small" variant="simple">
+        
+        <!-- Показываем сообщение об успехе, если оно есть -->
+        <Message 
+          v-if="formState.successMessage" 
+          severity="success" 
+          size="small" 
+          variant="simple">
           {{ formState.successMessage }}
         </Message>
       </div>

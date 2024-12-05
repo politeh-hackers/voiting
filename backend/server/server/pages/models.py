@@ -59,15 +59,15 @@ class Media(BaseUUID):
     def __str__(self):
         return self.header
 
-class Actual(BaseUUID):  # Наследует только от Basic
+class Actual(BaseUUID): 
     h1 = models.CharField(max_length=60, blank=True)
     title = models.CharField(max_length=80, blank=True)
     description = models.CharField(max_length=160, blank=True)
     header = models.CharField(max_length=200)
-    content = models.TextField()
-    photos = models.CharField(max_length=255, null=True, blank=True)
+    summary = models.CharField(max_length=100, blank=True)
+    main_photo = models.TextField(blank=True)
+    content = models.JSONField()
     date_created = models.DateTimeField(default=timezone.now)
-
     actual_tags = models.ManyToManyField(ActualTag, related_name="actual", blank=True)
 
     class Meta:
