@@ -3,28 +3,28 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Message from 'primevue/message';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import axios from 'axios';
-
-const router = useRouter();
 
 const formState = ref({
   login: '',
   password: '',
   errorMessage: '',
+  successMessage: '',
 });
 
-const login = async () => {
+const register = async () => {
   formState.value.errorMessage = '';
+  formState.value.successMessage = '';
 
   try {
-    const response = await axios.post('http://127.0.0.1:8000/login', {
+    const response = await axios.post('http://127.0.0.1:8000/register/', {
       login: formState.value.login,
       password: formState.value.password,
     });
 
     if (response.data.success) {
-      router.push({ name: 'Base' });
+      formState.value.successMessage = 'Регистрация успешна!';
+      formState.value.errorMessage = '';
     } else {
       formState.value.errorMessage = response.data.message;
     }
@@ -37,7 +37,7 @@ const login = async () => {
 
 <template>
   <div class="main__menu">
-    <form @submit.prevent="login" class="form">
+    <form @submit.prevent="register" class="form">
       <div class="form-group">
         <InputText v-model="formState.login" type="text" placeholder="Логин" />
       </div>
@@ -48,8 +48,11 @@ const login = async () => {
         <Message v-if="formState.errorMessage" severity="error" size="small" variant="simple">
           {{ formState.errorMessage }}
         </Message>
+        <Message v-if="formState.successMessage" severity="success" size="small" variant="simple">
+          {{ formState.successMessage }}
+        </Message>
       </div>
-      <Button type="submit" label="Войти" />
+      <Button type="submit" label="Зарегистрироваться" />
     </form>
   </div>
 </template>

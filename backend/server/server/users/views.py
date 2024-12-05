@@ -9,27 +9,29 @@ import json
 from django.views import View
 from base.service import BaseValidationService
 
-class Registration(View):
+class Login(View):
     test_service = AdminsService(model=Admins)
-
-    def save(self, *args, **kwargs):
-        if self.remember_me:
-            self.expires_at = now() + timedelta(weeks=2)  # 2 недели
-        else:
-            self.expires_at = now() + timedelta(hours=1)  # 1 час
-        super().save(*args, **kwargs)
-
 
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
-        self.test_service.validation(data)
-        self.test_service.create(data)
-        return JsonResponse(self.test_service.get_all(), safe=False)
+        if self.test_service.authenticate(data['login'], data['password']):
+            return JsonResponse({"success": True})
+        return JsonResponse({"success": False, "message": "Неверный логин или пароль"})
 
-def set(request):
-    login = request.GET.get('login')
-    password = request.GET.get('password')
+class Registration(View):
+    def post(self, request: HttpRequest):
+        data = json.loads(request.body)
+        login = data.get('login')
+        password = data.get('password')
 
+        if not login or not password:
+            return JsonResponse({"success": False, "message": "Логин и пароль обязательны."})
+
+        if Admins.objects.filter(login=login).exists():
+            return JsonResponse({"success": False, "message": "Пользователь с таким логином уже существует."})
+
+        Admins.objects.create(login=login, password=password)
+        return JsonResponse({"success": True})

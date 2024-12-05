@@ -19,13 +19,11 @@ const items = ref([
 ]);
 
 const items2 = ref([
-  {
-      label: 'Добавить админа',
-      icon: 'pi pi-refresh'
-  }
+  { label: 'Добавить админа', command: () => router.push("/Admin"), icon: 'pi pi-user' },
+  { label: 'Теги', icon: 'pi pi-hashtag'}
+]);
 
-])
-const text = ref();
+
 </script>
 
 <template>
@@ -42,7 +40,7 @@ const text = ref();
       <div class="content">
         <div class="card">
       <Toolbar>
-          <template #end> <SplitButton label="Save" :model="items2"></SplitButton></template>
+          <template #end> <SplitButton label="Настройки" :model="items2"></SplitButton></template>
       </Toolbar>
   </div>
         <RouterView />
