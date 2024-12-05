@@ -17,7 +17,7 @@ const register = async () => {
   formState.value.successMessage = '';
 
   try {
-    const response = await axios.post('http://127.0.0.1:8000/register/', {
+    const response = await axios.post('http://127.0.0.1:8000/admin/registration', {
       login: formState.value.login,
       password: formState.value.password,
     });
