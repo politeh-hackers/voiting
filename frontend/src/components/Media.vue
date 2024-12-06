@@ -44,7 +44,7 @@
         <div ref="editorContainer" class="content-editor"></div>
 
         <div class="date__picker">
-          <DatePicker v-model="post.date_created" />
+          <DatePicker v-model="post.date_created" dateFormat ="yy/mm/dd" />
         </div>
 
         <Button icon="pi pi-check" @click="addPost" />
@@ -89,7 +89,7 @@
         <div ref="editorContainer" class="content-editor"></div>
 
         <div class="date__picker">
-          <DatePicker v-model="post.date_created" />
+          <DatePicker v-model="post.date_created" dateFormat ="d-m-y"/>
         </div>
 
         <Button icon="pi pi-check" @click="SaveEditedPost" />
@@ -222,41 +222,32 @@ const onImageUpload = (event: any) => {
 
 const SaveEditedPost = async () => {
   if (!post.value.id) {
-    console.error("Post ID is missing");
+    console.error("Отсутствует ID поста");
     return;
   }
 
-  post.value.content = await editorInstance
-    .save()
-    .then((data) => JSON.stringify(data));
+  post.value.content = await editorInstance.save().then((data) => JSON.stringify(data));
 
   const postData = {
     content: post.value.content,
     header: post.value.header,
     summary: post.value.summary,
-    main_photo: post.value.main_photo, 
+    main_photo: post.value.main_photo,
   };
 
+  const formattedDate = post.value.date_created.toLocaleDateString('en-CA'); 
+
   try {
-    const response = await fetch(
-      `http://localhost:8000/admin/media/${post.value.id}`,
-      {
-        method: "PATCH", 
-        headers: {
-          "Content-Type": "application/json", 
-        },
-        body: JSON.stringify(postData),
-      }
-    );
+    const response = await fetch(`http://localhost:8000/admin/media/${post.value.id}`, {
+      method: "PATCH", 
+      headers: {
+        "Content-Type": "application/json", 
+      },
+      body: JSON.stringify({...postData, date_created: formattedDate}),
+    });
 
     if (response.ok) {
-      console.log("Post edited successfully");
-
-      // Удалить старое изображение, если оно было заменено
-      if (previousPhoto && previousPhoto !== post.value.main_photo) {
-        await deleteImage(previousPhoto);
-      }
-
+      console.log("Пост успешно отредактирован");
       loadNews(); 
       post.value = {
         summary: "",
@@ -268,36 +259,12 @@ const SaveEditedPost = async () => {
       visibledt.value = false; 
     } else {
       const errorData = await response.json();
-      console.error("Error updating post:", errorData);
+      console.error("Ошибка при обновлении поста:", errorData);
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Ошибка:", error);
   }
 };
-
-// const renderBlocks = (content: string): string => {
-//   try {
-//     const parsedContent = JSON.parse(content);
-
-//     if (parsedContent.blocks && Array.isArray(parsedContent.blocks)) {
-//       return parsedContent.blocks
-//         .map((block) => {
-//           if (
-//             block.type === "image" &&
-//             block.data.file &&
-//             block.data.file.url
-//           ) {
-//             return `<img src="${block.data.file.url}" alt="image" style="max-width: 100%; margin-bottom: 10px;" />`;
-//           }
-//           return "";
-//         })
-//         .join("");
-//     }
-//   } catch (error) {
-//     console.error("Error parsing content:", error);
-//   }
-//   return "";
-// };
 
 const loadNews = async () => {
   try {
@@ -318,9 +285,14 @@ const addPost = async () => {
     .then((data) => JSON.stringify(data));
 
   const content = new FormData();
+  
+  // Преобразуем дату в формат 'YYYY-MM-DD'
+  const formattedDate = post.value.date_created.toISOString().split('T')[0]; 
+
   content.append("content", post.value.content);
   content.append("header", post.value.header);
   content.append("summary", post.value.summary);
+  content.append("date_created", formattedDate); 
 
   if (post.value.main_photo) {
     content.append("main_photo", post.value.main_photo);
@@ -333,16 +305,16 @@ const addPost = async () => {
     });
 
     if (response.ok) {
-      console.log("Post added successfully");
+      console.log("Пост успешно добавлен");
       loadNews(); 
       post.value.header = "";
       post.value.summary = "";
       visible.value = false; 
     } else {
-      console.error("Error adding post:", response.statusText);
+      console.error("Ошибка при добавлении поста:", response.statusText);
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Ошибка:", error);
   }
 };
 
@@ -351,7 +323,7 @@ const editPost = (newsItem) => {
   post.value.id = newsItem.id;
   post.value.header = newsItem.header;
   post.value.summary = newsItem.summary;
-  previousPhoto = newsItem.main_photo; // Сохранить текущее изображение
+  previousPhoto = newsItem.main_photo; 
   post.value.main_photo = newsItem.main_photo;
   post.value.content = newsItem.content;
   post.value.date_created = newsItem.date_created
@@ -389,7 +361,7 @@ const deletePost = async (postId: string) => {
     deleteImage("http://localhost:8000/admin/media");
     if (response.ok) {
       console.log("Post deleted successfully");
-      loadNews(); // Обновление списка новостей
+      loadNews(); 
     } else {
       console.error("Error deleting post:", response.statusText);
     }
