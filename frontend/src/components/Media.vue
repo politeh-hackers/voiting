@@ -182,15 +182,15 @@ const post = ref<Post>({
   date_created: new Date(),
 });
 
-const sortOrder = ref("asc"); // По умолчанию сортировка от старшей к младшей
-let previousPhoto = ""; // Для хранения имени старого изображения
+const sortOrder = ref("asc"); 
+let previousPhoto = ""; // 
 const visible = ref(false);
 const visibledt = ref(false);
 const editorContainer = ref<HTMLElement | null>(null);
 let editorInstance: any = null;
 const newsList = ref<Post[]>([]); 
 const postService = new PostService();
-const searchQuery = ref(""); // Переменная для текста поиска
+const searchQuery = ref(""); 
 const sortOptions = [
   { label: "От старшей к младшей", value: "asc" },
   { label: "От младшей к старшей", value: "desc" },
@@ -354,6 +354,7 @@ const editPost = (newsItem) => {
   previousPhoto = newsItem.main_photo; // Сохранить текущее изображение
   post.value.main_photo = newsItem.main_photo;
   post.value.content = newsItem.content;
+  post.value.date_created = newsItem.date_created
 
   visibledt.value = true; 
 

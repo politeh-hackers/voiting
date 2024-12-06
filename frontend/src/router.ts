@@ -4,6 +4,7 @@ import Base from './components/Base.vue'
 import Form from './components/Category.vue'
 import Media from './components/Media.vue'
 import Admin from './components/Admin.vue'
+import Appeals from './components/Appeals.vue'
 
 export default createRouter(
     {
@@ -30,6 +31,11 @@ export default createRouter(
                             path: '/Media', // Дочерний маршрут (без начального "/")
                             component: Media, // Компонент HelloWorld.vue
                         },
+                        {
+                            name: 'Appeals',
+                            path: '/Appeals',
+                            component: Appeals
+                        }
                     ],
             },
             {

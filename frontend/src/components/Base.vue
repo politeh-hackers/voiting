@@ -15,7 +15,7 @@ const router = useRouter();
 const items = ref([
   { label: "Категории", command: () => router.push("/Form") },
   { label: "Медиа", command: () => router.push("/Media") },
-  { label: "Обращения" },
+  { label: "Обращения", command:()=> router.push("/Appeals") },
   { label: "Актуальное" },
 ]);
 
