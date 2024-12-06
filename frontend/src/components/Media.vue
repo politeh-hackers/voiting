@@ -54,7 +54,7 @@
       v-model:visible="visibledt"
       @show="initializeEditor"
       modal
-      header="Добавить новость"
+      header="Изменить новость"
       :style="{ width: '60rem' }"
       class="dialog-edit"
     >
@@ -75,7 +75,7 @@
         </div>
 
         <div class="image-upload">
-          <label for="image-upload">Загрузить изображение:</label>
+          <label for="image-upload">Изменить изображение:</label>
           <FileUpload
             name="main_photo"
             :url="'http://localhost:8000/admin/image'"
@@ -95,14 +95,27 @@
         <Button icon="pi pi-check" @click="SaveEditedPost" />
       </div>
     </Dialog>
-
+   
     <DataView
-      :value="newsList"
+      :value="filteredNewsList"
       paginator
       :rows="5"
       dataKey="'id'"
       class="main-dataview"
     >
+    <template #header><Dropdown
+    v-model="sortOrder"
+    :options="sortOptions"
+    optionLabel="label"
+    optionValue="value"
+    class="p-dropdown"
+  /><InputText
+    v-model="searchQuery"
+    placeholder="Поиск по описанию"
+    class="search-input"
+  />
+  
+</template>
       <template #list="slotProps">
         <div class="news-container">
           <div
@@ -149,15 +162,17 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import InputText from "primevue/inputtext";
 import DatePicker from "primevue/datepicker";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
 import DataView from "primevue/dataview";
-import FileUpload from "primevue/fileupload"; // Импортируем компонент FileUpload
+import FileUpload from "primevue/fileupload"; 
 import { PostService, Post } from "../api/serviceformedia";
 import { initEditor } from "../editor.js/editor-init";
+import Dropdown from 'primevue/dropdown';
+
 
 const post = ref<Post>({
   summary: "",
@@ -167,20 +182,41 @@ const post = ref<Post>({
   date_created: new Date(),
 });
 
+const sortOrder = ref("asc"); // По умолчанию сортировка от старшей к младшей
+let previousPhoto = ""; // Для хранения имени старого изображения
 const visible = ref(false);
 const visibledt = ref(false);
 const editorContainer = ref<HTMLElement | null>(null);
 let editorInstance: any = null;
-
-const newsList = ref<Post[]>([]); // Список новостей
+const newsList = ref<Post[]>([]); 
 const postService = new PostService();
+const searchQuery = ref(""); // Переменная для текста поиска
+const sortOptions = [
+  { label: "От старшей к младшей", value: "asc" },
+  { label: "От младшей к старшей", value: "desc" },
+];
 
-// Функция для обработки загрузки изображения
+// Вычисляемое свойство для фильтрации
+const filteredNewsList = computed(() => {
+  const filtered = newsList.value.filter((newsItem) =>
+    newsItem.summary.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    newsItem.header.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+
+  // Сортировка по дате
+  return filtered.sort((a, b) => {
+    const dateA = new Date(a.date_created).getTime();
+    const dateB = new Date(b.date_created).getTime();
+    return sortOrder.value === "asc" ? dateA - dateB : dateB - dateA;
+  });
+});
+const toggleSortOrder = () => {
+  sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
+};
 const onImageUpload = (event: any) => {
-  // При успешной загрузке изображения
   const uploadedImage = event.files[0];
   if (uploadedImage) {
-    post.value.main_photo = uploadedImage.name; // Сохраняем имя изображения в объект post
+    post.value.main_photo = uploadedImage.name; 
   }
 };
 
@@ -190,7 +226,6 @@ const SaveEditedPost = async () => {
     return;
   }
 
-  // Получаем обновленный контент из редактора
   post.value.content = await editorInstance
     .save()
     .then((data) => JSON.stringify(data));
@@ -199,34 +234,38 @@ const SaveEditedPost = async () => {
     content: post.value.content,
     header: post.value.header,
     summary: post.value.summary,
-    main_photo: post.value.main_photo, // При необходимости отправьте изображение
+    main_photo: post.value.main_photo, 
   };
 
   try {
-    // Отправка PATCH-запроса с JSON
     const response = await fetch(
       `http://localhost:8000/admin/media/${post.value.id}`,
       {
-        method: "PATCH", // Используем PATCH для обновления
+        method: "PATCH", 
         headers: {
-          "Content-Type": "application/json", // Указываем, что данные передаются в формате JSON
+          "Content-Type": "application/json", 
         },
-        body: JSON.stringify(postData), // Преобразуем данные в JSON-строку
+        body: JSON.stringify(postData),
       }
     );
 
     if (response.ok) {
       console.log("Post edited successfully");
-      loadNews(); // Обновление списка новостей
+
+      // Удалить старое изображение, если оно было заменено
+      if (previousPhoto && previousPhoto !== post.value.main_photo) {
+        await deleteImage(previousPhoto);
+      }
+
+      loadNews(); 
       post.value = {
-        // Сбрасываем форму
         summary: "",
         main_photo: "",
         header: "",
         content: "",
         date_created: new Date(),
       };
-      visibledt.value = false; // Закрытие диалога после сохранения изменений
+      visibledt.value = false; 
     } else {
       const errorData = await response.json();
       console.error("Error updating post:", errorData);
@@ -236,31 +275,30 @@ const SaveEditedPost = async () => {
   }
 };
 
-const renderBlocks = (content: string): string => {
-  try {
-    const parsedContent = JSON.parse(content);
+// const renderBlocks = (content: string): string => {
+//   try {
+//     const parsedContent = JSON.parse(content);
 
-    if (parsedContent.blocks && Array.isArray(parsedContent.blocks)) {
-      return parsedContent.blocks
-        .map((block) => {
-          if (
-            block.type === "image" &&
-            block.data.file &&
-            block.data.file.url
-          ) {
-            return `<img src="${block.data.file.url}" alt="image" style="max-width: 100%; margin-bottom: 10px;" />`;
-          }
-          return "";
-        })
-        .join("");
-    }
-  } catch (error) {
-    console.error("Error parsing content:", error);
-  }
-  return "";
-};
+//     if (parsedContent.blocks && Array.isArray(parsedContent.blocks)) {
+//       return parsedContent.blocks
+//         .map((block) => {
+//           if (
+//             block.type === "image" &&
+//             block.data.file &&
+//             block.data.file.url
+//           ) {
+//             return `<img src="${block.data.file.url}" alt="image" style="max-width: 100%; margin-bottom: 10px;" />`;
+//           }
+//           return "";
+//         })
+//         .join("");
+//     }
+//   } catch (error) {
+//     console.error("Error parsing content:", error);
+//   }
+//   return "";
+// };
 
-// Загрузка списка новостей
 const loadNews = async () => {
   try {
     const response = await fetch("http://localhost:8000/admin/media");
@@ -284,7 +322,6 @@ const addPost = async () => {
   content.append("header", post.value.header);
   content.append("summary", post.value.summary);
 
-  // Добавление изображения, если оно есть
   if (post.value.main_photo) {
     content.append("main_photo", post.value.main_photo);
   }
@@ -297,10 +334,10 @@ const addPost = async () => {
 
     if (response.ok) {
       console.log("Post added successfully");
-      loadNews(); // Обновление списка новостей
+      loadNews(); 
       post.value.header = "";
       post.value.summary = "";
-      visible.value = false; // Закрытие формы
+      visible.value = false; 
     } else {
       console.error("Error adding post:", response.statusText);
     }
@@ -314,14 +351,14 @@ const editPost = (newsItem) => {
   post.value.id = newsItem.id;
   post.value.header = newsItem.header;
   post.value.summary = newsItem.summary;
+  previousPhoto = newsItem.main_photo; // Сохранить текущее изображение
   post.value.main_photo = newsItem.main_photo;
   post.value.content = newsItem.content;
 
-  visibledt.value = true; // Открываем диалог
+  visibledt.value = true; 
 
   setTimeout(() => {
     try {
-      // Преобразуем строку в объект и передаем только блоки
       const editorData = {
         blocks: JSON.parse(newsItem.content).blocks,
       };
@@ -381,15 +418,14 @@ const initializeEditor = () => {
 };
 
 onMounted(() => {
-  loadNews(); // Загрузка новостей при монтировании
+  loadNews();
 });
 </script>
-
 
 <style lang="scss">
 .news-header {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1fr; /* Оформляем как сетку с 4 колонками */
+  grid-template-columns: 1fr 2fr 1fr 1fr;
   gap: 20px;
   font-weight: bold;
   padding: 10px 0;
@@ -400,7 +436,7 @@ onMounted(() => {
 .news-header .title-label,
 .news-header .date-label,
 .news-header .actions-label {
-  text-align: center; /* Выравнивание по центру */
+  text-align: center; 
 }
 
 .news-container {
@@ -410,29 +446,29 @@ onMounted(() => {
 
 .news-item {
   display: flex;
-  align-items: center; /* Выравнивание по центру по вертикали */
+  align-items: center; 
   padding: 1.5rem;
   gap: 1rem;
   border-bottom: 1px solid #e0e0e0;
 }
 
 .image-block {
-  flex: 0 0 auto; /* Не растягивать изображение */
+  flex: 0 0 auto; 
   margin-right: 1rem;
-  border-right: 1px solid #e0e0e0; /* Линия справа от изображения */
+  border-right: 1px solid #e0e0e0; 
   padding-right: 1rem;
 }
 
 .title-block {
-  flex: 1; /* Заголовок будет занимать доступное пространство */
-  border-right: 1px solid #e0e0e0; /* Линия справа от заголовка */
+  flex: 1;
+  border-right: 1px solid #e0e0e0;
   padding-right: 1rem;
 }
 
 .date-block {
   font-size: 0.875rem;
   color: #888;
-  border-right: 1px solid #e0e0e0; /* Линия справа от даты */
+  border-right: 1px solid #e0e0e0;
   padding-right: 1rem;
 }
 
