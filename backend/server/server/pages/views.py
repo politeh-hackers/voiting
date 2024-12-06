@@ -18,6 +18,7 @@ class MediaView(View):
 
     def post(self, request):
         data = request.POST.dict()
+        print("[MediaView] Date Created:", data)
         self.test_service.create(data)
         return JsonResponse(self.test_service.get_all(), safe=False)
 
@@ -134,6 +135,7 @@ class AppealView(View):
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
         self.test_service.validation(data)
+
         self.test_service.create(data)
         return JsonResponse(self.test_service.get_all(), safe=False)
 

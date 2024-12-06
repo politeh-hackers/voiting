@@ -16,7 +16,7 @@ class MediaService(BaseValidationService, BaseService):
             "title": lambda: self.validate_field_length("title", 30, 80, data),
             "description": lambda: self.validate_field_length("description", 80, 160, data),
             "header": lambda: self.validate_field_length("header", 1, 200, data),
-            "date_created": lambda: self.validate_date("date_created", data, "%Y-%m-%dT%H:%M:%SZ"),
+            "date_created": lambda: self.validate_date("date_created", data, "%d-%m-%Y"),
             "content": lambda: self.validate_content("content", data),
             "media_tags": lambda: self.validate_tags("media_tags", data, MediaTag),
             "photos": lambda: self.validate_photos("photos", data),

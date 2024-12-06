@@ -48,7 +48,7 @@ class Media(BaseUUID):
     summary = models.CharField(max_length=100, blank=True)
     main_photo = models.TextField(blank=True)
     content = models.JSONField()
-    date_created = models.DateTimeField(default=timezone.now)
+    date_created = models.DateField()
     media_tags = models.ManyToManyField("MediaTag", blank=True)
 
     class Meta:
