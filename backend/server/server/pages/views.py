@@ -13,7 +13,6 @@ class MediaView(View):
 
     test_service = MediaService(model=Media)
 
-
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
@@ -40,6 +39,11 @@ class MediaView(View):
         self.test_service.delete(model_id=model_id)
 
         return JsonResponse(None, safe=False)
+
+    def patch(self, request: HttpRequest, model_id: uuid.UUID):
+        data = json.loads(request.body)
+        self.test_service.update(model_id=model_id, data=data)
+        return JsonResponse(self.test_service.get_all(), safe=False)
 
 class ActualView(View):
 
