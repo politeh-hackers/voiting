@@ -16,7 +16,7 @@ const items = ref([
   { label: "Категории", command: () => router.push("/Form") },
   { label: "Медиа", command: () => router.push("/Media") },
   { label: "Обращения", command:()=> router.push("/Appeals") },
-  { label: "Актуальное" },
+  { label: "Актуальное", command:() => router.push("/Actual") },
 ]);
 
 const items2 = ref([

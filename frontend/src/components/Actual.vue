@@ -44,7 +44,7 @@
         <div ref="editorContainer" class="content-editor"></div>
 
         <div class="date__picker">
-          <DatePicker v-model="post.date_created" dateFormat ="yy/mm/dd" />
+          <DatePicker v-model="post.date_created" dateFormat="yy/mm/dd" />
         </div>
 
         <Button icon="pi pi-check" @click="addPost" />
@@ -89,13 +89,13 @@
         <div ref="editorContainer" class="content-editor"></div>
 
         <div class="date__picker">
-          <DatePicker v-model="post.date_created" dateFormat ="d-m-y"/>
+          <DatePicker v-model="post.date_created" dateFormat="d-m-y" />
         </div>
 
         <Button icon="pi pi-check" @click="SaveEditedPost" />
       </div>
     </Dialog>
-   
+
     <DataView
       :value="filteredNewsList"
       paginator
@@ -103,19 +103,20 @@
       dataKey="'id'"
       class="main-dataview"
     >
-    <template #header><Dropdown
-    v-model="sortOrder"
-    :options="sortOptions"
-    optionLabel="label"
-    optionValue="value"
-    class="p-dropdown"
-  /><InputText
-    v-model="searchQuery"
-    placeholder="Поиск по описанию"
-    class="search-input"
-  />
-</template>
-<template #list="slotProps">
+      <template #header
+        ><Dropdown
+          v-model="sortOrder"
+          :options="sortOptions"
+          optionLabel="label"
+          optionValue="value"
+          class="p-dropdown"
+        /><InputText
+          v-model="searchQuery"
+          placeholder="Поиск по описанию"
+          class="search-input"
+        />
+      </template>
+      <template #list="slotProps">
         <div class="news-container">
           <div
             v-for="newsItem in slotProps.items"
@@ -158,21 +159,19 @@
     </DataView>
   </div>
 </template>
-
-
-
-<script setup lang="ts">
+  
+  
+  <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import InputText from "primevue/inputtext";
 import DatePicker from "primevue/datepicker";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
 import DataView from "primevue/dataview";
-import FileUpload from "primevue/fileupload"; 
+import FileUpload from "primevue/fileupload";
 import { PostService, Post } from "../api/serviceformedia";
 import { initEditor } from "../editor.js/editor-init";
-import Dropdown from 'primevue/dropdown';
-
+import Dropdown from "primevue/dropdown";
 
 const post = ref<Post>({
   summary: "",
@@ -182,15 +181,15 @@ const post = ref<Post>({
   date_created: new Date(),
 });
 
-const sortOrder = ref("asc"); 
-let previousPhoto = ""; // 
+const sortOrder = ref("asc");
+let previousPhoto = ""; //
 const visible = ref(false);
 const visibledt = ref(false);
 const editorContainer = ref<HTMLElement | null>(null);
 let editorInstance: any = null;
-const newsList = ref<Post[]>([]); 
+const newsList = ref<Post[]>([]);
 const postService = new PostService();
-const searchQuery = ref(""); 
+const searchQuery = ref("");
 const sortOptions = [
   { label: "От старшей к младшей", value: "asc" },
   { label: "От младшей к старшей", value: "desc" },
@@ -198,9 +197,12 @@ const sortOptions = [
 
 // Вычисляемое свойство для фильтрации
 const filteredNewsList = computed(() => {
-  const filtered = newsList.value.filter((newsItem) =>
-    newsItem.summary.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    newsItem.header.toLowerCase().includes(searchQuery.value.toLowerCase())
+  const filtered = newsList.value.filter(
+    (newsItem) =>
+      newsItem.summary
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
+      newsItem.header.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 
   // Сортировка по дате
@@ -216,17 +218,19 @@ const toggleSortOrder = () => {
 const onImageUpload = (event: any) => {
   const uploadedImage = event.files[0];
   if (uploadedImage) {
-    post.value.main_photo = uploadedImage.name; 
+    post.value.main_photo = uploadedImage.name;
   }
 };
-// сохранение изменений в посте
+
 const SaveEditedPost = async () => {
   if (!post.value.id) {
     console.error("Отсутствует ID поста");
     return;
   }
 
-  post.value.content = await editorInstance.save().then((data) => JSON.stringify(data));
+  post.value.content = await editorInstance
+    .save()
+    .then((data) => JSON.stringify(data));
 
   const postData = {
     content: post.value.content,
@@ -235,20 +239,23 @@ const SaveEditedPost = async () => {
     main_photo: post.value.main_photo,
   };
 
-  const formattedDate = post.value.date_created.toLocaleDateString('en-CA'); 
+  const formattedDate = post.value.date_created.toLocaleDateString("en-CA");
 
   try {
-    const response = await fetch(`http://localhost:8000/admin/media/${post.value.id}`, {
-      method: "PATCH", 
-      headers: {
-        "Content-Type": "application/json", 
-      },
-      body: JSON.stringify({...postData, date_created: formattedDate}),
-    });
+    const response = await fetch(
+      `http://localhost:8000/admin/actual/${post.value.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...postData, date_created: formattedDate }),
+      }
+    );
 
     if (response.ok) {
       console.log("Пост успешно отредактирован");
-      loadNews(); 
+      loadNews();
       post.value = {
         summary: "",
         main_photo: "",
@@ -256,7 +263,7 @@ const SaveEditedPost = async () => {
         content: "",
         date_created: new Date(),
       };
-      visibledt.value = false; 
+      visibledt.value = false;
     } else {
       const errorData = await response.json();
       console.error("Ошибка при обновлении поста:", errorData);
@@ -265,10 +272,10 @@ const SaveEditedPost = async () => {
     console.error("Ошибка:", error);
   }
 };
-// загрузка новости
+
 const loadNews = async () => {
   try {
-    const response = await fetch("http://localhost:8000/admin/media");
+    const response = await fetch("http://localhost:8000/admin/actual");
     if (response.ok) {
       newsList.value = await response.json();
     } else {
@@ -278,38 +285,38 @@ const loadNews = async () => {
     console.error("Error loading news:", error);
   }
 };
-// добавление поста
+
 const addPost = async () => {
   post.value.content = await editorInstance
     .save()
     .then((data) => JSON.stringify(data));
 
   const content = new FormData();
-  
+
   // Преобразуем дату в формат 'YYYY-MM-DD'
-  const formattedDate = post.value.date_created.toISOString().split('T')[0]; 
+  const formattedDate = post.value.date_created.toISOString().split("T")[0];
 
   content.append("content", post.value.content);
   content.append("header", post.value.header);
   content.append("summary", post.value.summary);
-  content.append("date_created", formattedDate); 
+  content.append("date_created", formattedDate);
 
   if (post.value.main_photo) {
     content.append("main_photo", post.value.main_photo);
   }
 
   try {
-    const response = await fetch("http://localhost:8000/admin/media", {
+    const response = await fetch("http://localhost:8000/admin/actual", {
       method: "POST",
       body: content,
     });
 
     if (response.ok) {
       console.log("Пост успешно добавлен");
-      loadNews(); 
+      loadNews();
       post.value.header = "";
       post.value.summary = "";
-      visible.value = false; 
+      visible.value = false;
     } else {
       console.error("Ошибка при добавлении поста:", response.statusText);
     }
@@ -323,12 +330,12 @@ const editPost = (newsItem) => {
   post.value.id = newsItem.id;
   post.value.header = newsItem.header;
   post.value.summary = newsItem.summary;
-  previousPhoto = newsItem.main_photo; 
+  previousPhoto = newsItem.main_photo;
   post.value.main_photo = newsItem.main_photo;
   post.value.content = newsItem.content;
-  post.value.date_created = newsItem.date_created
+  post.value.date_created = newsItem.date_created;
 
-  visibledt.value = true; 
+  visibledt.value = true;
 
   setTimeout(() => {
     try {
@@ -353,15 +360,15 @@ const editPost = (newsItem) => {
 const deletePost = async (postId: string) => {
   try {
     const response = await fetch(
-      `http://localhost:8000/admin/media/${postId}`,
+      `http://localhost:8000/admin/actual/${postId}`,
       {
         method: "DELETE",
       }
     );
-    deleteImage("http://localhost:8000/admin/media");
+    deleteImage("http://localhost:8000/admin/actual");
     if (response.ok) {
       console.log("Post deleted successfully");
-      loadNews(); 
+      loadNews();
     } else {
       console.error("Error deleting post:", response.statusText);
     }
@@ -369,7 +376,6 @@ const deletePost = async (postId: string) => {
     console.error("Error:", error);
   }
 };
-// удаление картини из контента
 const deleteImage = (fileUrl: string) => {
   const imageName = fileUrl.split("/").pop();
 
@@ -385,7 +391,6 @@ const deleteImage = (fileUrl: string) => {
     }
   });
 };
-// инициализация эдитора
 const initializeEditor = () => {
   if (editorContainer.value) {
     editorInstance = initEditor(editorContainer.value, {});
@@ -396,8 +401,8 @@ onMounted(() => {
   loadNews();
 });
 </script>
-
-<style lang="scss">
+  
+  <style lang="scss">
 .news-header {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr 1fr;
@@ -411,7 +416,7 @@ onMounted(() => {
 .news-header .title-label,
 .news-header .date-label,
 .news-header .actions-label {
-  text-align: center; 
+  text-align: center;
 }
 
 .news-container {
@@ -421,16 +426,16 @@ onMounted(() => {
 
 .news-item {
   display: flex;
-  align-items: center; 
+  align-items: center;
   padding: 1.5rem;
   gap: 1rem;
   border-bottom: 1px solid #e0e0e0;
 }
 
 .image-block {
-  flex: 0 0 auto; 
+  flex: 0 0 auto;
   margin-right: 1rem;
-  border-right: 1px solid #e0e0e0; 
+  border-right: 1px solid #e0e0e0;
   padding-right: 1rem;
 }
 
@@ -492,3 +497,4 @@ onMounted(() => {
   margin-bottom: 5px;
 }
 </style>
+  

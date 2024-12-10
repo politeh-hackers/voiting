@@ -5,6 +5,7 @@ import Form from './components/Category.vue'
 import Media from './components/Media.vue'
 import Admin from './components/Admin.vue'
 import Appeals from './components/Appeals.vue'
+import Actual from './components/Actual.vue'
 
 export default createRouter(
     {
@@ -35,6 +36,11 @@ export default createRouter(
                             name: 'Appeals',
                             path: '/Appeals',
                             component: Appeals
+                        },
+                        {
+                            name:'Actual',
+                            path:'/Actual',
+                            component: Actual
                         }
                     ],
             },

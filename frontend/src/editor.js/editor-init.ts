@@ -18,8 +18,6 @@ export const initEditor = (element: HTMLElement, data: any = null) => {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        
-
       },
       body: JSON.stringify({ file_url: fileUrl })
     }).then((response) => {
