@@ -1,20 +1,31 @@
-from typing import TypeVar, Generic, List, Dict
+from asyncio.windows_events import NULL
+from typing import TypeVar, Generic, List, Dict, Protocol
 from datetime import datetime
-
 from django.http import JsonResponse
 from django.utils import timezone
 from django.core.exceptions import ValidationError
-from base.abstractions import BaseServiceProtocol
 from django.db import models
 import uuid
 import re
 from django.core.files.images import get_image_dimensions
-from users.models import Admins
+
+from .constants import Constants
+from .enums import FilterErrorMessages
 
 T = TypeVar("T", bound=models.Model)
 
+MAX_PHOTO_NAME_LENGTH = 255
+MAX_PHOTO_SIZE_MB = 5
+MAX_PHOTO_SIZE = MAX_PHOTO_SIZE_MB * 1024 * 1024  
+MAX_PHOTO_WIDTH = 1920
+MAX_PHOTO_HEIGHT = 1080
+PASSWORD_MIN_LENGTH = 8
+SPECIAL_CHARACTERS = "!@#$%^&*(),.?\":{}|<>"
+DATE_FORMAT = "%Y-%m-%d"
+
+
 class BaseService(Generic[T]):
-    model = T
+    model: T
 
     def __init__(self, model: T):
         self.model = model
@@ -23,110 +34,69 @@ class BaseService(Generic[T]):
         return list(self.model.objects.values())
 
     def create(self, data: Dict) -> None:
-        return self.model.objects.create(**data)
+        self.model.objects.create(**data)
 
-    def update(self, model_id: uuid.UUID, data: dict) -> None:
-        return self.model.objects.filter(id=model_id).update(**data)
+    def update(self, model_id: uuid.UUID, data: Dict) -> None:
+        self.model.objects.filter(id=model_id).update(**data)
 
     def delete(self, model_id: uuid.UUID) -> None:
-        instance = self.model.objects.get(id=model_id)
+        instance: T = self.model.objects.get(id=model_id)
         instance.delete()
 
+
+
+
 class BaseValidationService:
-    """Базовый сервис для общей валидации."""
 
-    def validate_field_length(self, field_name, min_length, max_length, data):
-        """Проверка длины строкового поля."""
-        if field_name in data:
-            if not (min_length <= len(data[field_name]) <= max_length):
-                raise ValidationError(
-                    {field_name: f"Поле '{field_name}' должно содержать от {min_length} до {max_length} символов."})
-        else:
-            raise ValidationError({field_name: f"Поле '{field_name}' обязательно."})
+    name_regex = re.compile(r'^[A-Za-zА-Яа-яЁё\s-]+$')  
+    phone_regex = re.compile(r'^\+375\(\d{2}\)\d{3}-\d{2}-\d{2}$')  
 
-    def validate_date(self, field_name, data, date_format="%Y-%m-%d"):
-        """Проверка правильности формата даты."""
-        if field_name in data:
-            try:
-                datetime.strptime(data[field_name], date_format)
-            except ValueError:
-                raise ValidationError({field_name: f"Дата должна быть в формате {date_format}."})
-        else:
-            data[field_name] = timezone.now()
+    @staticmethod
+    def validate_presence(value):
+        if value is None or (isinstance(value, str) and not value.strip()):
+            raise ValidationError(FilterErrorMessages.REQUIRED)
 
-    def validate_tags(self, field_name, data, tag_model):
-        """Проверка правильности тегов."""
-        if field_name in data:
-            tags = data[field_name]
-            if not isinstance(tags, list):
-                raise ValidationError({field_name: "Теги должны быть в виде списка."})
-            # Проверка, существуют ли теги в базе
-            existing_tags = set(tag_model.objects.filter(name__in=tags).values_list("name", flat=True))
-            invalid_tags = set(tags) - existing_tags
-            if invalid_tags:
-                raise ValidationError({field_name: f"Неверные теги: {', '.join(invalid_tags)}"})
+    @staticmethod
+    def validate_length(field_value: str, min_length: int, max_length: int):
+        if field_value and not (min_length <= len(field_value) <= max_length):
+            raise ValidationError(FilterErrorMessages.LENGTH)
 
-    def validate_content(self, field_name, data):
-        """Проверка наличия контента."""
-        if field_name not in data or not data[field_name].strip():
-            raise ValidationError({field_name: "Поле 'content' обязательно."})
+    @staticmethod
+    def validate_name(value: str):
+        if value and not BaseValidationService.name_regex.match(value):
+            raise ValidationError(FilterErrorMessages.NAME_ERROR)
 
-    def validate_photos(self, field_name, data):
-        photo = data.get(field_name)
+    @staticmethod
+    def validate_phone(value: str):
+        if value and not BaseValidationService.phone_regex.match(value):
+            raise ValidationError(FilterErrorMessages.NAME_ERROR)
 
-        if photo:
-            if not photo.content_type.startswith('image/'):
-                raise ValidationError({field_name: "Файл должен быть изображением."})
+    def validate_common_fields(self, data):
+        self.validate_length(data.get('h1'), Constants.MIN_LEN_H1, Constants.MAX_LEN_H1)
+        
+        self.validate_length(data.get('title'), Constants.MIN_LEN_TITLE, Constants.MAX_LEN_TITLE)
+        
+        self.validate_length(data.get('description'), Constants.MIN_LEN_DESCRIPTION, Constants.MAX_LEN_DESCRIPTION)
+        
+        self.validate_presence(data.get('header'))
+        self.validate_length(data.get('header'), 1, Constants.MAX_LEN_HEADER)
 
-            if len(photo.name) > 255:
-                raise ValidationError({field_name: "Слишком длинное имя файла для фотографии."})
+    def validate_media_actual_fields(self, data):
+        self.validate_presence(data.get('main_photo'))
 
-            max_size = 5 * 1024 * 1024  # 5 MB
-            if photo.size > max_size:
-                raise ValidationError({field_name: "Файл слишком большой. Максимальный размер: 5 МБ."})
+        self.validate_presence(data.get('content'))
 
-            width, height = get_image_dimensions(photo)
-            if width > 1920 or height > 1080:
-                raise ValidationError({field_name: "Размер изображения должен быть не больше 1920x1080 пикселей."})
+        self.validate_length(data.get('content'), Constants.MIN_LEN_TEXT, Constants.MAX_LEN_TEXT)
 
-    def generate_default_fields(self, data):
-        """Генерация значений по умолчанию для полей, если они не указаны."""
-        data.setdefault("h1", self.generate_h1())
-        data.setdefault("title", self.generate_title())
-        data.setdefault("description", self.generate_description())
+    def validate_appeal_fields(self, data):
+        self.validate_name(data.get('first_name'))
 
-    def cleanup_tags(self, field_name, tags, tag_model):
-        """Удаление тегов, если они больше не используются."""
-        for tag_name in tags:
-            tag = tag_model.objects.filter(name=tag_name).first()
-            if tag and not tag.__getattr__(
-                    tag_model._meta.model_name).exists():  # Проверка, если тег больше нигде не используется
-                tag.delete()
+        self.validate_name(data.get('last_name'))
 
-    def generate_h1(self):
-        return "Default H1"
+        self.validate_name(data.get('patronymic'))
 
-    def generate_title(self):
-        return "Default Title"
+        self.validate_phone(data.get('phone'))
 
-    def generate_description(self):
-        return "Default Description"
+        self.validate_length(data.get('text'), 500, Constants.MAX_LEN_TEXT)
 
-    def validate_password_strength(self, password, data):
-        # Проверка длины пароля
-        if len(data[password]) < 8:
-            raise ValidationError('Пароль должен содержать минимум 8 символов.')
-
-        # Проверка наличия цифры
-        if not any(char.isdigit() for char in data[password]):
-            raise ValidationError('Пароль должен содержать хотя бы одну цифру.')
-
-        # Проверка наличия специального символа
-        special_characters = "!@#$%^&*(),.?\":{}|<>"
-        if not any(char in special_characters for char in data[password]):
-            raise ValidationError('Пароль должен содержать хотя бы один специальный символ.')
-
-    def validate_login(self, login, data):
-
-        if len(data[login]) < 8:
-            raise ValidationError('Пароль должен содержать минимум 8 символов.')
+        self.validate_length(data.get('official_response'), 500, Constants.MAX_LEN_TEXT)

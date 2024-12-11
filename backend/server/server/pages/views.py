@@ -1,9 +1,10 @@
 import json
 import os
+from pyexpat import model
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import get_object_or_404
 from .models import Category, Appeal, Actual, Media
-from .services import MediaService, AppealService, ActualService, CategoryService
+from .services import CategoryService, MediaService, AppealService, ActualService #, CategoryService
 import uuid
 from django.http import JsonResponse, HttpRequest
 from django.views import View
@@ -18,7 +19,8 @@ class MediaView(View):
 
     def post(self, request):
         data = request.POST.dict()
-        print("[MediaView] Date Created:", data)
+        
+        # self.test_service.validate(data)
         self.test_service.create(data)
         return JsonResponse(self.test_service.get_all(), safe=False)
 
@@ -55,6 +57,7 @@ class ActualView(View):
 
     def post(self, request):
         data = request.POST.dict()
+        # self.test_service.validate(data)
         self.test_service.create(data)
         return JsonResponse(self.test_service.get_all(), safe=False)
 

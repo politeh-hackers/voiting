@@ -10,7 +10,6 @@ urlpatterns = [
     path('admin/image', ImageView.as_view()),
     path('admin/image/<str:file_name>', ImageView.as_view()),
 
-
     path('admin/actual', ActualView.as_view()),
     path('admin/actual/<uuid:model_id>', ActualView.as_view()),
 

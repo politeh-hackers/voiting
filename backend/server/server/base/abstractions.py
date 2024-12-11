@@ -1,12 +1,12 @@
 from typing import Protocol, List
 from typing import TypeVar, Generic
-from django.db import models
+from django.db import Error, models
 
 T = TypeVar("T", bound=models.Model)
 
 class BaseServiceProtocol(Protocol[T]):
 
-    model = T
+    model: T
 
     def get_all(self) -> List: ...
 
@@ -17,3 +17,7 @@ class BaseServiceProtocol(Protocol[T]):
     def delete(self, model_id: int) -> None: ...
 
     def getby(self, **filters: dict) -> List: ...
+
+class BaseValidateProtocol():
+
+    def validate(self, data) -> None: ...  
