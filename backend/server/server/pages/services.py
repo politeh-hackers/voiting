@@ -6,7 +6,8 @@ from django.forms import ImageField
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from base.service import BaseService, BaseValidationService
-from pages.models import Actual, Appeal, Media, MediaTag, ActualTag
+from pages.models import Actual, Appeal, Media, MediaTag, ActualTag, Category
+from base.enums import FilterErrorMessages
 
     
 class MediaService(BaseService):
@@ -39,4 +40,9 @@ class AppealService(BaseService):
         self.validator.validate_appeal_fields(data)
         return data
 
-class CategoryService(BaseService): pass
+class CategoryService(BaseService): 
+    def __init__(self, model=Category):
+        self.model = model
+    def validate(self, data: Category):
+        if "name" in data and data["name"] and not (4 <= len(data["name"]) <= 100): 
+            raise ValidationError(FilterErrorMessages.LENGTH)

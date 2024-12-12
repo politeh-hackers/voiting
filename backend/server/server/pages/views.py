@@ -19,10 +19,9 @@ class MediaView(View):
 
     def post(self, request):
         data = request.POST.dict()
-        
         # self.test_service.validate(data)
         self.test_service.create(data)
-        return JsonResponse(self.test_service.get_all(), safe=False)
+        return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         media_instance = get_object_or_404(Media, id=model_id)
@@ -40,13 +39,13 @@ class MediaView(View):
                     if os.path.exists(image_path):
                         os.remove(image_path)
         self.test_service.delete(model_id=model_id)
-
         return JsonResponse(None, safe=False)
 
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
         data = json.loads(request.body)
+        # self.test_service.validate(data)
         self.test_service.update(model_id=model_id, data=data)
-        return JsonResponse(self.test_service.get_all(), safe=False)
+        return JsonResponse(None, safe=False)
 
 class ActualView(View):
 
@@ -57,9 +56,9 @@ class ActualView(View):
 
     def post(self, request):
         data = request.POST.dict()
-        # self.test_service.validate(data)
+        self.test_service.validate(data)
         self.test_service.create(data)
-        return JsonResponse(self.test_service.get_all(), safe=False)
+        return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         id = get_object_or_404(Actual, id=model_id)
@@ -76,8 +75,9 @@ class ActualView(View):
 
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
         data = json.loads(request.body)
+        # self.test_service.validate(data)
         self.test_service.update(model_id=model_id, data=data)
-        return JsonResponse(self.test_service.get_all(), safe=False)
+        return JsonResponse(None, safe=False)
 
 class ImageView(View):
     
@@ -108,26 +108,8 @@ class ImageView(View):
         image_path = os.path.join('static/images', file_name)
         if os.path.exists(image_path):
             os.remove(image_path)
-
         return JsonResponse(None, safe=False)
 
-
-
-
-    # def delete(self, request: HttpRequest, model_id: uuid.UUID):
-    #     try:
-    #         self.test_service.delete(model_id=model_id)
-    #         return JsonResponse(self.test_service.get_all(), safe=False, status=204)
-    #     except (ValueError, TypeError):
-    #         return JsonResponse({"error": "Invalid UUID"}, status=400)
-    #
-    # def patch(self, request: HttpRequest, model_id: uuid.UUID):
-    #     try:
-    #         body = json.loads(request.body)
-    #         self.test_service.update(model_id=model_id, data=body)
-    #         return JsonResponse(self.test_service.get_all(), safe=False)
-    #     except (ValueError, TypeError):
-    #         return JsonResponse({"error": "Invalid UUID"}, status=400)
 
 class AppealView(View):
     test_service = AppealService(model=Appeal)
@@ -137,52 +119,39 @@ class AppealView(View):
 
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
-        self.test_service.validation(data)
-
+        # self.test_service.validate(data)
         self.test_service.create(data)
-        return JsonResponse(self.test_service.get_all(), safe=False)
+        return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
-        try:
-            self.test_service.delete(model_id=model_id)
-            return JsonResponse(self.test_service.get_all(), safe=False, status=204)
-        except (ValueError, TypeError):
-            return JsonResponse({"error": "Invalid UUID"}, status=400)
+        self.test_service.delete(model_id=model_id)
+        return JsonResponse(None, safe=False, status=204)
 
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
-        try:
-            body = json.loads(request.body)
-            self.test_service.update(model_id=model_id, data=body)
-            return JsonResponse(self.test_service.get_all(), safe=False)
-        except (ValueError, TypeError):
-            return JsonResponse({"error": "Invalid UUID"}, status=400)
+        data = json.loads(request.body)
+        # self.test_service.validate(data)
+        self.test_service.update(model_id=model_id, data=data)
+        return JsonResponse(None, safe=False)
 
 class CategoryView(View):
+
     test_service = CategoryService(model=Category)
 
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
     def post(self, request: HttpRequest):
-        try:
-            data = json.loads(request.body)
-            self.test_service.validation(data)
-            self.test_service.create(data)
-            return JsonResponse(None, safe=False)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
+        data = json.loads(request.body)
+        self.test_service.validate(data)
+        self.test_service.create(data)
+        return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
-        try:
-            self.test_service.delete(model_id=model_id)
-            return JsonResponse(self.test_service.get_all(), safe=False, status=204)
-        except (ValueError, TypeError):
-            return JsonResponse({"error": "Invalid UUID"}, status=400)
+        self.test_service.delete(model_id=model_id)
+        return JsonResponse(None, safe=False, status=204)
 
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
-        try:
-            body = json.loads(request.body)
-            self.test_service.update(model_id=model_id, data=body)
-            return JsonResponse(self.test_service.get_all(), safe=False)
-        except (ValueError, TypeError):
-            return JsonResponse({"error": "Invalid UUID"}, status=400)
+        data = json.loads(request.body)
+        self.test_service.validate(data)   
+        self.test_service.update(model_id=model_id, data=data)
+        return JsonResponse(None, safe=False)
