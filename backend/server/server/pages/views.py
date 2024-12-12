@@ -91,7 +91,7 @@ class ImageView(View):
             data = request.FILES["main_photo"]
         elif "image" in request.FILES:
             data = request.FILES["image"]
-        data_str = str(data) 
+        data_str = str(data)  
         image_path = os.path.join('static/images', data_str)
         with open(image_path, 'wb') as image_file:
             for chunk in data.chunks():
@@ -116,12 +116,6 @@ class AppealView(View):
 
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
-
-    def post(self, request: HttpRequest):
-        data = json.loads(request.body)
-        # self.test_service.validate(data)
-        self.test_service.create(data)
-        return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         self.test_service.delete(model_id=model_id)

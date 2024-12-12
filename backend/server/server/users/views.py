@@ -10,6 +10,7 @@ from django.views import View
 from base.service import BaseValidationService
 
 class Login(View):
+    
     test_service = AdminsService(model=Admins)
 
     def get(self, request: HttpRequest):
@@ -22,6 +23,7 @@ class Login(View):
         return JsonResponse({"success": False, "message": "Неверный логин или пароль"})
 
 class Registration(View):
+
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
         login = data.get('login')

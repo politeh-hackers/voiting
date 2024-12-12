@@ -72,6 +72,7 @@ class BaseValidationService:
             raise ValidationError(FilterErrorMessages.NAME_ERROR)
 
     def validate_common_fields(self, data):
+
         self.validate_length(data.get('h1'), Constants.MIN_LEN_H1, Constants.MAX_LEN_H1)
         
         self.validate_length(data.get('title'), Constants.MIN_LEN_TITLE, Constants.MAX_LEN_TITLE)
@@ -82,6 +83,7 @@ class BaseValidationService:
         self.validate_length(data.get('header'), 1, Constants.MAX_LEN_HEADER)
 
     def validate_media_actual_fields(self, data):
+
         self.validate_presence(data.get('main_photo'))
 
         self.validate_presence(data.get('content'))
@@ -89,6 +91,7 @@ class BaseValidationService:
         self.validate_length(data.get('content'), Constants.MIN_LEN_TEXT, Constants.MAX_LEN_TEXT)
 
     def validate_appeal_fields(self, data):
+        
         self.validate_name(data.get('first_name'))
 
         self.validate_name(data.get('last_name'))
