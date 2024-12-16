@@ -1,10 +1,10 @@
 <template>
   <div class="card flex flex-column">
-    
     <Dialog
       v-model:visible="visible"
       @show="initializeEditor"
       @hide="handleDialogClose"
+      
       modal
       header="Добавить новость"
       :style="{ width: '60rem' }"
@@ -33,15 +33,35 @@
             :url="'http://localhost:8000/admin/image'"
             accept="image/*"
             :auto="true"
+            :showUploadButton="false"
+            :showCancelButton="false"
             @upload="onImageUpload"
+            @remove="onImageRemove"
             chooseLabel="Выбрать изображение"
-          />
+          >
+            <template #content>
+              <div class="custom-file-upload">
+                <!-- Отображение выбранного изображения -->
+                <img
+                  v-if="post.main_photo"
+                  :src="`http://localhost:8000/static/image/${post.main_photo}`"
+                  alt="Preview"
+                  class="image-preview"
+                />
+                <Button
+                  label="Удалить изображение"
+                  class="p-button-danger"
+                  @click="onImageRemove"
+                />
+              </div>
+            </template>
+          </FileUpload>
         </div>
 
         <div ref="editorContainer" class="content-editor"></div>
 
         <div class="date__picker">
-          <DatePicker v-model="post.date_created" dateFormat="yy/mm/dd" />
+          <DatePicker v-model="post.date_created" dateFormat="" />
         </div>
 
         <Button icon="pi pi-check" @click="addPost" />
@@ -78,15 +98,35 @@
             :url="'http://localhost:8000/admin/image'"
             accept="image/*"
             :auto="true"
+            :showUploadButton="false"
+            :showCancelButton="false"
             @upload="onImageUpload"
+            @remove="onImageRemove"
             chooseLabel="Выбрать изображение"
-          />
+          >
+            <template #content>
+              <div class="custom-file-upload">
+                <!-- Отображение выбранного изображения -->
+                <img
+                  v-if="post.main_photo"
+                  :src="`http://localhost:8000/static/image/${post.main_photo}`"
+                  alt="Preview"
+                  class="image-preview"
+                />
+                <Button
+                  label="Удалить изображение"
+                  class="p-button-danger"
+                  @click="onImageRemove"
+                />
+              </div>
+            </template>
+          </FileUpload>
         </div>
 
         <div ref="editorContainer" class="content-editor"></div>
 
         <div class="date__picker">
-          <DatePicker v-model="post.date_created" dateFormat="d-m-y" />
+          <DatePicker v-model="post.date_created" dateFormat="" />
         </div>
 
         <Button icon="pi pi-check" @click="SaveEditedPost" />
@@ -102,9 +142,9 @@
     >
       <template #header>
         <Button
-        class="content__view"
-        label="Добавить новость"
-        @click="visible = true"
+          class="content__view"
+          label="Добавить новость"
+          @click="visible = true"
         />
         <Dropdown
           v-model="sortOrder"
@@ -224,14 +264,34 @@ const onImageUpload = (event: any) => {
     
   }
 };
+const onImageRemove = (event: any) => {
+  console.log("Изображение удалено:", event.file);
+
+  if (post.value.main_photo) {
+    // Если файл уже загружен на сервер, удаляем его
+    deleteImage(`http://localhost:8000/static/image/${post.value.main_photo}`)
+      .then(() => {
+        post.value.main_photo = ""; // Очищаем ссылку на фото
+      })
+      .catch((error) => {
+        console.error("Ошибка при удалении изображения с сервера:", error);
+      });
+  } else {
+    // Если файл не загружен, просто сбрасываем его в состоянии
+    post.value.main_photo = "";
+  }
+};
 const handleDialogClose = () => {
   // Проверяем, что окно было закрыто через крестик и поле изображения не пустое
   if (!visible.value && post.value.main_photo) {
     deleteImage(`http://localhost:8000/static/image/${post.value.main_photo}`);
     post.value.main_photo = ""; // Очищаем ссылку на фото
   }
+  if (editorInstance) {
+    editorInstance.clear();
+    console.log("pizda")
+  }
 };
-
 
 const SaveEditedPost = async () => {
   if (!post.value.id) {
@@ -249,10 +309,9 @@ const SaveEditedPost = async () => {
     summary: post.value.summary,
     main_photo: post.value.main_photo,
   };
-  
+
   const formattedDate = post.value.date_created.toLocaleDateString("en-CA");
 
-  
   try {
     const response = await fetch(
       `http://localhost:8000/admin/actual/${post.value.id}`,
@@ -304,14 +363,14 @@ const addPost = async () => {
     .then((data) => JSON.stringify(data));
 
   const content = new FormData();
-  
+
   // Преобразуем дату в формат 'YYYY-MM-DD'
-  const formattedDate = post.value.date_created.toISOString().split('T')[0]; 
+  const formattedDate = post.value.date_created.toLocaleDateString("en-CA");
 
   content.append("content", post.value.content);
   content.append("header", post.value.header);
   content.append("summary", post.value.summary);
-  content.append("date_created", formattedDate); 
+  content.append("date_created", formattedDate);
 
   if (post.value.main_photo) {
     content.append("main_photo", post.value.main_photo);
@@ -325,11 +384,13 @@ const addPost = async () => {
 
     if (response.ok) {
       console.log("Пост успешно добавлен");
-      loadNews(); 
+      loadNews();
       post.value.header = "";
       post.value.summary = "";
       post.value.main_photo = "";
-      visible.value = false; 
+      post.value.content = "";
+      editorInstance = null;
+      visible.value = false;
     } else {
       console.error("Ошибка при добавлении поста:", response.statusText);
     }
@@ -379,7 +440,7 @@ const deletePost = async (postId: string) => {
       }
     );
     deleteImage("http://localhost:8000/admin/actual");
-   
+
     if (response.ok) {
       console.log("Post deleted successfully");
       loadNews();
@@ -425,7 +486,14 @@ onMounted(() => {
   padding: 10px 0;
   border-bottom: 2px solid #e0e0e0;
 }
-
+.image-preview {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
 .news-header .image-label,
 .news-header .title-label,
 .news-header .date-label,

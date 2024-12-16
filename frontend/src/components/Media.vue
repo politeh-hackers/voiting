@@ -8,7 +8,7 @@
     <Dialog
       v-model:visible="visible"
       @show="initializeEditor"
-      
+      @hide = "handleDialogClose"
       modal
       header="Добавить новость"
       :style="{ width: '60rem' }"
@@ -224,8 +224,15 @@ const onImageUpload = (event: any) => {
 };
 
 const handleDialogClose = () => {
-    deleteImage(uploadedImagePath.value); // Удаление изображения
-    uploadedImagePath.value = ""; // Сброс пути
+  // Проверяем, что окно было закрыто через крестик и поле изображения не пустое
+  if (!visible.value && post.value.main_photo) {
+    deleteImage(`http://localhost:8000/static/image/${post.value.main_photo}`);
+    post.value.main_photo = ""; // Очищаем ссылку на фото
+  }
+  if (editorInstance) {
+    editorInstance.clear();
+  }
+  
 };
 // сохранение изменений в посте
 const SaveEditedPost = async () => {
