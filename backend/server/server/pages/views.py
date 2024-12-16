@@ -61,8 +61,13 @@ class ActualView(View):
         return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
-        id = get_object_or_404(Actual, id=model_id)
-        content = id.content
+        media_instance = get_object_or_404(Media, id=model_id)
+        main_photo = media_instance.main_photo
+        if main_photo:
+            main_photo_path = os.path.join('static/Actual_image', main_photo)
+            if os.path.exists(main_photo_path):
+                os.remove(main_photo_path)
+        content = media_instance.content
         if content:
             for block in json.loads(content).get("blocks", []):
                 if block.get("type") == "image":
