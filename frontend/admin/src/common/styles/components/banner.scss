@@ -1,0 +1,108 @@
+.artist-banner {
+    width: 100vw;
+    -webkit-transform: translateX(calc((100vw - 1160px) / 2 * -1));
+            transform: translateX(calc((100vw - 1160px) / 2 * -1));
+    height: 81px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: end;
+        -ms-flex-pack: end;
+            justify-content: flex-end;
+    -o-object-fit: cover;
+       object-fit: cover;
+}
+
+.artist-banner-closeable {
+    width: 100%;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    margin: 0 auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: end;
+        -ms-flex-pack: end;
+            justify-content: flex-end;
+    position: relative;
+
+    @media (max-width: 1440px) {
+        width: 100%;
+    }
+}
+
+.artist-banner-closeable__image {
+    height: 100%;
+    width: 100%;
+    -o-object-fit: cover;
+       object-fit: cover;
+}
+
+.artist-banner__button {
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    cursor: pointer;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-item-align: center;
+        align-self: center;
+    margin-right: 16px;
+    background-color: white;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    font-size: 19px;
+    z-index: 1;
+    position: absolute;
+
+    &:hover {
+        background-color: #CECECE;
+        -webkit-transition: $transition-time;
+        transition: $transition-time;
+    }
+}
+
+@media (max-width: 1024px) {
+    
+    #closeble-banner {
+        display: none;
+    }
+    
+    .artist-banner {
+        height: 70px;
+    }
+
+    .artist-banner-closeable.disable {
+        display: none;
+    }
+
+    .artist-banner {
+        display: none;
+    }
+
+}
+
+.central-bnr {
+    img {
+        margin-top: 40px;
+        position: relative;
+        height: -moz-fit-content;
+        height: fit-content;
+        width: 100vw;
+        left: 50%;
+        margin-left: -50vw;
+
+        @media (max-width: 1440px) {
+            left: 50%;
+            margin-left: -50vw;
+            position: relative;
+            width: 100vw;
+        }
+    }
+}

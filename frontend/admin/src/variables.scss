@@ -1,0 +1,186 @@
+@use "sass:color";
+@use "sass:math";
+
+/* --- CSS VARIABLES --- */
+$-background-color:                         --background-color;
+$-background-color-light:                   --background-color-light;
+$-background-color-lighter:                 --background-color-lighter;
+$-background-color-lightest:                --background-color-lightest;
+$-text-color:                               --text-color;
+$-text-color-accent:                        --text-color-accent;
+$-border-color:                             --border-color;
+$-placeholder-color:                        --placeholder-color;
+$-selection-color:                          --selection-color;
+$-selection-background-color:               --selection-background-color;
+$-selection-text-color:                     --selection-text-color;
+$-overlay-color:                            --overlay-color;
+$-overlay-disabled-color:                   --overlay-disabled-color;
+$-scroll-track-color:                       --scroll-track;
+$-scroll-thumb-color:                       --scroll-thumb;
+$-action-bar-shadow:                        --action-bar-shadow;
+
+/* Colors */
+$white:                                     #FFFFFF;
+$black:                                     #000000;
+
+$color-dark:                                #0E1319;
+$color-dark-light:                          color.adjust($color-dark, $lightness: 2.5%);
+$color-dark-lighter:                        color.adjust($color-dark, $lightness: 4%);
+$color-dark-lightest:                       color.adjust($color-dark, $lightness: 10%);
+
+$dark-secondary:                            #181F29;
+$dark-secondary-light:                      #252C38;
+
+$light-primary:                             #F8F8F8;
+$light-secondary:                           #EFF0F1;
+
+$border-accent-light:                       #4C535D;
+
+$blue-primary:                              #46BDDC;
+$gray-dark:                                 #898C8F;
+
+$blue-gray:                                 #3A3B4C;
+
+$green:                                     #10CF68; // Success
+$blue:                                      #107FCF; // Info
+$yellow:                                    #FF971E; // Warrning
+$red:                                       #BF2525; // Danger
+
+$gray:                                      color.adjust($black, $lightness: 33.5%); // #555555
+$gray-light:                                color.adjust($black, $lightness: 46.7%); // #777777
+
+$white-lilac:                               #F3F3F4; // Background wrapper color
+$iron:                                      #E5E6E7;
+$silver:                                    #C2C2C2; // Default color
+$biscay:                                    #132028;
+$mid-grey:                                  #676A6C;
+$dim-gray:                                  #5E5E5E;
+$nero:                                      #262626;
+
+$baltic-sea:                                #19181C;
+$cinnabar:                                  #E44949;
+
+/* Fonts */
+$font-name:                                 "Inter";
+$iconic-font:                               "Font Awesome 5 Pro";
+$ilvo-icon-font:                            "IlvoCRM";
+
+$font-family-base:                          $font-name, "Helvetica Neue", "Arial", "Helvetica", sans-serif;
+$font-family-monospace:                     "Menlo", "Monaco", "Consolas", "Courier New", monospace;
+
+$google-font-name:                          $font-name;
+$google-font-parameters:                   "300,300i,400,400i,500,500i,700,700i&display=swap&subset=cyrillic,cyrillic-ext";
+
+/* Typography */
+$em-size:                                   14;
+$font-size:                                 13px;
+$font-size-large:                           math.ceil($font-size * 1.3);
+$font-size-small:                           math.ceil($font-size * 0.8);
+$font-size-smallest:                        math.ceil($font-size * 0.6);
+
+$line-height:                               1.42857142;
+$line-height-computed:                      math.floor($font-size * $line-height);
+
+/* Heading */
+$header-font-weight:                        300;
+$header-line-height:                        #{calc(18 / $em-size)}em;
+
+$font-size-h1:                              #{calc(26 / $em-size)}rem;
+$font-size-h2:                              #{calc(22 / $em-size)}rem;
+$font-size-h3:                              #{calc(16 / $em-size)}rem;
+$font-size-h4:                              #{calc(14 / $em-size)}rem;
+$font-size-h5:                              #{calc(12 / $em-size)}rem;
+$font-size-h6:                              #{calc(10 / $em-size)}rem;
+
+/* Paddings */
+$padding-base-vertical:                     8px;
+$padding-base-horizontal:                   14px;
+
+/* Sizes */
+$input-height-base:                         $line-height-computed + ($padding-base-vertical * 2) + 4;
+
+/* Defaults */
+$default-color:                             $dim-gray;
+$default-font-size:                         $font-size;
+$default-font-family:                       $font-family-base;
+$default-line-height:                       $line-height;
+$default-background-color:                  $white;
+$default-border-color:                      rgba($white, 0.2);
+$default-border-color-active:               var($-selection-color);
+$default-border-radius:                     5px;
+$default-border-width:                      1px;
+$default-border:                            $default-border-width solid var(--border-color);
+$default-border-active:                     $default-border-width solid $default-border-color-active;
+$default-border-active-dashed:              $default-border-width dashed $default-border-color-active;
+$default-transition-duration:               0.2s;
+$default-transition-easing:                 ease-in-out;
+$default-transition:                        $default-transition-duration $default-transition-easing;
+$default-shadow-color:                      rgba($black, 0.2);
+$default-shadow:                            1px 1px 10px $default-shadow-color;
+$action-bar-shadow:                         var($-action-bar-shadow);
+$default-padding:                           10px;
+$default-padding-half:                      calc($default-padding / 2);
+$default-padding-third:                     calc($default-padding / 3);
+$default-padding-double:                    calc($default-padding * 2);
+$default-padding-triple:                    calc($default-padding * 3);
+$default-cursor:                            default;
+$default-cursor-hover:                      pointer;
+$default-cursor-disabled:                   $default-cursor;
+$default-shadow-as-border:                  0 0 0 1px inset;
+
+/* Links */
+$link-color:                                $green;
+$link-hover-color:                          color.adjust($link-color, $lightness: -5%);
+$link-hover-decoration:                     none;
+
+/* Z-indexes */
+$zindex-image-gallery:                      1600;
+$zindex-modal:                              2000;
+
+/* Application */
+$sidebar-width:                             5.5rem;
+$sidebar-width-mini:                        60px;
+$header-height:                             3.5rem;
+$footer-height:                             30px;
+
+/* Scroll Bars */
+$scrollbar-width:                           4px;
+
+/* Tooltip */
+$tooltip-max-width:                         300px;
+$tooltip-arrow-width:                       5px;
+$tooltip-color:                             var($-text-color);
+$tooltip-background:                        var($-background-color);
+$tooltip-zindex:                            2070;
+
+/* Buttons */
+$button-margin:                             5px;
+
+/* Borders */
+$border-color:                              $default-border-color;
+$border-color-active:                       $blue-primary;
+
+/* Page */
+$page-overflow-x:                           hidden;
+$page-min-width:                            320px;
+$filter-panel-width:                        300px;
+
+
+// Media Query Breakpoints
+$screen-xs:                                 480px;
+$screen-sm:                                 768px;
+$screen-md:                                 992px;
+$screen-lg:                                 1200px;
+$screen-xl:                                 1420px;
+
+$screen-xs-max:                             $screen-sm - 1;
+$screen-sm-max:                             $screen-md - 1;
+$screen-md-max:                             $screen-lg - 1;
+$screen-lg-max:                             $screen-xl - 1;
+
+
+/* --- Special --- */
+
+// Various colors
+$light-gray:                                #D1DADE; // Default label, badget
+$light-blue:                                #F3F6FB;

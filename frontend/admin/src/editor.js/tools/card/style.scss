@@ -1,0 +1,112 @@
+.card-item {
+    display: grid;
+    grid-template-columns: 100px auto;
+    gap: 10px;
+    background: #FFFFFF;
+    border: 1px solid rgba(201, 201, 204, 0.48);
+    border-radius: 5px;
+    overflow: hidden;
+
+    &:not(:last-child) {
+        margin-bottom: 5px;
+    }
+
+    &-image {
+        width: 100px;
+        height: 100px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &-content {
+        overflow: hidden;
+        
+        h4 {
+            margin: 5px 0 0 0;
+        }
+
+        &-details {
+            color: gray;
+        }
+    }
+}
+
+.card-selector {
+    min-width: 1000px;
+
+    &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s ease-in-out;
+        backdrop-filter: blur(2px);
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    &.loading {
+        &:after {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    &-type {
+        display: flex;
+        justify-content: space-between;
+
+        &-check {
+            display: flex;
+            width: 100%;
+
+            > input {
+                width: 0;
+                height: 0;
+                opacity: 0;
+
+                + label {
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                    padding: 5px;
+                    border-radius: 5px;
+                }
+
+                &:checked + label {
+                    background: rgba(#0C84FF, 0.8);
+                    color: #FFFFFF;
+                }
+            }
+        }
+    }
+
+    &-filter {
+        margin-bottom: 5px;
+    }
+
+    &-view {
+        width: 100%;
+        height: 45vh;
+        overflow: hidden auto;
+    }
+}
+
+@keyframes image-preloader-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
