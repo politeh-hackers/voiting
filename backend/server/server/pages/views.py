@@ -27,7 +27,7 @@ class MediaView(View):
         media_instance = get_object_or_404(Media, id=model_id)
         main_photo = media_instance.main_photo
         if main_photo:
-            main_photo_path = os.path.join('static/images', main_photo)
+            main_photo_path = os.path.join('static/Media_image', main_photo)
             if os.path.exists(main_photo_path):
                 os.remove(main_photo_path)
         content = media_instance.content
@@ -35,7 +35,7 @@ class MediaView(View):
             for block in json.loads(content).get("blocks", []):
                 if block.get("type") == "image":
                     file_name = block["data"]["file"]["name"]
-                    image_path = os.path.join('static/images', file_name)
+                    image_path = os.path.join('static/Media_image', file_name)
                     if os.path.exists(image_path):
                         os.remove(image_path)
         self.test_service.delete(model_id=model_id)
@@ -67,7 +67,7 @@ class ActualView(View):
             for block in json.loads(content).get("blocks", []):
                 if block.get("type") == "image":
                     file_name = block["data"]["file"]["name"]
-                    image_path = os.path.join('static/images', file_name)
+                    image_path = os.path.join('static/Actual_image', file_name)
                     if os.path.exists(image_path):
                         os.remove(image_path)
         self.test_service.delete(model_id=model_id)
