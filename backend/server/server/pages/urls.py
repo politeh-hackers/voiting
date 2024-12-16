@@ -7,9 +7,12 @@ from django.conf import settings
 urlpatterns = [
     path('admin/media', views.MediaView.as_view()),
     path('admin/media/<uuid:model_id>', views.MediaView.as_view()),
-    
-    path('admin/image', ImageView.as_view()),
-    path('admin/image/<str:file_name>', ImageView.as_view()),
+
+    path('admin/Media_image', MediaImageView.as_view()),
+    path('admin/Media_image/<str:file_name>', MediaImageView.as_view()),
+
+    path('admin/Actual_image', ActualImageView.as_view()),
+    path('admin/Actual_image/<str:file_name>', ActualImageView.as_view()),
 
     path('admin/actual', ActualView.as_view()),
     path('admin/actual/<uuid:model_id>', ActualView.as_view()),
