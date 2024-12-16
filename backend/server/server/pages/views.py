@@ -56,7 +56,7 @@ class ActualView(View):
 
     def post(self, request):
         data = request.POST.dict()
-        self.test_service.validate(data)
+        # self.test_service.validate(data)
         self.test_service.create(data)
         return JsonResponse(None, safe=False)
 
@@ -91,18 +91,28 @@ class ImageView(View):
             data = request.FILES["main_photo"]
         elif "image" in request.FILES:
             data = request.FILES["image"]
-        data_str = str(data)  
-        image_path = os.path.join('static/images', data_str)
+        else:
+            return JsonResponse({"error": "No image provided"}, status=400)
+        file_name = str(data)
+        image_dir = os.path.join('static/images')
+        os.makedirs(image_dir, exist_ok=True)  
+        image_path = os.path.join(image_dir, file_name)
+        base_name, extension = os.path.splitext(file_name)
+        counter = 1
+        while os.path.exists(image_path):
+            file_name = f"{base_name}_{counter}{extension}"
+            image_path = os.path.join(image_dir, file_name)
+            counter += 1
         with open(image_path, 'wb') as image_file:
             for chunk in data.chunks():
                 image_file.write(chunk)
-        return JsonResponse(
-            {
-                "url": f"http://localhost:8000/static/images/{data_str}",
-                "name": data_str,
-                "size": data.size,
-                "type": data.content_type
-            }, safe=False)
+                return JsonResponse(
+                {
+                    "url": f"http://localhost:8000/static/images/{file_name}",
+                    "name": file_name,
+                    "size": data.size,
+                    "type": data.content_type
+                }, safe=False)
 
     def delete(self, request: HttpRequest, file_name: str):
         image_path = os.path.join('static/images', file_name)
@@ -116,6 +126,12 @@ class AppealView(View):
 
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
+    
+    def post(self, request: HttpRequest):
+        data = json.loads(request.body)
+        # self.test_service.validate(data)
+        self.test_service.create(data)
+        return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         self.test_service.delete(model_id=model_id)
