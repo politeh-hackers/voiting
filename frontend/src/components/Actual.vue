@@ -288,8 +288,8 @@ const handleDialogClose = () => {
     post.value.main_photo = ""; // Очищаем ссылку на фото
   }
   if (editorInstance) {
-    editorInstance.clear();
-    console.log("pizda")
+  editorInstance.clear();
+  console.log("pizda")
   }
 };
 
@@ -389,8 +389,9 @@ const addPost = async () => {
       post.value.summary = "";
       post.value.main_photo = "";
       post.value.content = "";
-      editorInstance = null;
+      editorInstance = null
       visible.value = false;
+      
     } else {
       console.error("Ошибка при добавлении поста:", response.statusText);
     }

@@ -59,6 +59,7 @@ export interface Post extends BaseUUIDSchema {
     phone_number:string
     date_created:Date
     appeal_text:string
+    on_website:boolean
     photos:string
     official_response:string
 }
