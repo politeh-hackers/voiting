@@ -9,7 +9,6 @@ import { ref } from "vue";
 import Drawer from "primevue/drawer";
 
 const postService = new PostService();
-const baseAdmin = "admin";
 const prefix = "category";
 
 const posts = ref<Post[]>([]);
@@ -19,20 +18,20 @@ const editingPostName = ref<string>(""); // Храним значение ред
 const visible = ref(false); // Управляет видимостью Drawer
 
 const UpdateTable = async () => {
-  const results = await postService.getAll(prefix, baseAdmin);
+  const results = await postService.getAll(prefix);
   posts.value = results;
 };
 
 onMounted(UpdateTable);
 
 const addPost = async () => {
-  await postService.create(post.value, prefix, baseAdmin);
+  await postService.create(post.value, prefix);
   post.value.name = "";
   await UpdateTable();
 };
 
 const deletePost = async (id: string) => {
-  await postService.delete(prefix, id, baseAdmin);
+  await postService.delete(prefix, id);
   posts.value = posts.value.filter((post) => post.id !== id);
   await UpdateTable();
 };
@@ -45,7 +44,7 @@ const startEditing = (id: string, name: string) => {
 
 const saveEditedPost = async () => {
   if (editingPostId.value) {
-    await postService.patch(prefix, editingPostId.value, baseAdmin, {
+    await postService.patch(prefix, editingPostId.value ,{
       name: editingPostName.value,
     });
     editingPostId.value = null; // Сбрасываем режим редактирования

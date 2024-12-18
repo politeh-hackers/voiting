@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Яндекс.Карта</title>
+    <!-- Подключаем скрипт Яндекс.Карт -->
+    <script type="text/javascript" src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=49d050e1-f27e-4890-a731-e914f7da15f3"></script>
+    <style>
+        /* Задаем размеры для карты */
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Моя Яндекс.Карта</h1>
+
+    <!-- Элемент, куда будет вставлена карта -->
+    <div id="map"></div>
+
+    <script type="text/javascript">
+        // Ожидаем загрузки API и создаем карту
+        ymaps.ready(function () {
+            var map = new ymaps.Map("map", {
+                center: [55.184217, 30.202876],  // Координаты центра карты (Москва)
+                zoom: 10                         // Уровень зума
+            });
+
+            // Добавляем маркер на карту
+            var placemark = new ymaps.Placemark([55.184217, 30.202876], {
+                hintContent: 'Москва',
+                balloonContent: 'Это Москва'
+            });
+
+            // Добавляем маркер на карту
+            map.geoObjects.add(placemark);
+        });
+    </script>
+
+</body>
+</html>

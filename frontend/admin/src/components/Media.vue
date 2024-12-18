@@ -314,7 +314,7 @@ const SaveEditedPost = async () => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/admin/media/${post.value.id}`,
+      `http://localhost:8000/media/${post.value.id}`,
       {
         method: "PATCH",
         headers: {
@@ -346,7 +346,7 @@ const SaveEditedPost = async () => {
 
 const loadNews = async () => {
   try {
-    const response = await fetch("http://localhost:8000/admin/media");
+    const response = await fetch("http://localhost:8000/media/");
     if (response.ok) {
       newsList.value = await response.json();
     } else {
@@ -377,7 +377,7 @@ const addPost = async () => {
   }
 
   try {
-    const response = await fetch("http://localhost:8000/admin/media", {
+    const response = await fetch("http://localhost:8000/media/", {
       method: "POST",
       body: content,
     });
@@ -435,12 +435,12 @@ const editPost = (newsItem) => {
 const deletePost = async (postId: string) => {
   try {
     const response = await fetch(
-      `http://localhost:8000/admin/media/${postId}`,
+      `http://localhost:8000/media/${postId}`,
       {
         method: "DELETE",
       }
     );
-    deleteImage("http://localhost:8000/admin/media");
+    deleteImage("http://localhost:8000/media");
 
     if (response.ok) {
       console.log("Post deleted successfully");

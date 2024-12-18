@@ -10,15 +10,15 @@ export class ApiService<T> {
     baseUrl: string = "http://localhost:8000"
     
 
-    public async getAll(prefix: string, baseAdmin:string): Promise<T[]> {
-        const response = await fetch(`${this.baseUrl}/${baseAdmin}/${prefix}`);
+    public async getAll(prefix: string): Promise<T[]> {
+        const response = await fetch(`${this.baseUrl}/${prefix}/`);
         const jsonData = await response.json()
         return jsonData as T[]
     }
 
-    public async create(data: T, prefix: string, baseAdmin:string): Promise<void | Error> {
+    public async create(data: T, prefix: string): Promise<void | Error> {
         
-        const response = await fetch(`${this.baseUrl}/${baseAdmin}/${prefix}`, {
+        const response = await fetch(`${this.baseUrl}/${prefix}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Указание типа контента
@@ -30,8 +30,8 @@ export class ApiService<T> {
         }
         return response.json() ;
     }
-    public async delete(prefix: string,id: string, baseAdmin:string):Promise<void>{
-        const response = await fetch(`${this.baseUrl}/${baseAdmin}/${prefix}/${id}`,{
+    public async delete(prefix: string,id: string):Promise<void>{
+        const response = await fetch(`${this.baseUrl}/${prefix}/${id}`,{
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json', // Указание типа контента
@@ -39,8 +39,8 @@ export class ApiService<T> {
             
         });
     }
-    public async patch(prefix: string,id: string, baseAdmin:string, data:T):Promise<void>{
-        const response = await fetch(`${this.baseUrl}/${baseAdmin}/${prefix}/${id}`,{
+    public async patch(prefix: string,id: string, data:T):Promise<void>{
+        const response = await fetch(`${this.baseUrl}/${prefix}/${id}`,{
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json', // Указание типа контента

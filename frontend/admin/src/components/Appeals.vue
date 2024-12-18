@@ -8,99 +8,100 @@
   >
     <div class="content__main">
       <div class="components">
-      <div class="category">
-        <Select
-          v-model="selectedCategory"
-          :options="items"
-          optionLabel="name"
-          placeholder="Select a Category"
-        />
-      </div>
-      <div class="name">
-        <InputText
-          v-model="post.first_name"
-          placeholder="Имя"
-          class="header__input"
-        />
-      </div>
-      <div class="surname">
-        <InputText
-          v-model="post.last_name"
-          placeholder="Фамилия"
-          class="summary_input"
-        />
-      </div>
-
-      <div class="second_name">
-        <InputText
-          v-model="post.patronymic"
-          placeholder="Отчество"
-          class="summary_input"
-        />
-      </div>
-
-      <div class="flex-auto">
-        <label for="phone" class="">Номер телефона</label>
-        <InputMask
-          id="phone"
-          v-model="post.phone_number"
-          mask="+375-(99)-999-99-99"
-          placeholder="+375-(99)-999-99-99"
-          fluid
-        />
-      </div>
-      <div class="date_picker">
-        <DatePicker v-model="post.date_created" dateFormat="" />
-      </div>
-      <FloatLabel variant="on">
-        <Textarea
-          id="over_label"
-          v-model="post.appeal_text"
-          rows="5"
-          cols="30"
-          style="resize: none"
-        />
-        <label for="on_label">Текст обращения</label>
-      </FloatLabel>
-      <label for="image-upload">Просмотр изображений</label>
-      <Image
-        alt="main_photo"
-        src="'http://localhost:8000/admin/image'"
-        width="250"
-        preview
-      />
-      <div class="card flex flex-wrap justify-center gap-4">
-        <Select
-          v-model="statusitems"
-          :options="status"
-          optionLabel="name"
-          placeholder="Select a Status"
-        />
-      </div>
-      <div class="card flex flex-wrap justify-center gap-4">
-        <div class="flex items-center gap-2">
-          <Checkbox
-            v-model="post.on_website"
-            inputId="CheckWorked"
-            name="on_website"
-            value="OnWebsite"
+        <div class="category">
+          <Select
+            v-model="selectedCategory"
+            :options="items"
+            optionLabel="name"
+            placeholder="Select a Category"
           />
-          <label for="CheckWorked"> На сайте </label>
         </div>
-      </div>
-      <FloatLabel variant="on">
-        <Textarea
-          id="over_label"
-          v-model="post.official_response"
-          rows="5"
-          cols="30"
-          style="resize: none"
+        <div class="name">
+          <InputText
+            v-model="post.first_name"
+            placeholder="Имя"
+            class="header__input"
+          />
+        </div>
+        <div class="surname">
+          <InputText
+            v-model="post.last_name"
+            placeholder="Фамилия"
+            class="summary_input"
+          />
+        </div>
+
+        <div class="second_name">
+          <InputText
+            v-model="post.patronymic"
+            placeholder="Отчество"
+            class="summary_input"
+          />
+        </div>
+
+        <div class="flex-auto">
+          <label for="phone" class="">Номер телефона</label>
+          <InputMask
+            id="phone"
+            v-model="post.phone_number"
+            mask="+375-(99)-999-99-99"
+            placeholder="+375-(99)-999-99-99"
+            fluid
+          />
+        </div>
+        <div class="date_picker">
+          <DatePicker v-model="post.date_created" dateFormat="" />
+        </div>
+        <FloatLabel variant="on">
+          <Textarea
+            id="over_label"
+            v-model="post.appeal_text"
+            rows="5"
+            cols="30"
+            style="resize: none"
+          />
+          <label for="on_label">Текст обращения</label>
+        </FloatLabel>
+        <label for="image-upload">Просмотр изображений</label>
+        <Image
+          alt="main_photo"
+          src="'http://localhost:8000/appeals/image'"
+          width="250"
+          preview
         />
-        <label for="on_label">Оффициальный ответ</label>
-      </FloatLabel>
-    </div>
+        <div class="card flex flex-wrap justify-center gap-4">
+          <Select
+            v-model="statusitems"
+            :options="status"
+            optionLabel="name"
+            placeholder="Select a Status"
+          />
+        </div>
+        <div class="card flex flex-wrap justify-center gap-4">
+          <div class="flex items-center gap-2">
+            <Checkbox
+              v-model="post.on_website"
+              inputId="CheckWorked"
+              name="on_website"
+              value="OnWebsite"
+            />
+            <label for="CheckWorked"> На сайте </label>
+          </div>
+        </div>
+        <FloatLabel variant="on">
+          <Textarea
+            id="over_label"
+            v-model="post.official_response"
+            rows="5"
+            cols="30"
+            style="resize: none"
+          />
+          <label for="on_label">Оффициальный ответ</label>
+        </FloatLabel>
+      </div>
     </div>
   </Dialog>
+<div></div>
   <DataView
     :value="NewList"
     paginator
@@ -195,7 +196,7 @@ const NewList = ref<Post[]>([]);
 const items = ref();
 const loadAppeals = async () => {
   try {
-    const response = await fetch("http://localhost:8000/admin/appeal");
+    const response = await fetch("http://localhost:8000/appeals/");
     if (response.ok) {
       NewList.value = await response.json();
       console.log(NewList.value);
@@ -208,7 +209,7 @@ const loadAppeals = async () => {
 };
 
 const loadCategories = async () => {
-  const response = await fetch("http://localhost:8000/admin/category");
+  const response = await fetch("http://localhost:8000/category/");
   items.value = await response.json();
 };
 
@@ -230,38 +231,29 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+// .components {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 1.5rem; /* Добавляем гэпы между всеми компонентами */
+// }
 
+// .card.flex {
+//   display: flex;
+//   flex-wrap: wrap;
+//   gap: 1.5rem; /* Добавляем гэпы в карточках */
+// }
 
+// .input {
+//   margin-bottom: 1rem; /* Отступы между инпутами */
+// }
 
-.components {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem; /* Добавляем гэпы между всеми компонентами */
-}
+// textarea, input {
+//   width: 100%; /* Ширина инпутов и текстовых полей */
+// }
 
-
-
-
-
-.card.flex {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem; /* Добавляем гэпы в карточках */
-}
-
-.input {
-  margin-bottom: 1rem; /* Отступы между инпутами */
-}
-
-
-
-textarea, input {
-  width: 100%; /* Ширина инпутов и текстовых полей */
-}
-
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
+// .action-buttons {
+//   display: flex;
+//   gap: 10px;
+//   justify-content: center;
+// }
 </style>
