@@ -13,14 +13,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Admins',
+            name='Category',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('login', models.CharField(max_length=50)),
-                ('password', models.CharField(max_length=100)),
+                ('name', models.CharField(max_length=100, unique=True)),
             ],
             options={
-                'abstract': False,
+                'verbose_name': 'category',
+                'verbose_name_plural': 'categories',
             },
         ),
     ]
