@@ -1,6 +1,7 @@
 from django.db import models
 from base.models import BaseUUID
 from category.models import Category
+from django.utils import timezone
 
 class Appeal(BaseUUID):
     h1 = models.CharField(max_length=60, blank=True)
@@ -21,7 +22,7 @@ class Appeal(BaseUUID):
     location = models.CharField(max_length=255, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
     on_website = models.BooleanField(default=False)
-    date = models.DateField()
+    date = models.DateField(default=timezone.now)
     text = models.CharField(max_length=500)
     photos = models.CharField(max_length=255, null=True, blank=True)
     official_response = models.CharField(max_length=500, null=True, blank=True)
