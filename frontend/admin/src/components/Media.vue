@@ -49,8 +49,8 @@
                   class="image-preview"
                 />
                 <Button
-                  label="Удалить изображение"
                   class="p-button-danger"
+                  icon="pi pi-times"
                   @click="onImageRemove"
                 />
               </div>
@@ -102,7 +102,7 @@
             :showCancelButton="false"
             @upload="onImageUpload"
             @remove="onImageRemove"
-            chooseLabel="Выбрать изображение"
+            chooseLabel="Выбрать изображение" 
           >
             <template #content>
               <div class="custom-file-upload">
@@ -114,9 +114,9 @@
                   class="image-preview"
                 />
                 <Button
-                  label="Удалить изображение"
                   class="p-button-danger"
                   @click="onImageRemove"
+                  icon="pi pi-times"
                 />
               </div>
             </template>
@@ -141,9 +141,10 @@
       class="main-dataview"
     >
       <template #header>
+        <div class="header__content">
         <Button
           class="content__view"
-          label="Добавить новость"
+          icon="pi pi-plus"
           @click="visible = true"
         />
         <Dropdown
@@ -157,6 +158,7 @@
           placeholder="Поиск по описанию"
           class="search-input"
         />
+      </div>
       </template>
       <template #list="slotProps">
         <div class="news-container">
@@ -268,7 +270,6 @@ const onImageRemove = (event: any) => {
   console.log("Изображение удалено:", event.file);
 
   if (post.value.main_photo) {
-    // Если файл уже загружен на сервер, удаляем его
     deleteImage(`http://localhost:8000/static/image/${post.value.main_photo}`)
       .then(() => {
         post.value.main_photo = ""; // Очищаем ссылку на фото
@@ -478,15 +479,26 @@ onMounted(() => {
 });
 </script>
   
-  <style lang="scss">
-.news-header {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1fr;
-  gap: 20px;
-  font-weight: bold;
-  padding: 10px 0;
-  border-bottom: 2px solid #e0e0e0;
+<style scoped lang="scss">
+
+input {
+  width: 100%; /* Ширина инпутов и текстовых полей */}
+
+
+
+.content__main{
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; 
 }
+// .news-header {
+//   display: grid;
+//   grid-template-columns: 1fr 2fr 1fr 1fr;
+//   gap: 20px;
+//   font-weight: bold;
+//   padding: 10px 0;
+//   border-bottom: 2px solid #e0e0e0;
+// }
 .image-preview {
   max-width: 150px;
   max-height: 150px;
@@ -578,6 +590,19 @@ onMounted(() => {
 .actions-label {
   font-weight: bold;
   margin-bottom: 5px;
+}
+.content-editor{ 
+}
+.search-input {
+}
+.p-dropdown{
+  align-items: center;
+}
+.header__content {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  height: 30px;
 }
 </style>
   

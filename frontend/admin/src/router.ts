@@ -12,8 +12,12 @@ export default createRouter(
         history: createWebHistory(),
         routes: [
             {
-                name: 'Home',
                 path: '/',
+                redirect: '/Main', // Начальный маршрут
+            },
+            {
+                name: 'Home',
+                path: '/Main',
                 component: Main,
             },
             {

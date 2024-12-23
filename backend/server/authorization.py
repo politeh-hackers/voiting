@@ -10,8 +10,8 @@ class AuthorizationMiddleware:
             if request.path == '/admin/login':  
                 return self.get_response(request)
 
-            user_login = request.COOKIES.get('user_login')
-            if not user_login:
-                return JsonResponse({"success": False, "message": "Вы не авторизованы."}, status=403)
+            # user_login = request.COOKIES.get('user_login')
+            # if not user_login:
+            #     return JsonResponse({"success": False, "message": "Вы не авторизованы."}, status=403)
 
         return self.get_response(request)

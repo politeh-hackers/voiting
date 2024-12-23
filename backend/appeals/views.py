@@ -2,9 +2,13 @@ import json
 from .models import Appeal
 from .services import AppealService
 import uuid
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views import View
+from django.shortcuts import render
 
+def hui(request):
+    return render(request, "appeals/index.html")
+ 
 class AppealView(View):
     test_service = AppealService(model=Appeal)
 
