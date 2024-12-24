@@ -25,10 +25,11 @@ const login = async () => {
       password: formState.value.password,
     });
 
-    if (response.data.success) {
+    if (response.data.refresh) {
+      const token = response.data.refresh;
+      localStorage.setItem('authToken', token);
       formState.value.successMessage = 'Авторизация успешна!';
       formState.value.errorMessage = '';
-
       setTimeout(() => {
         router.push({ name: 'Base' });
       }, 1000);

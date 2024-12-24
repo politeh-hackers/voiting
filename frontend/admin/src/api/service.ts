@@ -1,3 +1,5 @@
+import { getToken } from "../utils/auth";
+
 export interface BaseUUIDSchema {
     id?: string,
 }
@@ -11,7 +13,13 @@ export class ApiService<T> {
     
 
     public async getAll(prefix: string): Promise<T[]> {
-        const response = await fetch(`${this.baseUrl}/${prefix}/`);
+        const token = getToken()
+        console.log("ddsds",token)
+        const response = await fetch(`${this.baseUrl}/${prefix}/`,{
+            headers:{
+                'Authorization': `Bearer ${token}`
+            }
+        });
         const jsonData = await response.json()
         return jsonData as T[]
     }
@@ -21,6 +29,7 @@ export class ApiService<T> {
         const response = await fetch(`${this.baseUrl}/${prefix}/`, {
             method: 'POST',
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json', // Указание типа контента
             },
 
