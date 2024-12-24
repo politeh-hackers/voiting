@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from django.core.wsgi import get_wsgi_application
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -147,3 +148,10 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'users.Admins'
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Время жизни access-токена
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),     # Время жизни refresh-токена
+    'SIGNING_KEY': 'your-secret-key',  # Секретный ключ
+    'ALGORITHM': 'HS256',              # Алгоритм подписи
+}

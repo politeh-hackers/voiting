@@ -17,7 +17,7 @@ export class ApiService<T> {
         console.log("ddsds",token)
         const response = await fetch(`${this.baseUrl}/${prefix}/`,{
             headers:{
-                'Authorization': `Bearer ${token}`
+                'Authorization': `${token}`
             }
         });
         const jsonData = await response.json()
@@ -29,7 +29,7 @@ export class ApiService<T> {
         const response = await fetch(`${this.baseUrl}/${prefix}/`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `${token}`,
                 'Content-Type': 'application/json', // Указание типа контента
             },
 
