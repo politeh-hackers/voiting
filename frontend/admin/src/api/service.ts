@@ -23,6 +23,7 @@ export class ApiService<T> {
             headers: {
                 'Content-Type': 'application/json', // Указание типа контента
             },
+
             body: JSON.stringify(data)
         });
         if (response.status !== 200) {

@@ -101,7 +101,6 @@
       </div>
     </div>
   </Dialog>
-<div></div>
   <DataView
     :value="NewList"
     paginator
@@ -230,30 +229,22 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss">
-// .components {
-//   display: flex;
-//   flex-direction: column;
-//   gap: 1.5rem; /* Добавляем гэпы между всеми компонентами */
-// }
-
-// .card.flex {
-//   display: flex;
-//   flex-wrap: wrap;
-//   gap: 1.5rem; /* Добавляем гэпы в карточках */
-// }
-
-// .input {
-//   margin-bottom: 1rem; /* Отступы между инпутами */
-// }
-
-// textarea, input {
-//   width: 100%; /* Ширина инпутов и текстовых полей */
-// }
-
-// .action-buttons {
-//   display: flex;
-//   gap: 10px;
-//   justify-content: center;
-// }
+<style scoped lang="scss">
+.components {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Добавляем гэпы между всеми компонентами */}
+.card.flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem; /* Добавляем гэпы в карточках */}
+.input {
+  margin-bottom: 1rem; /* Отступы между инпутами */}
+textarea, input {
+  width: 100%; /* Ширина инпутов и текстовых полей */}
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
 </style>

@@ -37,6 +37,7 @@ class AuthorizationMiddleware:
             if request.path == '/admin/login':  # Исключение для страницы логина
                 return self.get_response(request)
 
+<<<<<<< HEAD
             # Проверяем JWT токен
             try:
                 user, token = self.jwt_authenticator.authenticate(request)
@@ -46,5 +47,10 @@ class AuthorizationMiddleware:
                     return JsonResponse({"success": False, "message": "Вы не авторизованы."}, status=403)
             except Exception as e:
                 return JsonResponse({"success": False, "message": str(e)}, status=403)
+=======
+            # user_login = request.COOKIES.get('user_login')
+            # if not user_login:
+            #     return JsonResponse({"success": False, "message": "Вы не авторизованы."}, status=403)
+>>>>>>> f52eb4843118ec64a0d6731cb95eb232f9dfbc82
 
         return self.get_response(request)

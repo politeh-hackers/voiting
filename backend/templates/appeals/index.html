@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick start with Yandex Maps (TypeScript)</title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=5325d15d-232d-4c0f-880e-faa5da31699b&lang=ru_RU" type="text/javascript"></script>
+    {% load static %}
+    <script src="{% static 'appeals/index.js' %}" type="module"></script> 
+  </head>
+
+  <body>
+    <div id="map" style="width: 600px; height: 400px;"></div>
+    <button id="saveBtn">Сохранить координаты</button>
+  </body>
+</html>
