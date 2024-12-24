@@ -20,7 +20,7 @@ class Login(View):
             return JsonResponse({"success": False, "message": "Неверный логин или пароль"})
         if check_password(password, admin.password):
             response = JsonResponse({"success": True, "message": "Вход выполнен"})
-            self.cookie_service.set_cookie(response, 'user_login', login, max_age=10)
+            self.cookie_service.set_cookie(response, 'user_login', login, 3600)
             return response
         return JsonResponse({"success": False, "message": "Неверный логин или пароль"})
 
@@ -38,10 +38,10 @@ class Registration(View):
         Admins.objects.create(login=login, password=hashed_password)
         return JsonResponse({"success": True})
 
-# class Logout(View):
-#     cookie_service = CookieService()
-#     def post(self, request: HttpRequest):
-#         response = JsonResponse({"success": True, "message": "Вы вышли из системы"})
-#         self.cookie_service.delete_cookie(response, 'user_login')
-#         return response
+class Logout(View):
+    cookie_service = CookieService()
+    def post(self, request: HttpRequest):
+        response = JsonResponse({"success": True, "message": "Вы вышли из системы"})
+        self.cookie_service.delete_cookie(response, 'user_login')
+        return response
 

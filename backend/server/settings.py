@@ -26,9 +26,7 @@ SECRET_KEY = 'django-insecure-16r6b2%e7f#j$fj+#&mm!tpda0m+b%sy^096xus&ou5#c441w2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
+ALLOWED_HOSTS = ['localhost:5173', '127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -40,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
     'media',
     'actual',
@@ -50,8 +49,7 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-    ]
+    'DEFAULT_PERMISSION_CLASSES': []
 }
 
 MIDDLEWARE = [
@@ -60,9 +58,9 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'server.authorization.AuthorizationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'server.authorization.AuthorizationMiddleware',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -142,12 +140,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080',
-
-
-]
-
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Использование базы данных для хранения сессий
-SESSION_COOKIE_AGE = 1209600  # 2 недели по умолчанию
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Сессия не завершится при закрытии браузера (если 'remember me')
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
