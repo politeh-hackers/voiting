@@ -4,10 +4,11 @@ from base.models import BaseUUID
 
 
 class Admins(AbstractUser):
-    login = models.CharField(max_length=150, unique=True)  # Используем login вместо username
+    username = None  
+    login = models.CharField(max_length=150, unique=True)  
 
-    USERNAME_FIELD = 'login'  # Поле, используемое для аутентификации
-    REQUIRED_FIELDS = []      # Поля, обязательные для заполнения при создании пользователя
+    USERNAME_FIELD = 'login'  
+    REQUIRED_FIELDS = []  
 
     def __str__(self):
         return self.login

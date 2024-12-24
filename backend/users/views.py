@@ -72,7 +72,6 @@ class Logout(View):
         return response
 
 class Registration(APIView):
-    
     def post(self, request):
         data = request.data
         login = data.get('login')
@@ -81,23 +80,24 @@ class Registration(APIView):
         if not login or not password:
             return Response({"success": False, "message": "Логин и пароль обязательны."}, status=400)
 
-        # Проверяем, существует ли пользователь с таким логином
-        if get_user_model().objects.filter(login=login).exists():
+        # Проверка на существование пользователя
+        User = get_user_model()
+        if User.objects.filter(login=login).exists():
             return Response({"success": False, "message": "Пользователь с таким логином уже существует."}, status=400)
 
-        # Создаём нового пользователя
-        user = get_user_model().objects.create(
+        # Создание пользователя
+        user = User.objects.create(
             login=login,
-            password=make_password(password)  # Пароль хэшируется
+            password=make_password(password)  # Хэширование пароля
         )
 
         # Генерация JWT токенов
         refresh = RefreshToken.for_user(user)
-        access = RefreshToken.access_token
+        access_token = RefreshToken.access_token
 
         return Response({
             "success": True,
             "message": "Пользователь зарегистрирован.",
-            "access": str(access),
+            "access": str(access_token),
             "refresh": str(refresh),
         })
