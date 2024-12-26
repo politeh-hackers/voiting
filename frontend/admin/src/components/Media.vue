@@ -37,6 +37,7 @@
             :showCancelButton="false"
             @upload="onImageUpload"
             @remove="onImageRemove"
+            :before-upload="uploadHeaders"
             chooseLabel="Выбрать изображение"
           >
             <template #content>
@@ -216,7 +217,7 @@ import FileUpload from "primevue/fileupload";
 import { PostService, Post } from "../api/serviceformedia";
 import { initEditor } from "../editor.js/editor-init";
 import Dropdown from "primevue/dropdown";
-
+import { getToken } from "../utils/auth";
 const post = ref<Post>({
   summary: "",
   main_photo: "",
@@ -224,7 +225,7 @@ const post = ref<Post>({
   content: "",
   date_created: new Date(),
 });
-
+const token = getToken()
 const sortOrder = ref("asc");
 let previousPhoto = ""; //
 const visible = ref(false);
@@ -238,7 +239,10 @@ const sortOptions = [
   { label: "По дате(по возрастанию)", value: "asc" },
   { label: "По дате(по убыванию)", value: "desc" },
 ];
-
+const uploadHeaders = ref({
+      'Authorization': `${token}`
+      
+    });
 // Вычисляемое свойство для фильтрации
 const filteredNewsList = computed(() => {
   const filtered = newsList.value.filter(
@@ -263,7 +267,6 @@ const onImageUpload = (event: any) => {
   const uploadedImage = event.files[0];
   if (uploadedImage) {
     post.value.main_photo = uploadedImage.name;
-    
   }
 };
 const onImageRemove = (event: any) => {
@@ -319,6 +322,7 @@ const SaveEditedPost = async () => {
       {
         method: "PATCH",
         headers: {
+          'Authorization': `${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...postData, date_created: formattedDate }),
@@ -347,7 +351,12 @@ const SaveEditedPost = async () => {
 
 const loadNews = async () => {
   try {
-    const response = await fetch("http://localhost:8000/media/");
+    console.log(uploadHeaders)
+    const response = await fetch("http://localhost:8000/media/",{
+      headers:{
+        'Authorization': `${token}`
+      }
+    });
     if (response.ok) {
       newsList.value = await response.json();
     } else {
@@ -381,6 +390,9 @@ const addPost = async () => {
     const response = await fetch("http://localhost:8000/media/", {
       method: "POST",
       body: content,
+      headers:{
+        'Authorization': `${token}`
+      }
     });
 
     if (response.ok) {
@@ -439,6 +451,9 @@ const deletePost = async (postId: string) => {
       `http://localhost:8000/media/${postId}`,
       {
         method: "DELETE",
+        headers:{
+          'Authorization': `${token}`
+        }
       }
     );
     deleteImage("http://localhost:8000/media");
@@ -460,6 +475,7 @@ const deleteImage = (fileUrl: string) => {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      'Authorization': `${token}`
     },
     body: JSON.stringify({ file_url: fileUrl }),
   }).then((response) => {

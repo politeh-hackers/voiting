@@ -167,6 +167,7 @@ import InputMask from "primevue/inputmask";
 import Checkbox from "primevue/checkbox";
 import Image from "primevue/image";
 import FloatLabel from "primevue/floatlabel";
+import { getToken } from "../utils/auth";
 const checked = ref(false);
 const phone_number = ref("");
 const selectedCategory = ref();
@@ -183,6 +184,7 @@ const post = ref<Post>({
   date_created: new Date(),
   official_response: "",
 });
+const token = getToken()
 
 const status = ref([
   { name: "Принято в работу", code: "Accepted" },
@@ -195,7 +197,12 @@ const NewList = ref<Post[]>([]);
 const items = ref();
 const loadAppeals = async () => {
   try {
-    const response = await fetch("http://localhost:8000/appeals/");
+    const response = await fetch("http://localhost:8000/appeals/",{
+      method: "GET",
+      headers:{
+         'Authorization': `${token}`
+      }
+    });
     if (response.ok) {
       NewList.value = await response.json();
       console.log(NewList.value);
@@ -208,7 +215,11 @@ const loadAppeals = async () => {
 };
 
 const loadCategories = async () => {
-  const response = await fetch("http://localhost:8000/category/");
+  const response = await fetch("http://localhost:8000/category/",{
+    headers:{
+         'Authorization': `${token}`
+    }
+  });
   items.value = await response.json();
 };
 

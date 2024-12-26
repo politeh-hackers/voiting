@@ -25,7 +25,7 @@ export class ApiService<T> {
     }
 
     public async create(data: T, prefix: string): Promise<void | Error> {
-        
+        const token = getToken()
         const response = await fetch(`${this.baseUrl}/${prefix}/`, {
             method: 'POST',
             headers: {
@@ -41,18 +41,22 @@ export class ApiService<T> {
         return response.json() ;
     }
     public async delete(prefix: string,id: string):Promise<void>{
+        const token = getToken()
         const response = await fetch(`${this.baseUrl}/${prefix}/${id}`,{
             method: 'DELETE',
             headers: {
+                'Authorization': `${token}`,
                 'Content-Type': 'application/json', // Указание типа контента
             },
             
         });
     }
     public async patch(prefix: string,id: string, data:T):Promise<void>{
+        const token = getToken()
         const response = await fetch(`${this.baseUrl}/${prefix}/${id}`,{
             method: 'PATCH',
             headers: {
+                'Authorization': `${token}`,
                 'Content-Type': 'application/json', // Указание типа контента
             },
             body: JSON.stringify(data)

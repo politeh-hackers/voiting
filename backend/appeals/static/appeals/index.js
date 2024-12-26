@@ -66,8 +66,8 @@ function initMap() {
         var position = marker.geometry.getCoordinates();
         return polygon.geometry.contains(position);
     }
-    // Функция для отправки координат маркера на сервер через POST-запрос
-    function sendCoordinatesToServer(location) {
+    // Функция для отправки координат и данных формы на сервер через POST-запрос
+    function sendDataToServer(data) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_1;
             return __generator(this, function (_a) {
@@ -79,15 +79,15 @@ function initMap() {
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                body: JSON.stringify({ location: location }) // Отправляем координаты как JSON с ключом "location"
+                                body: JSON.stringify(data) // Отправляем данные как JSON
                             })];
                     case 1:
                         response = _a.sent();
                         if (response.ok) {
-                            console.log('Координаты успешно отправлены');
+                            console.log('Данные успешно отправлены');
                         }
                         else {
-                            console.error('Ошибка при отправке координат');
+                            console.error('Ошибка при отправке данных');
                         }
                         return [3 /*break*/, 3];
                     case 2:
@@ -120,8 +120,19 @@ function initMap() {
             // Проверяем, внутри ли маркер в полигоне перед отправкой данных
             if (isMarkerInPolygon()) {
                 var position = marker.geometry.getCoordinates();
-                // Отправляем координаты маркера на сервер в поле "location"
-                sendCoordinatesToServer(position);
+                // Собираем данные из формы
+                var formData = new FormData(document.getElementById('appealForm'));
+                var appealData = {
+                    location: position,
+                    last_name: formData.get('last_name'),
+                    first_name: formData.get('first_name'),
+                    patronymic: formData.get('patronymic'),
+                    phone: formData.get('phone'),
+                    text: formData.get('text'),
+                    photos: formData.getAll('photos') // Получаем все выбранные файлы
+                };
+                // Отправляем данные на сервер
+                sendDataToServer(appealData);
             }
             else {
                 alert('Маркер находится вне полигона. Переместите его внутрь полигона перед сохранением.');
