@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
-from django.core.wsgi import get_wsgi_application
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -46,7 +45,6 @@ INSTALLED_APPS = [
     'appeals',
     'category',
     'users',
-    'cookies'
 ]
 
 REST_FRAMEWORK = {
@@ -129,15 +127,8 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -150,8 +141,8 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'users.Admins'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Время жизни access-токена
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),     # Время жизни refresh-токена
-    'SIGNING_KEY': 'your-secret-key',  # Секретный ключ
-    'ALGORITHM': 'HS256',              # Алгоритм подписи
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60), 
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),   
+    'SIGNING_KEY': 'your-secret-key',  
+    'ALGORITHM': 'HS256',             
 }

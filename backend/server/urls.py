@@ -12,4 +12,3 @@ urlpatterns = [
     path('admin/image/<str:file_name>', ImageView.as_view()),
 
 ]
-

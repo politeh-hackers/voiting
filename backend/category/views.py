@@ -4,7 +4,6 @@ from .services import CategoryService
 import uuid
 from django.http import JsonResponse, HttpRequest
 from django.views import View
-from cookies.services import CookieService
 
 class CategoryView(View):
 
