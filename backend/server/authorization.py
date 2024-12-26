@@ -36,20 +36,17 @@ class AuthorizationMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.method == 'POST' and request.path == '/admin/login' or request.method == 'POST' and request.path == '/admin/registration':
-            return self.get_response(request)
-
-        if request.method in ['GET', 'POST', 'PATCH', 'DELETE']:
+        exeption_paths = ['/admin/login', '/appeals/appeals', '/admin/image']
+        if request.method in ['GET', 'POST', 'PATCH', 'DELETE'] and request.path not in exeption_paths:
             token = request.headers.get('Authorization')
-
+            if not token:
+                return JsonResponse({"success": False, "message": "Authorization token is missing."}, status=401)
             try:
                 jwt.decode(
                     token,
-                    api_settings.SIGNING_KEY, 
-                    algorithms=[api_settings.ALGORITHM]  
+                    api_settings.SIGNING_KEY,
+                    algorithms=[api_settings.ALGORITHM]
                 )
-
             except Error as e:
                 return JsonResponse({"success": False, "message": str(e)}, status=401)
-
         return self.get_response(request)

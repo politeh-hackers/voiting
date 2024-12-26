@@ -6,8 +6,8 @@ from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views import View
 from django.shortcuts import render
 
-def hui(request):
-    return render(request, "appeals/index.html")
+def AppealsClientView(request):
+    return render(request, "appeals.html")
  
 class AppealView(View):
     test_service = AppealService(model=Appeal)
