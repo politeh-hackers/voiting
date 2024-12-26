@@ -10,5 +10,6 @@ urlpatterns = [
     path('admin/', include('users.urls')),
     path('admin/image', ImageView.as_view()),
     path('admin/image/<str:file_name>', ImageView.as_view()),
+    path('gpt/', include('gpt.urls'))
 
 ]
