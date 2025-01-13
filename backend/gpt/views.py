@@ -1,19 +1,17 @@
-import openai
+from g4f.client import Client
 from django.http import JsonResponse
+import json
 
-# Укажи свой API-ключ
-openai.api_key = "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"
-
-def generate_response(request):
+def generate(request):
     if request.method == "POST":
-        user_input = request.POST.get("user_input", "")
-        try:
-            response = openai.Completion.create(
-                engine="text-davinci-003",
-                prompt=user_input,
-                max_tokens=150
-            )
-            return JsonResponse({"response": response.choices[0].text.strip()})
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-    return JsonResponse({"error": "Invalid request method"}, status=400)
+        body = json.loads(request.body)
+        user_input = body.get("user_input", "")
+        client = Client()
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": user_input}],
+            web_search=False
+        )
+        reply_content = response.choices[0].message.content
+        return JsonResponse({"response": reply_content.strip()})
+
