@@ -1,8 +1,8 @@
 from django.db import models
 from base.models import BaseUUID
 
-class Category(BaseUUID):  # Наследует только от BaseUUID
-    name = models.CharField(max_length=100, unique=True)
+class Category(BaseUUID): 
+    name = models.CharField(max_length=100, unique=True, blank=True)
 
     def __str__(self):
         return self.name
