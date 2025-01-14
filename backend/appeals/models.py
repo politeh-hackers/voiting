@@ -19,7 +19,7 @@ class Appeal(BaseUUID):
     text = models.CharField(max_length=500, null=False, blank=True)
     photos = models.CharField(max_length=255, null=True, blank=True)
     official_response = models.CharField(max_length=500, null=True, blank=True)
-    category = models.ManyToManyField(Category, blank=True, null=False)
+    category = models.CharField(max_length=200, blank=True, null=False)
 
     class Meta:
         ordering = ['-date']
