@@ -17,8 +17,8 @@ export const isTokenExpired = (token: string): boolean => {
   }
 };
 
-export const isAuthenticated = (): boolean => {
-  const token = getToken();
+export const isAuthenticated = (token:string): boolean => {
+  
   if (token && !isTokenExpired(token)) {
     return true;
   }

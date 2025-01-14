@@ -9,7 +9,11 @@ class AuthorizationMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+<<<<<<< HEAD
+        exeption_paths = ['/admin/login', '/appeals/appeals', '/appeals/', '/admin/image']
+=======
         exeption_paths = ['/admin/login', '/appeals/appeals', '/appeals/', '/admin/image', '/gpt/generate']
+>>>>>>> 504da75ece884c7a1396b427f009179a62c1e607
         if request.method in ['POST', 'PATCH', 'DELETE'] and request.path not in exeption_paths:
             token = request.headers.get('Authorization')
             if not token:

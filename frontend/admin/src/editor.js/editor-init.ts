@@ -9,15 +9,17 @@ import Table from '@editorjs/table';
 import MapTool from './tools/map';
 import CardTool, { CardToolData, CardType } from './tools/card';
 import JSCookie from '../common/utils/cookie';
+import { getToken, isAuthenticated } from '../utils/auth';
 
 export const initEditor = (element: HTMLElement, data: any = null) => {
   let previousData: any = { blocks: [] };
   const deleteImage = (fileUrl: string) => {const imageName = fileUrl.split('/').pop(); // например, если fileUrl = 'http://localhost:8000/uploads/myimage.jpg', то imageName будет 'myimage.jpg'
-
+  const token = getToken()
     return fetch(`http://127.0.0.1:8000/admin/image/${imageName}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `${token}`
       },
       body: JSON.stringify({ file_url: fileUrl })
     }).then((response) => {

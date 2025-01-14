@@ -142,7 +142,7 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'users.Admins'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60), 
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1), 
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),   
     'SIGNING_KEY': 'your-secret-key',  
     'ALGORITHM': 'HS256',             

@@ -35,10 +35,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 function initMap() {
-    // Создаем карту
     var map = new ymaps.Map('map', {
-        center: [55.200000, 30.250000], // Координаты центра карты
-        zoom: 10, // Масштаб
+        center: [55.200000, 30.250000],
+        zoom: 10,
     });
     var coordinates = [
         [55.199440, 30.225416],
@@ -48,8 +47,8 @@ function initMap() {
         [55.208408, 30.243153]
     ];
     var polygon = new ymaps.Polygon([coordinates], {}, {
-        fillColor: '#6699FF33', // Цвет заливки
-        strokeColor: '#0000FF', // Цвет обводки
+        fillColor: '#6699FF33',
+        strokeColor: '#0000FF',
         strokeWidth: 2
     });
     map.geoObjects.add(polygon);
@@ -58,15 +57,12 @@ function initMap() {
         hintContent: 'Перетащи меня!'
     });
     map.geoObjects.add(marker);
-    marker.options.set('draggable', true); // Сделаем маркер перетаскиваемым
-    // Переменная для хранения последней допустимой позиции маркера
+    marker.options.set('draggable', true);
     var lastValidPosition = [55.199440, 30.225416];
-    // Функция для проверки, внутри ли маркер в полигоне
     function isMarkerInPolygon() {
         var position = marker.geometry.getCoordinates();
         return polygon.geometry.contains(position);
     }
-    // Функция для отправки координат и данных формы на сервер через POST-запрос
     function sendDataToServer(data) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_1;
@@ -79,7 +75,7 @@ function initMap() {
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                body: JSON.stringify(data) // Отправляем данные как JSON
+                                body: JSON.stringify(data)
                             })];
                     case 1:
                         response = _a.sent();
@@ -99,28 +95,20 @@ function initMap() {
             });
         });
     }
-    // Отслеживаем перемещение маркера
     marker.events.add('drag', function () {
-        // Получаем текущие координаты маркера
         var position = marker.geometry.getCoordinates();
-        // Если маркер выходит за пределы полигона
         if (!isMarkerInPolygon()) {
-            // Возвращаем маркер в последнюю допустимую позицию
             marker.geometry.setCoordinates(lastValidPosition);
         }
         else {
-            // Если маркер внутри полигона, обновляем последнюю допустимую позицию
             lastValidPosition = position;
         }
     });
-    // Обработчик нажатия кнопки "Сохранить"
     var saveButton = document.getElementById('saveBtn');
     if (saveButton) {
         saveButton.addEventListener('click', function () {
-            // Проверяем, внутри ли маркер в полигоне перед отправкой данных
             if (isMarkerInPolygon()) {
                 var position = marker.geometry.getCoordinates();
-                // Собираем данные из формы
                 var formData = new FormData(document.getElementById('appealForm'));
                 var appealData = {
                     location: position,
@@ -129,9 +117,8 @@ function initMap() {
                     patronymic: formData.get('patronymic'),
                     phone: formData.get('phone'),
                     text: formData.get('text'),
-                    photos: formData.getAll('photos') // Получаем все выбранные файлы
+                    photos: formData.getAll('photos')
                 };
-                // Отправляем данные на сервер
                 sendDataToServer(appealData);
             }
             else {
@@ -140,5 +127,4 @@ function initMap() {
         });
     }
 }
-// Убедимся, что API загружено и готово к использованию
 ymaps.ready(initMap);

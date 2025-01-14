@@ -62,7 +62,7 @@
         <div ref="editorContainer" class="content-editor"></div>
 
         <div class="date__picker">
-          <DatePicker v-model="post.date_created" dateFormat="" />
+          <DatePicker v-model="post.date_created" dateFormat="yy-mm-dd" />
         </div>
 
         <Button icon="pi pi-check" @click="addPost" />
@@ -207,6 +207,7 @@
   
   
   <script setup lang="ts">
+import { useRouter } from "vue-router";
 import { ref, onMounted, computed, watch } from "vue";
 import InputText from "primevue/inputtext";
 import DatePicker from "primevue/datepicker";
@@ -217,7 +218,8 @@ import FileUpload from "primevue/fileupload";
 import { PostService, Post } from "../api/serviceformedia";
 import { initEditor } from "../editor.js/editor-init";
 import Dropdown from "primevue/dropdown";
-import { getToken } from "../utils/auth";
+import { getToken, isAuthenticated } from "../utils/auth";
+const router = useRouter()
 const post = ref<Post>({
   summary: "",
   main_photo: "",
@@ -241,7 +243,6 @@ const sortOptions = [
 ];
 const uploadHeaders = ref({
       'Authorization': `${token}`
-      
     });
 // Вычисляемое свойство для фильтрации
 const filteredNewsList = computed(() => {
@@ -270,6 +271,7 @@ const onImageUpload = (event: any) => {
   }
 };
 const onImageRemove = (event: any) => {
+  
   console.log("Изображение удалено:", event.file);
 
   if (post.value.main_photo) {
@@ -286,6 +288,7 @@ const onImageRemove = (event: any) => {
   }
 };
 const handleDialogClose = () => {
+  
   // Проверяем, что окно было закрыто через крестик и поле изображения не пустое
   if (!visible.value && post.value.main_photo) {
     deleteImage(`http://localhost:8000/static/image/${post.value.main_photo}`);
@@ -293,11 +296,14 @@ const handleDialogClose = () => {
   }
   if (editorInstance) {
   editorInstance.clear();
-  console.log("pizda")
   }
 };
 
 const SaveEditedPost = async () => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   if (!post.value.id) {
     console.error("Отсутствует ID поста");
     return;
@@ -350,6 +356,10 @@ const SaveEditedPost = async () => {
 };
 
 const loadNews = async () => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   try {
     console.log(uploadHeaders)
     const response = await fetch("http://localhost:8000/media/",{
@@ -368,6 +378,10 @@ const loadNews = async () => {
 };
 
 const addPost = async () => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   post.value.content = await editorInstance
     .save()
     .then((data) => JSON.stringify(data));
@@ -415,6 +429,10 @@ const addPost = async () => {
 
 // Редактирование новости
 const editPost = (newsItem) => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   post.value.id = newsItem.id;
   post.value.header = newsItem.header;
   post.value.summary = newsItem.summary;
@@ -446,6 +464,10 @@ const editPost = (newsItem) => {
 
 // Удаление новости
 const deletePost = async (postId: string) => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   try {
     const response = await fetch(
       `http://localhost:8000/media/${postId}`,
@@ -469,6 +491,10 @@ const deletePost = async (postId: string) => {
   }
 };
 const deleteImage = (fileUrl: string) => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   const imageName = fileUrl.split("/").pop();
 
   return fetch(`http://127.0.0.1:8000/admin/image/${imageName}`, {
@@ -498,7 +524,8 @@ onMounted(() => {
 <style scoped lang="scss">
 
 input {
-  width: 100%; /* Ширина инпутов и текстовых полей */}
+  width: 100%; /* Ширина инпутов и текстовых полей */
+}
 
 
 
