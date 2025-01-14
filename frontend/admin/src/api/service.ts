@@ -11,7 +11,6 @@ export interface Error {
 export class ApiService<T> {
     baseUrl: string = "http://localhost:8000"
     
-
     public async getAll(prefix: string): Promise<T[]> {
         const token = getToken()
         console.log("ddsds",token)

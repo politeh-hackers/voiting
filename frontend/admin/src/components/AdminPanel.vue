@@ -1,85 +1,74 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Toolbar from 'primevue/toolbar';
-import Button from "primevue/button";
-import Menu from "primevue/menu";
-import 'primeicons/primeicons.css';
-import { RouterLink, RouterView, useRouter } from "vue-router";
-import { InputIcon } from "primevue";
-import { IconField } from "primevue";
-import { SplitButton } from "primevue";
-import { Avatar } from "primevue";
+import { useRouter } from "vue-router";
 import SpeedDial from 'primevue/speeddial';
+import 'primeicons/primeicons.css';
+import Button from "primevue/button";
 
 const router = useRouter();
-const items = ref([
-  { label: "Категории", command: () => router.push("/Form") },
-  { label: "Медиа", command: () => router.push("/Media") },
-  { label: "Обращения", command:()=> router.push("/Appeals") },
-  { label: "Актуальное", command:() => router.push("/Actual") },
-]);
 
-const items2 = ref([
-  { label: 'Добавить админа', command: () => router.push("/Admin"), icon: 'pi pi-user' },
-  { label: 'Теги', icon: 'pi pi-hashtag'}
-]);
-const activeRoute = ref(""); // Отслеживаем активный маршрут
+const menuItems = [
+  { label: "Категории", route: "/Form", icon: "pi pi-folder" },
+  { label: "Медиа", route: "/Media", icon: "pi pi-image" },
+  { label: "Обращения", route: "/Appeals", icon: "pi pi-envelope" },
+  { label: "Актуальное", route: "/Actual", icon: "pi pi-calendar" },
+  { label: "Добавить админа", route: "/Admin", icon: "pi pi-user" }
+];
+
+const additionalItems = [
+  { label: 'Добавить админа', route: "/Admin", icon: 'pi pi-user' },
+  { label: 'Теги', route: "/Tags", icon: 'pi pi-hashtag' }
+];
+
+const activeRoute = ref(router.currentRoute.value.path);
+
 const setActiveRoute = (route: string) => {
   activeRoute.value = route;
   router.push(route);
+};
+
+const sidebarVisible = ref(false);
+
+const toggleSidebar = () => {
+  sidebarVisible.value = !sidebarVisible.value;
+  if (sidebarVisible.value) {
+    document.body.style.overflow = "hidden"; // Блокируем прокрутку страницы при открытой панели
+  } else {
+    document.body.style.overflow = "auto"; // Включаем прокрутку страницы
+  }
 };
 </script>
 
 <template>
   <div class="main__menu">
-    <div class="container">
-      <!-- Левая панель с кнопками -->
-      <div class="sidebar">
-        <img src = "https://1000logos.net/wp-content/uploads/2017/05/Pepsi-logo.png" class="welcome__text"></img>
-        <div class="custom-menu">
-          <div 
-            class="menu-item"
-            :class="{ active: activeRoute === '/Form' }"
-            @click="setActiveRoute('/Form')"
-          >
-            <i class="pi pi-folder menu-icon"></i>
-            <span>Категории</span>
-          </div>
-          <div 
-            class="menu-item"
-            :class="{ active: activeRoute === '/Media' }"
-            @click="setActiveRoute('/Media')"
-          >
-            <i class="pi pi-image menu-icon"></i>
-            <span>Медиа</span>
-          </div>
-          <div 
-            class="menu-item"
-            :class="{ active: activeRoute === '/Appeals' }"
-            @click="setActiveRoute('/Appeals')"
-          >
-            <i class="pi pi-envelope menu-icon"></i>
-            <span>Обращения</span>
-          </div>
-          <div 
-            class="menu-item"
-            :class="{ active: activeRoute === '/Actual' }"
-            @click="setActiveRoute('/Actual')"
-          >
-            <i class="pi pi-calendar menu-icon"></i>
-            <span>Актуальное</span>
+    <!-- Верхняя панель с логотипом и кнопкой для меню -->
+    <div class="header">
+      <Button class="menu_button" icon="pi pi-bars" @click="toggleSidebar" />
+      <div class="logo">
+        <img src="./123.svg" alt="Logo" />
+      </div>
+    </div>
+
+    <div class="container" :class="{ 'sidebar-open': sidebarVisible }">
+      <!-- Левая панель с кнопками (показывается или скрывается) -->
+      <transition name="sidebar-slide">
+        <div v-if="sidebarVisible" class="sidebar">
+          <div class="custom-menu">
+            <div
+              v-for="item in menuItems" :key="item.route"
+              :class="{ 'menu-item': true, active: activeRoute === item.route }"
+              @click="setActiveRoute(item.route)"
+            >
+              <i :class="item.icon" class="menu-icon"></i>
+              <span>{{ item.label }}</span>
+            </div>
           </div>
         </div>
-      </div>
+      </transition>
+
       <!-- Правая область для отображения содержимого -->
       <div class="content">
-        <div class="card">
-          <div>
-            <SpeedDial :model="items2" direction="up" style="position: absolute; left: calc(2%); bottom: 3%;" />
-             
-            
-          </div>
-        </div>
+        <!-- Использование items для SpeedDial -->
         <RouterView />
       </div>
     </div>
@@ -87,79 +76,100 @@ const setActiveRoute = (route: string) => {
 </template>
 
 <style scoped>
-.welcome__text {
-  width: 100px;
+/* Стили для верхней панели */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: black;
+  color: white;
 }
-.custom-menu {
+
+.logo img {
+  height: 22px;
+}
+
+/* Основной контейнер */
+.container {
+  display: flex;
+  height: calc(100vh - 60px); /* Высота экрана минус высота верхней панели */
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  transition: transform 0.3s ease;
+}
+
+/* Левая панель */
+.sidebar {
+  width: 260px;
+  background-color: black;
   display: flex;
   flex-direction: column;
-  gap: 0px;
-  width: 100%;
-  padding: 0 ;
+  gap: 20px;
+  border-right: 2px solid #e5e7eb;
+  height: 100%;
+  position: fixed;
+  left: -260px; /* Скрываем панель по умолчанию за пределами экрана */
+  z-index: 10;
+  opacity: 0; /* Начинаем с нулевой видимости */
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
+
+/* Стиль для кнопки в меню */
 .menu-item {
-  background-color: black; /* Темно-синий фон кнопки */
-  color: white; /* Желтый текст */
-  padding: 15px;
-  border-radius: 0px;
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 15px;
+  color: white;
   cursor: pointer;
   font-family: Arial, sans-serif;
   font-size: 1rem;
   transition: all 0.3s ease;
   text-align: left;
-  
 }
+
 .menu-item:hover {
-  background-color: white; /* Желтая подсветка */
-  color: black; /* Темно-синий текст */
+  background-color: white;
+  color: black;
 }
-/* Основной контейнер */
-.container {
-  display: flex;
-  margin: 0;
-  padding: 0;
-  background-color: wheat;
-  height: 100vh; /* Высота 100% экрана */
-}
+
 .menu-item.active {
-  background-color: white; /* Желтый фон для активной кнопки */
-  color: black; /* Темно-синий текст */
+  background-color: white;
+  color: black;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  
-}
-/* Левая панель */
-.sidebar {
-  width: 20%;
-  background-color: black; /* Темно-синий фон */
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  align-items: center;
-  padding: 20px 0;
-  margin: 0;
-  border-right: 2px solid #e5e7eb; /* Светло-серая разделительная линия */
 }
 
 /* Правая область */
 .content {
-  width: 80%;
+  flex-grow: 1;
   padding: 20px;
+  background-color: white;
   overflow-y: auto;
-  background-color: #fff;
-}
-h1 {
-  margin: 0;
-  padding: 0;
-}
-.sidebar .menu__panel {
-  width: 100%;
-  margin: 0;
-  padding: 0;
+  transition: margin-left 0.3s ease; /* Плавный сдвиг содержимого */
 }
 
+/* Переходы для анимации панели */
+.sidebar-slide-enter-active{
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+.sidebar-slide-leave-active {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
 
+.sidebar-slide-enter, .sidebar-slide-leave-to /* .sidebar-slide-leave-active in <2.1.8 */ {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+/* Когда панель открыта, контент сдвигается */
+.container.sidebar-open .sidebar {
+  transform: translateX(260px); /* Сдвигаем панель в пределах экрана */
+  opacity: 1; /* Панель становится видимой */
+}
+
+.container.sidebar-open .content {
+  margin-left: 260px; /* Сдвигаем контент, когда панель открыта */
+}
 </style>

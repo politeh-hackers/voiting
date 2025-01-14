@@ -1,0 +1,181 @@
+{% load static %}
+
+<header class="header">
+    <div class="header__container">
+        <div class="header__left">
+            <div class="header__img">
+                <img src="{% static 'category/0462e569-918b-4bf6-9792-934e47581cb3 1.svg' %}" alt="" class="header__logo">
+            </div>
+            <div class="header__text">
+                МАРТЫНОВ ПАВЕЛ<br>
+                <span>ЛИЧНЫЙ БЛОГ</span>
+            </div>
+        </div>
+        <div class="header__center">
+            <ul class="header__list">
+                <li><a href="#">Актуальное</a></li>
+                <li><a href="#">Медиа</a></li>
+                <li><a href="#">Обращения</a></li>
+                <li><a href="#">Биография</a></li>
+            </ul>
+        </div>
+        <div class="header__right">
+            <button class="appeals__button">
+                <img src="{% static 'category/Vector.svg' %}" alt="" class="appeals__image">
+                <a>Оставить обращение</a>
+            </button>
+            <img src="{% static 'category/Frame 85.svg' %}" alt="" class="search__button" id="searchButton">
+        </div>
+    </div>
+</header>
+
+<!-- Скрытое окно поиска -->
+<div id="searchPopup" class="search-popup">
+    <div class="search-popup__container">
+        <input type="text" placeholder="Поиск...">
+        <button class="clear-btn" id="clearButton">+</button>
+    </div>
+</div>
+
+<style lang="scss">
+/* Header styles */
+.header {
+    background-color: white;
+}
+
+.search__button{
+    cursor: pointer;
+}
+
+.header__right{
+    display: flex;
+    gap: 16px;
+}
+.clear-btn {
+    
+    left: 93%;
+    background: none;
+    border: none;
+    font-size: 20px;
+    
+}
+.appeals__button{
+    background: white;
+    font-size: 12px;
+    font-weight: 400;
+    border-width: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.header__container {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   max-width: 1384px; 
+   margin-left: auto;
+   margin-right: auto;
+   padding-top: 13px;
+}
+
+.header__left {
+    display: flex;
+    gap: 23px;
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    display: flex;
+    gap: 24px;
+}
+
+.header__img {
+    width: 92px;
+    height: 96px;
+}
+
+.header__logo {
+}
+
+.header__text {
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.header__text span {
+    font-weight: 700;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0;
+    background-color: #F7F7F7;
+}
+
+.search-popup {
+    position: relative;
+    margin-top: 40px ;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 1);  
+    display: none;  
+    transform: translateY(-20px);  
+    transition: transform 0.3s ease-in-out;  
+}
+
+.search-popup.active {
+    transform: translateY(0); 
+}
+
+.search-popup__container {
+    display: flex;
+   justify-content: space-between;
+   align-items: center;
+   max-width: 1384px; 
+   margin-left: auto;
+   margin-right: auto;
+   
+}
+
+.search-popup input {
+    border: none;  /* Убираем стандартную рамку */
+    border-bottom: 2px solid #000;  /* Полоска снизу */
+    outline: none;  /* Убираем контур при фокусе */
+    padding-top: 8px;
+    padding-bottom: 8px;  /* Отступы только по вертикали, чтобы было пространство для полоски */
+    font-size: 12px;  /* Размер шрифта */
+    width: 1384px;
+    position: relative; /* Для позиционирования крестика */
+}
+.search-popup input::after{
+    content: '✖';  /* Символ крестика */
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  
+  transition: opacity 0.3s ease;
+}
+.close-search {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+</style>

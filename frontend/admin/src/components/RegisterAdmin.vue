@@ -5,7 +5,9 @@ import Message from 'primevue/message';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { getToken, isAuthenticated } from "../utils/auth";
 
+const token = getToken()
 const router = useRouter();
 
 const formState = ref({
@@ -18,12 +20,20 @@ const formState = ref({
 const register = async () => {
   formState.value.errorMessage = '';
   formState.value.successMessage = '';
-
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); // Перенаправляем на страницу входа, если пользователь не авторизован
+    return;
+  }
   try {
     const response = await axios.post('http://127.0.0.1:8000/admin/registration', {
       login: formState.value.login,
-      password: formState.value.password,
-    });
+      password: formState.value.password},
+      {
+    headers: {
+      'Authorization': `${token}` 
+    }
+  }
+    );
 
     if (response.data.success) {
       formState.value.successMessage = 'Регистрация успешна!';

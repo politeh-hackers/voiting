@@ -4,7 +4,10 @@ from .services import CategoryService
 import uuid
 from django.http import JsonResponse, HttpRequest
 from django.views import View
+from django.shortcuts import render
 
+def CategoryClientView(request):
+    return render(request, "Category.html")
 class CategoryView(View):
 
     test_service = CategoryService(model=Category)

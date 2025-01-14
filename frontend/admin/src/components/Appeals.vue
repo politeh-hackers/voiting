@@ -43,7 +43,7 @@
           <label for="phone" class="">Номер телефона</label>
           <InputMask
             id="phone"
-            v-model="post.phone_number"
+            v-model="post.phone"
             mask="+375-(99)-999-99-99"
             placeholder="+375-(99)-999-99-99"
             fluid
@@ -55,7 +55,7 @@
         <FloatLabel variant="on">
           <Textarea
             id="over_label"
-            v-model="post.appeal_text"
+            v-model="post.text"
             rows="5"
             cols="30"
             style="resize: none"
@@ -177,9 +177,9 @@ const post = ref<Post>({
   first_name: "",
   last_name: "",
   patronymic: "",
-  phone_number: "",
+  phone: "",
   photos: "",
-  appeal_text: "",
+  text: "",
   on_website: false,
   date_created: new Date(),
   official_response: "",
@@ -225,8 +225,9 @@ const loadCategories = async () => {
 
 const editPost = (newsItem) => {
   post.value.id = newsItem.id;
-  post.value.appeal_text = newsItem.appeal_text;
+  post.value.text = newsItem.text;
   post.value.map_point = newsItem.map_point;
+  post.value.phone = newsItem.phone
   post.value.photos = newsItem.photos;
   post.value.first_name = newsItem.first_name;
   post.value.date_created = newsItem.date_created;
@@ -257,5 +258,123 @@ textarea, input {
   display: flex;
   gap: 10px;
   justify-content: center;
+}
+.content__main{
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; 
+}
+// .news-header {
+//   display: grid;
+//   grid-template-columns: 1fr 2fr 1fr 1fr;
+//   gap: 20px;
+//   font-weight: bold;
+//   padding: 10px 0;
+//   border-bottom: 2px solid #e0e0e0;
+// }
+.image-preview {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.news-header .image-label,
+.news-header .title-label,
+.news-header .date-label,
+.news-header .actions-label {
+  text-align: center;
+}
+
+.news-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.news-item {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  gap: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.image-block {
+  flex: 0 0 auto;
+  margin-right: 1rem;
+  border-right: 1px solid #e0e0e0;
+  padding-right: 1rem;
+}
+
+.title-block {
+  flex: 1;
+  border-right: 1px solid #e0e0e0;
+  padding-right: 1rem;
+}
+
+.date-block {
+  font-size: 0.875rem;
+  color: #888;
+  border-right: 1px solid #e0e0e0;
+  padding-right: 1rem;
+}
+
+.news-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.news-date {
+  font-size: 0.875rem;
+  color: #888;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.news-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.image-upload {
+  margin-top: 10px;
+}
+
+.tag-overlay {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.image-label,
+.title-label,
+.date-label,
+.actions-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.content-editor{ 
+}
+.search-input {
+}
+.p-dropdown{
+  align-items: center;
+}
+.header__content {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  height: 30px;
 }
 </style>

@@ -37,6 +37,7 @@
             :showCancelButton="false"
             @upload="onImageUpload"
             @remove="onImageRemove"
+            :before-upload="uploadHeaders"
             chooseLabel="Выбрать изображение"
           >
             <template #content>
@@ -49,8 +50,8 @@
                   class="image-preview"
                 />
                 <Button
-                  label="Удалить изображение"
                   class="p-button-danger"
+                  icon="pi pi-times"
                   @click="onImageRemove"
                 />
               </div>
@@ -102,7 +103,7 @@
             :showCancelButton="false"
             @upload="onImageUpload"
             @remove="onImageRemove"
-            chooseLabel="Выбрать изображение"
+            chooseLabel="Выбрать изображение" 
           >
             <template #content>
               <div class="custom-file-upload">
@@ -114,9 +115,9 @@
                   class="image-preview"
                 />
                 <Button
-                  label="Удалить изображение"
                   class="p-button-danger"
                   @click="onImageRemove"
+                  icon="pi pi-times"
                 />
               </div>
             </template>
@@ -141,9 +142,10 @@
       class="main-dataview"
     >
       <template #header>
+        <div class="header__content">
         <Button
           class="content__view"
-          label="Добавить новость"
+          icon="pi pi-plus"
           @click="visible = true"
         />
         <Dropdown
@@ -157,6 +159,7 @@
           placeholder="Поиск по описанию"
           class="search-input"
         />
+      </div>
       </template>
       <template #list="slotProps">
         <div class="news-container">
@@ -204,6 +207,7 @@
   
   
   <script setup lang="ts">
+import { useRouter } from "vue-router";
 import { ref, onMounted, computed, watch } from "vue";
 import InputText from "primevue/inputtext";
 import DatePicker from "primevue/datepicker";
@@ -214,7 +218,8 @@ import FileUpload from "primevue/fileupload";
 import { PostService, Post } from "../api/serviceformedia";
 import { initEditor } from "../editor.js/editor-init";
 import Dropdown from "primevue/dropdown";
-
+import { getToken, isAuthenticated } from "../utils/auth";
+const router = useRouter()
 const post = ref<Post>({
   summary: "",
   main_photo: "",
@@ -222,7 +227,7 @@ const post = ref<Post>({
   content: "",
   date_created: new Date(),
 });
-
+const token = getToken()
 const sortOrder = ref("asc");
 let previousPhoto = ""; //
 const visible = ref(false);
@@ -236,7 +241,9 @@ const sortOptions = [
   { label: "По дате(по возрастанию)", value: "asc" },
   { label: "По дате(по убыванию)", value: "desc" },
 ];
-
+const uploadHeaders = ref({
+      'Authorization': `${token}`
+    });
 // Вычисляемое свойство для фильтрации
 const filteredNewsList = computed(() => {
   const filtered = newsList.value.filter(
@@ -261,14 +268,13 @@ const onImageUpload = (event: any) => {
   const uploadedImage = event.files[0];
   if (uploadedImage) {
     post.value.main_photo = uploadedImage.name;
-    
   }
 };
 const onImageRemove = (event: any) => {
+  
   console.log("Изображение удалено:", event.file);
 
   if (post.value.main_photo) {
-    // Если файл уже загружен на сервер, удаляем его
     deleteImage(`http://localhost:8000/static/image/${post.value.main_photo}`)
       .then(() => {
         post.value.main_photo = ""; // Очищаем ссылку на фото
@@ -282,6 +288,7 @@ const onImageRemove = (event: any) => {
   }
 };
 const handleDialogClose = () => {
+  
   // Проверяем, что окно было закрыто через крестик и поле изображения не пустое
   if (!visible.value && post.value.main_photo) {
     deleteImage(`http://localhost:8000/static/image/${post.value.main_photo}`);
@@ -289,11 +296,14 @@ const handleDialogClose = () => {
   }
   if (editorInstance) {
   editorInstance.clear();
-  console.log("pizda")
   }
 };
 
 const SaveEditedPost = async () => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   if (!post.value.id) {
     console.error("Отсутствует ID поста");
     return;
@@ -318,6 +328,7 @@ const SaveEditedPost = async () => {
       {
         method: "PATCH",
         headers: {
+          'Authorization': `${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...postData, date_created: formattedDate }),
@@ -345,8 +356,17 @@ const SaveEditedPost = async () => {
 };
 
 const loadNews = async () => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   try {
-    const response = await fetch("http://localhost:8000/actual/");
+    console.log(uploadHeaders)
+    const response = await fetch("http://localhost:8000/actual/",{
+      headers:{
+        'Authorization': `${token}`
+      }
+    });
     if (response.ok) {
       newsList.value = await response.json();
     } else {
@@ -358,6 +378,10 @@ const loadNews = async () => {
 };
 
 const addPost = async () => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   post.value.content = await editorInstance
     .save()
     .then((data) => JSON.stringify(data));
@@ -380,6 +404,9 @@ const addPost = async () => {
     const response = await fetch("http://localhost:8000/actual/", {
       method: "POST",
       body: content,
+      headers:{
+        'Authorization': `${token}`
+      }
     });
 
     if (response.ok) {
@@ -402,6 +429,10 @@ const addPost = async () => {
 
 // Редактирование новости
 const editPost = (newsItem) => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   post.value.id = newsItem.id;
   post.value.header = newsItem.header;
   post.value.summary = newsItem.summary;
@@ -433,11 +464,18 @@ const editPost = (newsItem) => {
 
 // Удаление новости
 const deletePost = async (postId: string) => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   try {
     const response = await fetch(
       `http://localhost:8000/actual/${postId}`,
       {
         method: "DELETE",
+        headers:{
+          'Authorization': `${token}`
+        }
       }
     );
     deleteImage("http://localhost:8000/actual");
@@ -453,12 +491,17 @@ const deletePost = async (postId: string) => {
   }
 };
 const deleteImage = (fileUrl: string) => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
   const imageName = fileUrl.split("/").pop();
 
   return fetch(`http://127.0.0.1:8000/admin/image/${imageName}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      'Authorization': `${token}`
     },
     body: JSON.stringify({ file_url: fileUrl }),
   }).then((response) => {
@@ -478,15 +521,25 @@ onMounted(() => {
 });
 </script>
   
-  <style lang="scss">
-.news-header {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1fr;
-  gap: 20px;
-  font-weight: bold;
-  padding: 10px 0;
-  border-bottom: 2px solid #e0e0e0;
+<style scoped lang="scss">
+
+input {
+  width: 100%; /* Ширина инпутов и текстовых полей */
 }
+
+.content__main{
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; 
+}
+// .news-header {
+//   display: grid;
+//   grid-template-columns: 1fr 2fr 1fr 1fr;
+//   gap: 20px;
+//   font-weight: bold;
+//   padding: 10px 0;
+//   border-bottom: 2px solid #e0e0e0;
+// }
 .image-preview {
   max-width: 150px;
   max-height: 150px;
@@ -578,6 +631,19 @@ onMounted(() => {
 .actions-label {
   font-weight: bold;
   margin-bottom: 5px;
+}
+.content-editor{ 
+}
+.search-input {
+}
+.p-dropdown{
+  align-items: center;
+}
+.header__content {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  height: 30px;
 }
 </style>
   

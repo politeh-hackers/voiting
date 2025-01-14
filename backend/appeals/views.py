@@ -7,7 +7,7 @@ from django.views import View
 from django.shortcuts import render
 
 def AppealsClientView(request):
-    return render(request, "appeals.html")
+    return render(request, "AppealsMartynov.html")
  
 class AppealView(View):
     test_service = AppealService(model=Appeal)

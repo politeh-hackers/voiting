@@ -8,7 +8,7 @@ import { Button } from "primevue";
 import { ref } from "vue";
 import Drawer from "primevue/drawer";
 import { useRouter } from "vue-router";
-import { isAuthenticated } from "../utils/auth"; // Импортируем утилиту для проверки токена
+import { getToken, isAuthenticated } from "../utils/auth"; // Импортируем утилиту для проверки токена
 
 const router = useRouter();
 const postService = new PostService();
@@ -19,9 +19,9 @@ const post = ref<Post>({ name: "" });
 const editingPostId = ref<string | null>(null);
 const editingPostName = ref<string>(""); 
 const visible = ref(false); 
-
+const token = getToken()
 const UpdateTable = async () => {
-  if (!isAuthenticated()) {
+  if (!isAuthenticated(token)) {
     router.push({ name: 'Login' }); // Перенаправляем на страницу входа, если пользователь не авторизован
     return;
   }
@@ -33,8 +33,9 @@ const UpdateTable = async () => {
 onMounted(UpdateTable);
 
 const addPost = async () => {
-  if (!isAuthenticated()) {
-    router.push({ name: 'Login' });
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' });
+    console.log("pizda")
     return;
   }
 
@@ -44,8 +45,8 @@ const addPost = async () => {
 };
 
 const deletePost = async (id: string) => {
-  if (!isAuthenticated()) {
-    router.push({ name: 'Login' });
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' });
     return;
   }
 
@@ -55,8 +56,8 @@ const deletePost = async (id: string) => {
 };
 
 const startEditing = (id: string, name: string) => {
-  if (!isAuthenticated()) {
-    router.push({ name: 'Login' });
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' });
     return;
   }
 
@@ -66,8 +67,8 @@ const startEditing = (id: string, name: string) => {
 };
 
 const saveEditedPost = async () => {
-  if (!isAuthenticated()) {
-    router.push({ name: 'Login' });
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' });
     return;
   }
 
