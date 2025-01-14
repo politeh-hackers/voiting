@@ -5,10 +5,31 @@ import uuid
 from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views import View
 from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+def AppealsClientView(request: HttpRequest):
+    page = request.GET.get('page', 1)  
+    per_page = request.GET.get('per_page', 10)  
+    appeals = Appeal.objects.all()
+    paginator = Paginator(appeals, per_page)
+    try:
+        appeals_page = paginator.page(page)
+    except PageNotAnInteger:
+        appeals_page = paginator.page(1)
+    except EmptyPage:
+        return JsonResponse({"error": "Page not found"}, status=404)
+    context = {
+        "appeals": appeals_page.object_list, 
+    }
+    return render(request, "appeals.html", context)
+
+
+<<<<<<< HEAD
 def AppealsClientView(request):
     return render(request, "AppealsMartynov.html")
  
+=======
+>>>>>>> 504da75ece884c7a1396b427f009179a62c1e607
 class AppealView(View):
     test_service = AppealService(model=Appeal)
 
