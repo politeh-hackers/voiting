@@ -24,12 +24,6 @@ def AppealsClientView(request: HttpRequest):
     return render(request, "appeals.html", context)
 
 
-<<<<<<< HEAD
-def AppealsClientView(request):
-    return render(request, "AppealsMartynov.html")
- 
-=======
->>>>>>> 504da75ece884c7a1396b427f009179a62c1e607
 class AppealView(View):
     test_service = AppealService(model=Appeal)
 
