@@ -1,5 +1,5 @@
 from base.service import BaseService
-from .models import Media, MediaTag
+from .models import Media
 
 class MediaService(BaseService):
 
