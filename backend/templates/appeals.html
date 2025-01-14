@@ -1,49 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quick start with Yandex Maps (TypeScript)</title>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=5325d15d-232d-4c0f-880e-faa5da31699b&lang=ru_RU" type="text/javascript"></script>
-    {% load static %}
-    <script src="{% static 'appeals/index.js' %}" type="module"></script>
-  </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appeals</title>
+</head>
+<body>
+    <h1>Appeals List</h1>
+    
+    <ul>
+        {% for appeal in appeals %}
+            <li>{{ appeal.first_name }} - {{ appeal.description }}</li>
+        {% endfor %}
+    </ul>
 
-  <body>
-    <div id="map" style="width: 600px; height: 400px;"></div>
-    
-    
-    <!-- Форма для ввода данных -->
-    <form id="appealForm">
-      <label for="category">Категория:</label>
-      <select id="category" name="category">
-        <option value="">Выберите категорию</option>
-      </select>
-      <div>
-        <label for="lastName">Фамилия:</label>
-        <input type="text" id="lastName" name="last_name" />
-      </div>
-      <div>
-        <label for="firstName">Имя:</label>
-        <input type="text" id="firstName" name="first_name" />
-      </div>
-      <div>
-        <label for="patronymic">Отчество:</label>
-        <input type="text" id="patronymic" name="patronymic" />
-      </div>
-      <div>
-        <label for="phone">Телефон:</label>
-        <input type="text" id="phone" name="phone" />
-      </div>
-      <div>
-        <label for="text">Текст обращения:</label>
-        <textarea id="text" name="text"></textarea>
-      </div>
-      <div>
-        <label for="photos">Фото:</label>
-        <input type="file" id="photos" name="photos" accept="image/*" multiple />
-      </div>
-    </form>
-    <button id="saveBtn">Отправить обращение</button>
-  </body>
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="?page={{ page|add:'-1' }}&per_page={{ per_page }}">Previous</a>
+        {% endif %}
+        
+        Page {{ page }} of {{ total_pages }}
+        
+        {% if page < total_pages %}
+            <a href="?page={{ page|add:'1' }}&per_page={{ per_page }}">Next</a>
+        {% endif %}
+    </div>
+
+    <div>
+        Total items: {{ total_items }}
+    </div>
+</body>
 </html>
