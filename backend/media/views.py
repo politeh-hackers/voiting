@@ -10,6 +10,7 @@ import uuid
 from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.core.handlers.wsgi import WSGIRequest
+from gpt.views import generations_for_news
 
 class MediaView(View):
 
@@ -21,14 +22,18 @@ class MediaView(View):
     def post(self, request):
         try:
             data = request.POST.dict()
-            validated_data: MediaActualFieldsSchema = MediaActualFieldsSchema.model_validate(data).model_dump()  # type: ignore
-            self.test_service.create(validated_data)
-            # self.test_service.create(data)
+            generations_for_news(data)
+            # validated_data = MediaActualFieldsSchema.model_validate(data).model_dump() 
+            self.test_service.create(data)
             return JsonResponse({"message": "success"}, status=200)
+
         except ValidationError as e:
             formatted_error = BaseValidationSchema.format_validation_errors(e)
             print("[error]", formatted_error)
             return JsonResponse({"error": formatted_error}, status=400)
+        except Exception as e:
+            print("[error]", str(e))
+            return JsonResponse({"error": str(e)}, status=500)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         media_instance = get_object_or_404(Media, id=model_id)
