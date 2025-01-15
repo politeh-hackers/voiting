@@ -7,6 +7,7 @@ from django.views import View
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+
 def AppealsClientView(request: HttpRequest):
     page = request.GET.get('page', 1)  
     per_page = int(request.GET.get('per_page', 3))  # Преобразуем в int
