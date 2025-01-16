@@ -1,0 +1,112 @@
+{% load static %}
+
+<footer class="footer">
+    <div class="footer__container">
+        <div class="footer__left">
+            
+            <div class="footer__text">
+                МАРТЫНОВ ПАВЕЛ<br>
+                <span>ЛИЧНЫЙ БЛОГ</span>
+            </div>
+        </div>
+        <div class="footer__center">
+            <ul class="footer__list">
+                <li><a href="#">Актуальное</a></li>
+                <li><a href="#">Медиа</a></li>
+                <li><a href="#">Обращения</a></li>
+                <li><a href="#">Биография</a></li>
+            </ul>
+        </div>
+        <div class="footer__right">
+            <button class="telegram__button">
+                <img src="{% static 'footer/telegram.svg' %}" alt="" class="telegram__image">
+                <a>Телеграм рассылка</a>
+            </button>
+            
+        </div>
+    </div>
+    <div class="logos__container">
+    <img src="{% static 'footer/Frame 96.svg' %}" alt="" class="logos__images" id="searchButton">
+    </div>
+</footer>
+
+<style lang="scss">
+    
+.logos__container {
+    display: flex;
+    align-items: center;
+    max-width: 1384px; 
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 22px;
+    padding-bottom: 34px;
+}
+.logos__images {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    padding: auto;
+}
+.footer{
+    margin-top: 70px;
+    background-color: white;
+    box-shadow: 0px 16px 32px -4px #6161671A;
+}
+.footer__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1384px; 
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 34px;
+}
+
+.footer__left {
+    display: flex;
+    gap: 23px;
+    align-items: center;
+}
+
+.footer__text {
+    font-size: 15px;
+}
+.footer__text span{
+    font-weight: 700;
+}
+.footer__center {
+
+}
+
+.footer__list {
+
+}
+
+.footer__right {
+
+}
+
+.telegram__button {
+    background: #27A7E7;
+    font-size: 12px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+    gap: 10px;
+    cursor: pointer;
+}
+.telegram__button a{
+    color: white;
+}
+.appeals__image {
+
+}
+
+.search__button {
+
+}
+
+</style>
