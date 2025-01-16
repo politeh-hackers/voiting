@@ -1,10 +1,10 @@
 {% load static %}
-
+<script src="{% static 'header/index.js' %}" type="module"></script>
 <header class="header">
     <div class="header__container">
         <div class="header__left">
             <div class="header__img">
-                <img src="{% static 'category/0462e569-918b-4bf6-9792-934e47581cb3 1.svg' %}" alt="" class="header__logo">
+                <img src="{% static 'header/0462e569-918b-4bf6-9792-934e47581cb3 1.svg' %}" alt="" class="header__logo">
             </div>
             <div class="header__text">
                 МАРТЫНОВ ПАВЕЛ<br>
@@ -21,28 +21,42 @@
         </div>
         <div class="header__right">
             <button class="appeals__button">
-                <img src="{% static 'category/Vector.svg' %}" alt="" class="appeals__image">
+                <img src="{% static 'header/Vector.svg' %}" alt="" class="appeals__image">
                 <a>Оставить обращение</a>
             </button>
-            <img src="{% static 'category/Frame 85.svg' %}" alt="" class="search__button" id="searchButton">
+            <img src="{% static 'header/Frame 85.svg' %}" alt="" class="search__button" id="searchButton">
         </div>
     </div>
 </header>
 
-<!-- Скрытое окно поиска -->
 <div id="searchPopup" class="search-popup">
-    <div class="search-popup__container">
-        <input type="text" placeholder="Поиск...">
-        <button class="clear-btn" id="clearButton">+</button>
+    <div class="container">
+        <input class = "input__search" type="text" placeholder="Поиск...">
+        <button class="clear-btn" id="clearButton">⨯</button>
     </div>
+
 </div>
 
 <style lang="scss">
-/* Header styles */
-.header {
-    background-color: white;
-}
 
+
+/* Header styles */
+.search-popup input::placeholder {
+    color: black;  /* Устанавливаем черный цвет для текста плейсхолдера */
+    
+}
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background-color: white;
+    box-shadow: 0px 16px 32px -4px #6161671A;
+}
+.search-popup .container {
+   width: 100%;
+   padding: 42px 28px;
+
+}
 .search__button{
     cursor: pointer;
 }
@@ -51,13 +65,19 @@
     display: flex;
     gap: 16px;
 }
+.input__search{
+    font-size: 30px;
+    color: #000;
+}
 .clear-btn {
-    
-    left: 93%;
+    position: absolute;
+    right: 28px;
+    top: 50%;  /* Центрируем по вертикали */
+    transform: translateY(-50%);  /* Точно выравниваем по центру */
+    font-size: 22px;
     background: none;
     border: none;
-    font-size: 20px;
-    
+    cursor: pointer;
 }
 .appeals__button{
     background: white;
@@ -126,14 +146,14 @@ body {
 }
 
 .search-popup {
+    display: none;
     position: relative;
-    margin-top: 40px ;
-    left: 0;
-    width: 100%;
+    margin: auto;
     background-color: rgba(255, 255, 255, 1);  
-    display: none;  
-    transform: translateY(-20px);  
-    transition: transform 0.3s ease-in-out;  
+    margin-top: 20px;
+    width: 1384px;
+    box-shadow: 0px 16px 32px -4px #6161671A;
+    
 }
 
 .search-popup.active {
@@ -142,34 +162,24 @@ body {
 
 .search-popup__container {
     display: flex;
-   justify-content: space-between;
-   align-items: center;
    max-width: 1384px; 
-   margin-left: auto;
-   margin-right: auto;
+   align-items: center;
+   justify-content: center;
+   margin: 42px 28px;
    
 }
 
 .search-popup input {
-    border: none;  /* Убираем стандартную рамку */
-    border-bottom: 2px solid #000;  /* Полоска снизу */
-    outline: none;  /* Убираем контур при фокусе */
-    padding-top: 8px;
-    padding-bottom: 8px;  /* Отступы только по вертикали, чтобы было пространство для полоски */
-    font-size: 12px;  /* Размер шрифта */
-    width: 1384px;
+    border: none;  
+    border-bottom: 2px solid #000;  
+    outline: none;  
+    font-size: 12px;  
+    padding: 8px 0;  /* Отступы внутри инпута для текста и плейсхолдера */
+    width: 100%;  /* Растягиваем инпут по ширине родительского контейнера */
+    box-sizing: border-box;  /* Чтобы padding не выходил за пределы ширины */
     position: relative; /* Для позиционирования крестика */
 }
-.search-popup input::after{
-    content: '✖';  /* Символ крестика */
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  
-  transition: opacity 0.3s ease;
-}
+
 .close-search {
     background-color: #f44336;
     color: white;
