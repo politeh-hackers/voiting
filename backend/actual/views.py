@@ -7,6 +7,8 @@ import uuid
 from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.core.handlers.wsgi import WSGIRequest
+from .schemas import MediaActualFieldsSchema
+from gpt.services import generations_for_news
 
 class ActualView(View):
 
@@ -17,9 +19,11 @@ class ActualView(View):
 
     def post(self, request):
         data = request.POST.dict()
-        # self.test_service.validate(data)
-        self.test_service.create(data)
-        return JsonResponse(None, safe=False)
+        validated_data = MediaActualFieldsSchema.model_validate(data).model_dump() 
+        generations_for_news(data)
+        self.test_service.create(validated_data)
+        # self.test_service.create(data)
+        return JsonResponse({"message": "success"}, status=200)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         media_instance = get_object_or_404(Actual, id=model_id)
@@ -41,8 +45,9 @@ class ActualView(View):
 
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
         data = json.loads(request.body)
-        # self.test_service.validate(data)
-        self.test_service.update(model_id=model_id, data=data)
+        validated_data = MediaActualFieldsSchema.model_validate(data).model_dump() 
+        generations_for_news(data)
+        self.test_service.update(model_id=model_id, data=validated_data)
         return JsonResponse(None, safe=False)
 
 class ImageView(View):

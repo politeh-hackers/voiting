@@ -10,26 +10,21 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def AppealsClientView(request: HttpRequest):
     page = request.GET.get('page', 1)  
-    per_page = int(request.GET.get('per_page', 3))  # Преобразуем в int
+    per_page = int(request.GET.get('per_page', 3))
     appeals = Appeal.objects.all()  
     paginator = Paginator(appeals, per_page)
     try:
         appeals_page = paginator.page(page)
     except PageNotAnInteger:
         appeals_page = paginator.page(1)
-    except EmptyPage:
-        return JsonResponse({"error": "Page not found"}, status=404)
-
-    # Создаем список всех страниц
     all_pages = list(range(1, paginator.num_pages + 1))
-
     context = {
         "appeals": list(appeals_page.object_list.values()),  
         "page": appeals_page.number,
         "per_page": per_page,
         "total_pages": paginator.num_pages,
         "total_items": paginator.count,
-        "all_pages": all_pages,  # Передаем список всех страниц
+        "all_pages": all_pages,
     }
 
     return render(request, "appeals.html", context)

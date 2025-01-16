@@ -5,9 +5,11 @@ import uuid
 from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.shortcuts import render
+from .schemas import CategorySchema
 
 def CategoryClientView(request):
     return render(request, "Category.html")
+    
 class CategoryView(View):
 
     test_service = CategoryService(model=Category)
@@ -17,8 +19,8 @@ class CategoryView(View):
 
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
-        self.test_service.validate(data)
-        self.test_service.create(data)
+        validation_data = CategorySchema.model_validate(data)
+        self.test_service.create(validation_data.model_dump())
         return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
@@ -27,6 +29,6 @@ class CategoryView(View):
 
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
         data = json.loads(request.body)
-        self.test_service.validate(data)   
-        self.test_service.update(model_id=model_id, data=data)
+        validation_data = CategorySchema.model_validate(data)  
+        self.test_service.update(model_id=model_id, data=validation_data)
         return JsonResponse(None, safe=False)

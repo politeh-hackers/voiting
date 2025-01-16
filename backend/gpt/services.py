@@ -4,8 +4,8 @@ import json
 import re
 from base.constants import Constants
 
-def generations_for_news(validated_data):
-    if not validated_data.get('h1') or not validated_data.get('title') or not validated_data.get('description'):
+def generations_for_news(data: dict):
+    if not data.get('h1') or not data.get('title') or not data.get('description'):
             formatted_request = (
                 "На основе следующего текста новости сгенерируйте:\n"
                 "1. H1 (заголовок): Напишите заголовок H1 от {min_h1} до {max_h1} символов, используя транслит через дефисы (например: 'zagadka-s-privet').\n"
@@ -19,7 +19,7 @@ def generations_for_news(validated_data):
                 max_title=Constants.MAX_LEN_TITLE,
                 min_description=Constants.MIN_LEN_DESCRIPTION,
                 max_description=Constants.MAX_LEN_DESCRIPTION,
-                content=validated_data.get('content', '')
+                content=data.get('content', '')
             )
             client = Client()
             response = client.chat.completions.create(
@@ -34,9 +34,9 @@ def generations_for_news(validated_data):
             for line in lines:
                 match = re.search(quote_pattern, line)
                 if line.startswith("1.") and match:
-                    validated_data['h1'] = match.group(1).strip()
+                    data['h1'] = match.group(1).strip()
                 elif line.startswith("2.") and match:
-                    validated_data['title'] = match.group(1).strip()
+                    data['title'] = match.group(1).strip()
                 elif line.startswith("3.") and match:
-                    validated_data['description'] = match.group(1).strip()
-            return validated_data
+                    data['description'] = match.group(1).strip()
+            return data

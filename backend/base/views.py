@@ -7,11 +7,6 @@ from django.shortcuts import render
 
 T = TypeVar("T", bound=models.Model)
 
-
-def MainClientView(request):
-    return render(request, "MainPage.html")
-
-
 class BaseView(Generic[T], APIView):
     
     model: T
