@@ -1,23 +1,13 @@
-from pydantic import BaseModel, Field
+from pydantic import Field, BaseModel
 from base.constants import Constants
 from datetime import date
 
-class MediaActualFieldsSchema(BaseModel):
-        header: str = Field(
-            ..., 
-            min_length=Constants.MIN_LEN_HEADER, 
-            max_length=Constants.MAX_LEN_HEADER, 
-            description=f"Поле должно содержать от 4 до {Constants.MAX_LEN_HEADER}")
+class BiographySchema(BaseModel):
         content: str = Field(
             ..., 
             min_length=Constants.MIN_LEN_TEXT, 
             max_length=Constants.MAX_LEN_TEXT, 
             description=f"Поле должно содержать от {Constants.MIN_LEN_TEXT} до {Constants.MAX_LEN_TEXT}")
-        summary: str = Field(
-            ..., 
-            min_length=Constants.MIN_LEN_HEADER, 
-            max_length=Constants.MAX_LEN_HEADER, 
-            description=f"Поле должно содержать от {Constants.MIN_LEN_HEADER} до {Constants.MAX_LEN_HEADER}")
         main_photo: str = Field(
             ..., 
             description="Главное фото должно быть обязательно")

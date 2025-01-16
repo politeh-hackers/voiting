@@ -1,9 +1,13 @@
-from pydantic import Field
-from base.schemas import BaseValidationSchema
+from pydantic import Field, BaseModel
 from base.constants import Constants
 from datetime import date
 
-class MediaActualFieldsSchema(BaseValidationSchema):
+class MediaActualFieldsSchema(BaseModel):
+        header: str = Field(
+            ..., 
+            min_length=Constants.MIN_LEN_HEADER, 
+            max_length=Constants.MAX_LEN_HEADER, 
+            description=f"Поле должно содержать от 4 до {Constants.MAX_LEN_HEADER}")
         content: str = Field(
             ..., 
             min_length=Constants.MIN_LEN_TEXT, 

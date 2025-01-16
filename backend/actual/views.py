@@ -46,7 +46,9 @@ class ActualView(View):
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
         data = json.loads(request.body)
         validated_data = MediaActualFieldsSchema.model_validate(data).model_dump() 
-        generations_for_news(data)
+        if (actual := Actual.objects.filter(id=model_id).first()) is not None and (actual.h1 == "" or actual.title == "" or actual.description == ""):
+            main_data = generations_for_news(validated_data)
+            self.test_service.update(model_id=model_id, data=main_data)
         self.test_service.update(model_id=model_id, data=validated_data)
         return JsonResponse(None, safe=False)
 
