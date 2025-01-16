@@ -1,9 +1,8 @@
+from asyncio.windows_events import NULL
 import json
 import os
 from django.shortcuts import get_object_or_404
-from pydantic import ValidationError
 from .schemas import MediaActualFieldsSchema
-from base.schemas import BaseValidationSchema
 from .models import Media
 from .services import MediaService
 import uuid
@@ -20,20 +19,11 @@ class MediaView(View):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
     def post(self, request):
-        try:
-            data = request.POST.dict()
-            generations_for_news(data)
-            # validated_data = MediaActualFieldsSchema.model_validate(data).model_dump() 
-            self.test_service.create(data)
-            return JsonResponse({"message": "success"}, status=200)
-
-        except ValidationError as e:
-            formatted_error = BaseValidationSchema.format_validation_errors(e)
-            print("[error]", formatted_error)
-            return JsonResponse({"error": formatted_error}, status=400)
-        except Exception as e:
-            print("[error]", str(e))
-            return JsonResponse({"error": str(e)}, status=500)
+        data = request.POST.dict()
+        validated_data: dict = MediaActualFieldsSchema.model_validate(data).model_dump()
+        main_data = generations_for_news(validated_data)
+        self.test_service.create(main_data)
+        return JsonResponse({"message": "success"}, status=200)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         media_instance = get_object_or_404(Media, id=model_id)
@@ -53,12 +43,15 @@ class MediaView(View):
         self.test_service.delete(model_id=model_id)
         return JsonResponse(None, safe=False)
 
-    def patch(self, request: HttpRequest, model_id: uuid.UUID):
-        data = json.loads(request.body)
-        # self.test_service.validate(data)
-        self.test_service.update(model_id=model_id, data=data)
+    def patch(self, request, model_id: uuid.UUID):
+        data: dict = json.loads(request.body)
+        validated_data: dict = MediaActualFieldsSchema.model_validate(data).model_dump()
+        if (media := Media.objects.filter(id=model_id).first()) is not None and (media.h1 == "" or media.title == "" or media.description == ""):
+            main_data = generations_for_news(validated_data)
+            self.test_service.update(model_id=model_id, data=main_data)
+        self.test_service.update(model_id=model_id, data=validated_data)
         return JsonResponse(None, safe=False)
-
+        
 class ImageView(View):
     test_service = MediaService(model=Media) 
 

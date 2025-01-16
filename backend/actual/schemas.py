@@ -4,7 +4,6 @@ from base.constants import Constants
 from datetime import date
 
 class MediaActualFieldsSchema(BaseValidationSchema):
-        
         content: str = Field(
             ..., 
             min_length=Constants.MIN_LEN_TEXT, 
