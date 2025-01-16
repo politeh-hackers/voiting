@@ -9,7 +9,29 @@ from django.views import View
 from django.core.handlers.wsgi import WSGIRequest
 from .schemas import MediaActualFieldsSchema
 from gpt.services import generations_for_news
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render
 
+def ActualClientView(request: HttpRequest):
+    page = request.GET.get('page', 1)  
+    per_page = int(request.GET.get('per_page', 3))
+    actual = Actual.objects.all()  
+    paginator = Paginator(actual, per_page)
+    try:
+        actual_page = paginator.page(page)
+    except PageNotAnInteger:
+        actual_page = paginator.page(1)
+    all_pages = list(range(1, paginator.num_pages + 1))
+    context = {
+        "appeals": list(actual_page.object_list.values()),  
+        "page": actual_page.number,
+        "per_page": per_page,
+        "total_pages": paginator.num_pages,
+        "total_items": paginator.count,
+        "all_pages": all_pages,
+    }
+
+    return render(request, "actual.html", context)
 class ActualView(View):
 
     test_service = ActualService(model=Actual)

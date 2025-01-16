@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'appeals',
     'category',
     'users',
-    'gpt'
+    'gpt',
+    'biography',
+    'mainpage'
 ]
 
 REST_FRAMEWORK = {
