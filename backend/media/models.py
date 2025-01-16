@@ -11,7 +11,7 @@ class Media(BaseUUID):
     content = models.JSONField(null=False, blank=True)
     date_created = models.DateField(null=False, blank=True)
     media_tags = models.CharField(max_length=100, unique=False)
-
+ 
     def __str__(self):
         return self.header
 
