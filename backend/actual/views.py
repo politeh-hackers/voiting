@@ -41,10 +41,9 @@ class ActualView(View):
 
     def post(self, request):
         data = request.POST.dict()
-        validated_data = MediaActualFieldsSchema.model_validate(data).model_dump() 
-        generations_for_news(data)
-        self.test_service.create(validated_data)
-        # self.test_service.create(data)
+        validated_data: dict = MediaActualFieldsSchema.model_validate(data).model_dump()
+        main_data = generations_for_news(validated_data)
+        self.test_service.create(main_data)
         return JsonResponse({"message": "success"}, status=200)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
