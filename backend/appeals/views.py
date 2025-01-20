@@ -28,7 +28,7 @@ def AppealsClientView(request: HttpRequest):
         "all_pages": all_pages,
     }
 
-    return render(request, "appeals.html", context)
+    return render(request, "ModalAppeals.html", context)
 
 
 class AppealView(View):

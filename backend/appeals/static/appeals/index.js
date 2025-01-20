@@ -111,6 +111,7 @@ function initMap() {
                 var position = marker.geometry.getCoordinates();
                 var formData = new FormData(document.getElementById('appealForm'));
                 var appealData = {
+                    header: formData.get('header'),
                     location: position,
                     last_name: formData.get('last_name'),
                     first_name: formData.get('first_name'),

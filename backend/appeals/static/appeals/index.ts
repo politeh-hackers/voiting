@@ -80,6 +80,7 @@ function initMap(): void {
                
                 const formData = new FormData(document.getElementById('appealForm') as HTMLFormElement);
                 const appealData = {
+                    header: formData.get('header'),
                     location: position,
                     last_name: formData.get('last_name'),
                     first_name: formData.get('first_name'),

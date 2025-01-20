@@ -8,7 +8,7 @@ class Biography(BaseUUID):
     header = models.CharField(max_length=200, null=False, blank=True, unique=True)
     main_photo = models.TextField(blank=True, null=False)
     content = models.JSONField(null=False)
-    date_сreated = models.DateField(null=False, blank=True)
+    date_created = models.DateField(null=False, blank=True)
 
     class Meta:
         verbose_name = "biography"
