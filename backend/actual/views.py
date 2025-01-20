@@ -15,15 +15,15 @@ from django.shortcuts import render
 def ActualClientView(request: HttpRequest):
     page = request.GET.get('page', 1)  
     per_page = int(request.GET.get('per_page', 3))
-    actual = Actual.objects.all()  
-    paginator = Paginator(actual, per_page)
+    actuals = Actual.objects.all()  
+    paginator = Paginator(actuals, per_page)
     try:
         actual_page = paginator.page(page)
     except PageNotAnInteger:
         actual_page = paginator.page(1)
     all_pages = list(range(1, paginator.num_pages + 1))
     context = {
-        "appeals": list(actual_page.object_list.values()),  
+        "actuals": list(actual_page.object_list.values()),  
         "page": actual_page.number,
         "per_page": per_page,
         "total_pages": paginator.num_pages,
@@ -68,7 +68,9 @@ class ActualView(View):
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
         data = json.loads(request.body)
         validated_data = MediaActualFieldsSchema.model_validate(data).model_dump() 
-        generations_for_news(data)
+        if (actual := Actual.objects.filter(id=model_id).first()) is not None and (actual.h1 == "" or actual.title == "" or actual.description == ""):
+            main_data = generations_for_news(validated_data)
+            self.test_service.update(model_id=model_id, data=main_data)
         self.test_service.update(model_id=model_id, data=validated_data)
         return JsonResponse(None, safe=False)
 

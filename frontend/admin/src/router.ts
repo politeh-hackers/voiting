@@ -7,6 +7,7 @@ import Admin from './components/RegisterAdmin.vue'
 import Appeals from './components/Appeals.vue'
 import Actual from './components/Actual.vue'
 import { isAuthenticated, getToken } from './utils/auth';
+import Biography from './components/Biography.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -44,6 +45,11 @@ const router = createRouter({
           name: 'Actual',
           path: '/Actual',
           component: Actual,
+        },
+        {
+          name:'Biography',
+          path: '/Biography',
+          component: Biography
         }
       ],
     },

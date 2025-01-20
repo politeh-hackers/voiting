@@ -1,12 +1,13 @@
 import json
+from .schemas import AppealFieldsSchema
 from .models import Appeal
 from .services import AppealService
 import uuid
-from django.http import JsonResponse, HttpRequest, HttpResponse
+from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.shortcuts import render
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.core.paginator import Paginator, PageNotAnInteger
+from gpt.views import generations_for_news
 
 def AppealsClientView(request: HttpRequest):
     page = request.GET.get('page', 1)  
@@ -38,8 +39,9 @@ class AppealView(View):
     
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
-        # self.test_service.validate(data)
-        self.test_service.create(data)
+        validated_data: dict = AppealFieldsSchema.model_validate(data).model_dump()
+        main_data = generations_for_news(validated_data)
+        self.test_service.create(main_data)
         return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):

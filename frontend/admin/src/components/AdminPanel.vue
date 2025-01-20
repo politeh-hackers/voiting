@@ -12,13 +12,11 @@ const menuItems = [
   { label: "Медиа", route: "/Media", icon: "pi pi-image" },
   { label: "Обращения", route: "/Appeals", icon: "pi pi-envelope" },
   { label: "Актуальное", route: "/Actual", icon: "pi pi-calendar" },
-  { label: "Добавить админа", route: "/Admin", icon: "pi pi-user" }
+  { label: "Добавить админа", route: "/Admin", icon: "pi pi-user" },
+  { label: "Биография", route:"/Biography", icon: "pi pi-book"}
 ];
 
-const additionalItems = [
-  { label: 'Добавить админа', route: "/Admin", icon: 'pi pi-user' },
-  { label: 'Теги', route: "/Tags", icon: 'pi pi-hashtag' }
-];
+
 
 const activeRoute = ref(router.currentRoute.value.path);
 

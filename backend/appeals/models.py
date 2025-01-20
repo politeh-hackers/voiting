@@ -1,6 +1,5 @@
 from django.db import models
 from base.models import BaseUUID
-from category.models import Category
 from django.utils import timezone
 
 class Appeal(BaseUUID):

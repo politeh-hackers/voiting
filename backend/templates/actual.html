@@ -16,36 +16,18 @@
                 <div class="actual__header">
                     Актуальное
                 </div>
-                <div class="cards">
-                    {% for appeal in appeals %}
-                    <div class="card__appeal">
-                        <div class="card__statustime">
-                            
-                            <div class="card__time">
-                                <img src="{% static 'appeals/clock.svg' %}" alt="" class="time__image">
-                                {{ actual.date }}
-                            </div>
-                        </div>
-                        <div class="card__header">
-                            {{ actual.header }}
-                        </div>
-                        <div class="card__content">
-                            {% if appeal.photos %}
-                                <img src="{{ actual.photos }}" alt="" class="card__photo">
-                            {% else %}
-                                <div class="card__text">{{ actual.text|slice:":100" }}{% if appeal.text|length > 100 %}...{% endif %}</div>
-                            {% endif %}
-                        </div>
-                        <div class="card__button">
-                            <a href="#">Подробнее ⟶</a>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+                {% include 'actualCards.html' %}
+                {% include 'pagination.html' %}
             </div>
             <div class="right__side">
-
+                <div class="actual__header">
+                    Популярное
+                </div>
+                {% include 'popularCards.html' %}
             </div>
+            
+        </div>
+
         </div>
     </main>
     {% include 'footer.html' %}
@@ -53,30 +35,42 @@
 
 </html>
 <style>
+    body{
+        
+    }
     .actual__header {
         font-size: 36px;
+        font-style: normal;
         font-weight: 500;
         line-height: 36px;
         letter-spacing: -0.02em;
         padding-top: 47px;
         padding-bottom: 44px;
-        display: flex; /* Для контроля ширины контейнера */
-        align-items: center; /* Выравнивание по вертикали */
+        display: flex;
+        align-items: center;
         position: relative;
     }
+
     .actual__header::after {
-    content: "";
-    flex-grow: 1; /* Растягивает линию на оставшееся пространство */
-    height: 1px; /* Толщина линии */
-    background-color:#868693; /* Цвет линии */
-    margin-left: 44px; /* Отступ линии от текста */
-}
+        content: "";
+        flex-grow: 1;
+        /* Растягивает линию на оставшееся пространство */
+        height: 1px;
+        /* Толщина линии */
+        background-color: #868693;
+        /* Цвет линии */
+        margin-left: 44px;
+        /* Отступ линии от текста */
+    }
+
     .left__side {
         width: 968px;
     }
+
     .right__side {
         width: 299px;
     }
+
     html,
     body {
         margin: 0;
@@ -84,18 +78,28 @@
         height: 100%;
         /* Устанавливаем высоту для использования Flexbox */
     }
-    body{
+
+    body {
         display: flex;
         flex-direction: column;
     }
-    
+
     main.content {
         flex: 1;
         /* Заставляет main занимать оставшееся пространство */
     }
-    .container{
-        width: 1307px;
+
+    .container {
+        max-width: 1307px;
         margin-left: auto;
         margin-right: auto;
+        display: flex;
+        justify-content: space-between;
     }
+
+
+    /* карточки */
+
+    
+    
 </style>
