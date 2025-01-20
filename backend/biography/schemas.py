@@ -3,6 +3,11 @@ from base.constants import Constants
 from datetime import date
 
 class BiographySchema(BaseModel):
+        header: str = Field(
+            ..., 
+            min_length=Constants.MIN_LEN_HEADER, 
+            max_length=Constants.MAX_LEN_HEADER, 
+            description=f"Поле должно содержать от {Constants.MIN_LEN_HEADER} до {Constants.MAX_LEN_HEADER}")
         content: str = Field(
             ..., 
             min_length=Constants.MIN_LEN_TEXT, 
