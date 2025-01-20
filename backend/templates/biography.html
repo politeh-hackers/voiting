@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>Document</title>
+</head>
+
+<body>
+
+    {% include 'header.html' %}
+    <main class="content">
+        <div class="container">
+            <div class="left__side">
+                <div class="content__header">
+                    БИОГРАФИЯ
+                </div>
+                <div class="content__main">
+                    <div class="h2">
+                        <span class="h2__text">Смена отца во главе холдинга</span>
+                    </div>
+                    <div class="date__biography">
+                        <img src="{% static 'biography/calendar.svg' %}" alt="" class="calendar"> <span
+                            class="date__text">Октябрь 2022 г.</span>
+                    </div>
+                    <div class="notation">
+                        После того как отец Павла Мартынова восстановил своё здоровье, в октябре 2022 года тот сменил
+                        его на должности генерального директора управляющей компании холдинга «Марко». В прошлом году
+                        Мартынов-старший говорил:
+                    </div>
+                    <div class="quote">
+                        <div class="quote__container">
+                            <div class="quote__text">
+                                «Меня радует, что они (дети) не пошли по пути «купи-продай», им интересно производство.
+                                Иногда они даже слишком усердствуют в стремлении расширяться, надо
+                                сдерживать».Любопытно,
+                                что совместное с белорусской компанией производство теперь действует в Узбекистане.
+                            </div>
+                            <div class="quote__image">
+                                <img src="{% static 'biography/image.svg' %}" alt="" class="martynov__img">
+                                Отец Павла Мартынова, Николай Мартынов
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h2">
+                        <span class="h2__text">Любовь к коллекционированию</span>
+                    </div>
+                    <div class="date__biography">
+                        <img src="{% static 'biography/calendar.svg' %}" alt="" class="calendar"> <span
+                            class="date__text">Сентрябрь 2017 г.</span>
+                    </div>
+                    <div class="quote">
+                        <div class="quote__container">
+                            <div class="quote__text">
+                                В 2017 году Николай Мартынов рассказывал о том, что на производственной базе отдыха
+                                предприятия хранится много раритетов: старые прялки, утюги, гармони, старинная мебель и
+                                даже довоенная легковушка ЗИС. И сообщил, что его хобби перенял сын.
+                            </div>
+                            <div class="quote__image">
+                                <img src="{% static 'biography/image2.svg' %}" alt="" class="martynov__img">
+                                Принятие участия в торжественной линейке<br>04.09.2024
+                            </div>
+                        </div>
+                        <div class="quote__container">
+                            <div class="quote__image">
+                                <img src="{% static 'biography/image2.svg' %}" alt="" class="martynov__img">
+                                Принятие участия в торжественной линейке<br>04.09.2024
+                            </div>
+                            <div class="quote__text">
+                                В 2017 году Николай Мартынов рассказывал о том, что на производственной базе отдыха
+                                предприятия хранится много раритетов: старые прялки, утюги, гармони, старинная мебель и
+                                даже довоенная легковушка ЗИС. И сообщил, что его хобби перенял сын.
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="h2">
+                        <span class="h2__text">Смена отца во главе холдинга</span>
+                    </div>
+                    <div class="date__biography">
+                        <img src="{% static 'biography/calendar.svg' %}" alt="" class="calendar"> <span
+                            class="date__text">Сентябрь 2002 - Ноябрь 2012 г.</span>
+                    </div>
+                    <div class="notation">
+                        Павел начал свою трудовую деятельность в качестве работника коммерческого отдела компании
+                        «Эвимар». Затем он перешёл в «Сан Марко», специализирующуюся на производстве обуви для детей и
+                        подростков. В итоге он стал заместителем директора по коммерческим вопросам, а затем и
+                        директором компании. Павел руководил компанией «Сан Марко», которая является частью известного
+                        холдинга, более 10 лет.<br>
+                        <br>
+                        В 2012 году Николай Мартынов пригласил Павла и его семью (внуков) на открытие
+                        торгово-развлекательного комплекса «Марко-сити».
+                    </div>
+                    <div class="image__container">
+                        <img src="{% static 'biography/image3.svg' %}" alt="" class="first__img">
+                        <img src="{% static 'biography/image4.svg' %}" alt="" class="first__img">
+                    </div>
+                </div>
+            </div>
+            <div class="right__side">
+                <div class="img__marko">
+                    <img src="{% static 'biography/image5.svg' %}" alt="" class="marko">
+                </div>
+                <div class="marko__text">
+                Один из магазинов компании<br> холдинга «Марко» 
+            </div>
+            </div>
+        </div>
+    </main>
+    {% include 'footer.html' %}
+</body>
+
+</style>
+
+</html>
+<style lang="scss">
+    .marko__text {
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 20px;
+        color: white;
+        display: flex;
+        position: absolute;
+        z-index: 100;
+        top:20%;
+        right: 1%;
+        letter-spacing: -0.02em;
+        text-align: right; 
+    }
+    .right__side span {
+        font-size: 20px;
+        color: white;
+        display: flex;
+        position: absolute;
+    }
+    .image__container {
+        display: flex;
+        justify-content: space-between;
+    }
+    .martynov__img {
+        margin-bottom: 12px;
+    }
+
+    .quote__image {
+        font-size: 12px;
+        color: #868693;
+    }
+
+    .quote__text {
+        font-size: 16px;
+        line-height: 16px;
+        letter-spacing: -0.02em;
+        font-weight: 400;
+    }
+
+    .notation {
+        font-size: 16px;
+        margin-bottom: 30px;
+        line-height: 16px;
+    }
+
+    .h2 {
+        padding-bottom: 24px;
+    }
+
+    .date__biography {
+        margin-bottom: 30px;
+        padding: 16px 8px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #868693;
+        border-top: 1px solid #868693;
+        gap: 10px;
+        width: fit-content;
+    }
+
+    .quote__container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+
+    }
+
+    .quote {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        border-bottom: 1px solid #868693;
+        padding-bottom: 38px;
+        margin-bottom: 44px;
+    }
+
+    .calendar {}
+
+    .date__text {
+        font-weight: 500;
+        font-size: 20px;
+        letter-spacing: -0.02em;
+        color: #EA424C;
+    }
+
+    .content__main {
+        padding-top: 44px;
+    }
+
+    .h2__text {
+        font-weight: 500;
+        font-size: 48px;
+        line-height: 48px;
+        letter-spacing: -0.02em;
+        padding-bottom: 24px;
+    }
+
+    .left__side {
+        margin-top: 59px;
+        width: 525px;
+    }
+
+    .content__header {
+        font-weight: 500;
+        font-size: 64px;
+        line-height: 64px;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        border-bottom: 1px solid #868693;
+        padding-bottom: 44px;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        /* Устанавливаем высоту для использования Flexbox */
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    main.content {
+        flex: 1;
+        /* Заставляет main занимать оставшееся пространство */
+    }
+
+    .content {
+        width: 1259px;
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+    }

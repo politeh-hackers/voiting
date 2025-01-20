@@ -1,5 +1,5 @@
-import json
 import os
+import json
 from django.shortcuts import get_object_or_404
 from .models import Biography
 from .services import BiographyService
@@ -9,6 +9,10 @@ from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.core.handlers.wsgi import WSGIRequest
 from gpt.services import generations_for_news
+from django.shortcuts import render
+
+def BiographyClientView(request):
+    return render(request, "biography.html")
 
 class BiographyView(View):
 
