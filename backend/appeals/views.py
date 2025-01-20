@@ -7,7 +7,7 @@ from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.shortcuts import render
 from django.core.paginator import Paginator, PageNotAnInteger
-from gpt.views import generations_for_news
+from gpt.views import generations_for_appeals
 
 def AppealsClientView(request: HttpRequest):
     page = request.GET.get('page', 1)  
@@ -40,7 +40,7 @@ class AppealView(View):
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
         validated_data: dict = AppealFieldsSchema.model_validate(data).model_dump()
-        main_data = generations_for_news(validated_data)
+        main_data = generations_for_appeals(validated_data)
         self.test_service.create(main_data)
         return JsonResponse(None, safe=False)
 

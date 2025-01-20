@@ -1,6 +1,7 @@
 import os
 import json
 from django.shortcuts import get_object_or_404
+from gpt.views import generations_for_biography
 from .models import Biography
 from .services import BiographyService
 import uuid
@@ -8,7 +9,6 @@ from .schemas import BiographySchema
 from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.core.handlers.wsgi import WSGIRequest
-from gpt.services import generations_for_news
 from django.shortcuts import render
 
 def BiographyClientView(request):
@@ -24,8 +24,11 @@ class BiographyView(View):
     def post(self, request):
         data = request.POST.dict()
         validated_data = BiographySchema.model_validate(data).model_dump() 
-        generations_for_news(data)
-        self.test_service.create(validated_data)
+        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "":
+            main_data = generations_for_biography(validated_data)
+            self.test_service.create(main_data)
+        else:
+            self.test_service.create(validated_data)
         return JsonResponse({"message": "success"}, status=200)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
@@ -49,7 +52,7 @@ class BiographyView(View):
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
         data = json.loads(request.body)
         validated_data = BiographySchema.model_validate(data).model_dump() 
-        generations_for_news(data)
+        generations_for_biography(data)
         self.test_service.update(model_id=model_id, data=validated_data)
         return JsonResponse(None, safe=False)
 

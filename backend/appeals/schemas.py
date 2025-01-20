@@ -31,9 +31,9 @@ class AppealFieldsSchema(BaseModel):
             max_length=Constants.MAX_LEN_TEXT, 
             description=f"Поле должно содержать от {Constants.MIN_LEN_TEXT} до {Constants.MAX_LEN_TEXT}"
         )
-        official_responce: str = Field(
-            ..., 
-            min_length=Constants.MIN_LEN_TEXT, 
-            max_length=Constants.MAX_LEN_TEXT, 
-            description=f"Поле должно содержать от {Constants.MIN_LEN_TEXT} до {Constants.MAX_LEN_TEXT}"
-        )
+        # official_responce: str = Field(
+        #     ..., 
+        #     min_length=Constants.MIN_LEN_TEXT, 
+        #     max_length=Constants.MAX_LEN_TEXT, 
+        #     description=f"Поле должно содержать от {Constants.MIN_LEN_TEXT} до {Constants.MAX_LEN_TEXT}"
+        # )
