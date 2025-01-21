@@ -2,7 +2,7 @@
   <Dialog
     v-model:visible="visibledt"
     modal
-    header="Изменить новость"
+    header="Обращение"
     :style="{ width: '60rem' }"
     class="dialog-edit"
   >
@@ -10,6 +10,7 @@
       <div class="components">
         <div class="category">
           <Select
+            disabled
             v-model="selectedCategory"
             :options="items"
             optionLabel="name"
@@ -18,6 +19,7 @@
         </div>
         <div class="name">
           <InputText
+            disabled
             v-model="post.first_name"
             placeholder="Имя"
             class="header__input"
@@ -25,6 +27,7 @@
         </div>
         <div class="surname">
           <InputText
+            disabled
             v-model="post.last_name"
             placeholder="Фамилия"
             class="summary_input"
@@ -33,6 +36,7 @@
 
         <div class="second_name">
           <InputText
+            disabled
             v-model="post.patronymic"
             placeholder="Отчество"
             class="summary_input"
@@ -41,16 +45,16 @@
 
         <div class="flex-auto">
           <label for="phone" class="">Номер телефона</label>
-          <InputMask
+          <InputText
             id="phone"
+            disabled
             v-model="post.phone"
-            mask="+375-(99)-999-99-99"
-            placeholder="+375-(99)-999-99-99"
+            placeholder="Номер телефона"
             fluid
           />
         </div>
         <div class="date_picker">
-          <DatePicker v-model="post.date_created" dateFormat="" />
+          <DatePicker disabled v-model="post.date" dateFormat="" />
         </div>
         <FloatLabel variant="on">
           <Textarea
@@ -128,7 +132,7 @@
           </div>
           <div class="date-block">
             <span class="news-date">
-              {{ new Date(newsItem.date_created).toLocaleDateString() }}
+              {{ new Date(newsItem.date).toLocaleDateString() }}
             </span>
           </div>
           <div class="action-buttons">
@@ -181,7 +185,7 @@ const post = ref<Post>({
   photos: "",
   text: "",
   on_website: false,
-  date_created: new Date(),
+  date: new Date(),
   official_response: "",
 });
 const token = getToken()
@@ -230,7 +234,7 @@ const editPost = (newsItem) => {
   post.value.phone = newsItem.phone
   post.value.photos = newsItem.photos;
   post.value.first_name = newsItem.first_name;
-  post.value.date_created = newsItem.date_created;
+  post.value.date = newsItem.date;
   post.value.last_name = newsItem.last_name;
   post.value.patronymic = newsItem.patronymic;
   visibledt.value = true;

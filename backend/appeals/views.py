@@ -7,12 +7,14 @@ from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.shortcuts import render
 from django.core.paginator import Paginator, PageNotAnInteger
-from gpt.views import generations_for_news
+from gpt.views import generations_for_appeals
+from category.models import Category
 
 def AppealsClientView(request: HttpRequest):
     page = request.GET.get('page', 1)  
     per_page = int(request.GET.get('per_page', 3))
     appeals = Appeal.objects.all()  
+    categories = Category.objects.all()
     paginator = Paginator(appeals, per_page)
     try:
         appeals_page = paginator.page(page)
@@ -26,8 +28,9 @@ def AppealsClientView(request: HttpRequest):
         "total_pages": paginator.num_pages,
         "total_items": paginator.count,
         "all_pages": all_pages,
+        "categories": categories,
     }
-
+    
     return render(request, "ModalAppeals.html", context)
 
 
@@ -40,7 +43,7 @@ class AppealView(View):
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
         validated_data: dict = AppealFieldsSchema.model_validate(data).model_dump()
-        main_data = generations_for_news(validated_data)
+        main_data = generations_for_appeals(validated_data)
         self.test_service.create(main_data)
         return JsonResponse(None, safe=False)
 

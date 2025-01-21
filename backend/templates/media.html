@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <main class="content">
+        <div class="container">
+            <div class="top__content">
+                {% for media in medias %}
+                <div class="gallery" style="background-image: url('{% static 'image/' %}{{ media.main_photo }}');">
+                    <div class="gallery__block">
+                        <div class="gallery_card-header">
+                            <p>{{ media.header }}</p>
+                        </div>
+                        <div class="gallery_card-summary">
+                            <p>{{ media.summary }}</p>
+                        </div>
+                       
+                        <div class="gallery_card-date">
+                            {{ media.date_created }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+        </div>
+        </div>
+        </div>
+    </main>
+    {% include 'footer.html' %}
+</body>
+
+</html>
+<style>
+    .gallery_card-button {
+        color: white;
+    }
+    .gallery__block {
+        padding-top: 42px;
+        padding-bottom: 52px;
+        padding-left: 42px;
+        padding-right: 42px;
+    }
+    .card__summary {}
+
+    .gallery_card-header {
+        font-weight: 500;
+        font-size: 48px;
+    }
+
+    .gallery {
+        color: white;
+        width: 745px;
+        height: 480px;
+        border-radius: 6px;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        /* Устанавливаем высоту для использования Flexbox */
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    main.content {
+        flex: 1;
+        /* Заставляет main занимать оставшееся пространство */
+    }
+
+    .container {
+        width: 1300px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 60px;
+    }
+</style>

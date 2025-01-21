@@ -10,7 +10,29 @@ from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.core.handlers.wsgi import WSGIRequest
 from gpt.views import generations_for_news
+from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+def MediaClientView(request: HttpRequest):
+    page = request.GET.get('page', 1)  
+    per_page = int(request.GET.get('per_page', 3))
+    medias = Media.objects.all()  
+    paginator = Paginator(medias, per_page)
+    try:
+        media_page = paginator.page(page)
+    except PageNotAnInteger:
+        media_page = paginator.page(1)
+    all_pages = list(range(1, paginator.num_pages + 1))
+    context = {
+        "medias": list(media_page.object_list.values()),  
+        "page": media_page.number,
+        "per_page": per_page,
+        "total_pages": paginator.num_pages,
+        "total_items": paginator.count,
+        "all_pages": all_pages,
+    }
+
+    return render(request, "media.html", context)
 class MediaView(View):
 
     test_service = MediaService(model=Media)

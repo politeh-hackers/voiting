@@ -7,6 +7,7 @@
   <title>Quick start with Yandex Maps (TypeScript)</title>
   <script src="https://api-maps.yandex.ru/2.1/?apikey=5325d15d-232d-4c0f-880e-faa5da31699b&lang=ru_RU"
     type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.7/dist/inputmask.min.js"></script>
   {% load static %}
   <script src="{% static 'appeals/index.js' %}" type="module"></script>
 </head>
@@ -19,7 +20,10 @@
   <form id="appealForm">
     <label for="category">Категория:</label>
     <select id="category" name="category">
-      <option value="">Выберите категорию</option>
+      <option value="" hidden selected>Выберите категорию</option>
+      {% for category in categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+      {% endfor %}
     </select>
     <div>
       <label for="header">Заголовок:</label>
