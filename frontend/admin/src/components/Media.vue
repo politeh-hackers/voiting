@@ -11,6 +11,27 @@
       class="dialog-main"
     >
       <div class="content__main">
+        <div class="h1">
+            <InputText
+              v-model="post.h1"
+              placeholder="h1"
+              class="h1__input"
+            />
+            </div>
+            <div class="title">
+            <InputText
+              v-model="post.title"
+              placeholder="title"
+              class="title__input"
+            />
+            </div>
+            <div class="description">
+            <InputText
+              v-model="post.description"
+              placeholder="description"
+              class="description__input"
+            />
+            </div>
         <div class="header">
           <InputText
             v-model="post.header"
@@ -77,6 +98,27 @@
       class="dialog-edit"
     >
       <div class="content__main">
+        <div class="h1">
+            <InputText
+              v-model="post.h1"
+              placeholder="h1"
+              class="h1__input"
+            />
+            </div>
+            <div class="title">
+            <InputText
+              v-model="post.title"
+              placeholder="title"
+              class="title__input"
+            />
+            </div>
+            <div class="description">
+            <InputText
+              v-model="post.description"
+              placeholder="description"
+              class="description__input"
+            />
+            </div>
         <div class="header">
           <InputText
             v-model="post.header"
@@ -219,8 +261,12 @@ import { PostService, Post } from "../api/serviceformedia";
 import { initEditor } from "../editor.js/editor-init";
 import Dropdown from "primevue/dropdown";
 import { getToken, isAuthenticated } from "../utils/auth";
+import { title } from "process";
 const router = useRouter()
 const post = ref<Post>({
+  h1:"",
+  title:"",
+  description:"",
   summary: "",
   main_photo: "",
   header: "",
@@ -314,6 +360,9 @@ const SaveEditedPost = async () => {
     .then((data) => JSON.stringify(data));
 
   const postData = {
+    h1:post.value.content,
+    title:post.value.content,
+    description:post.value.content,
     content: post.value.content,
     header: post.value.header,
     summary: post.value.summary,
@@ -339,6 +388,9 @@ const SaveEditedPost = async () => {
       console.log("Пост успешно отредактирован");
       loadNews();
       post.value = {
+        h1:"",
+        title: "",
+        description:"",
         summary: "",
         main_photo: "",
         header: "",
@@ -390,7 +442,9 @@ const addPost = async () => {
 
   // Преобразуем дату в формат 'YYYY-MM-DD'
   const formattedDate = post.value.date_created.toLocaleDateString("en-CA");
-
+  content.append("h1", post.value.h1);
+  content.append("title", post.value.title);
+  content.append("descripton", post.value.description);
   content.append("content", post.value.content);
   content.append("header", post.value.header);
   content.append("summary", post.value.summary);
@@ -412,6 +466,9 @@ const addPost = async () => {
     if (response.ok) {
       console.log("Пост успешно добавлен");
       loadNews();
+      post.value.h1 = "";
+      post.value.title = "";
+      post.value.description = "";
       post.value.header = "";
       post.value.summary = "";
       post.value.main_photo = "";
@@ -434,6 +491,9 @@ const editPost = (newsItem) => {
     return;
   }
   post.value.id = newsItem.id;
+  post.value.h1 = newsItem.h1;
+  post.value.title = newsItem.title;
+  post.value.description = newsItem.description;
   post.value.header = newsItem.header;
   post.value.summary = newsItem.summary;
   previousPhoto = newsItem.main_photo;
