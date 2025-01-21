@@ -10,7 +10,7 @@ class Actual(BaseUUID):
     summary = models.CharField(max_length=100, blank=True, unique=True, null=False)
     main_photo = models.TextField(blank=True, null=False)
     content = models.JSONField(null=False)
-    date_created = models.DateTimeField(null=False)
+    date_created = models.DateField(null=False)
     actual_tags = models.CharField(max_length=100, unique=False)
 
     class Meta:

@@ -49,7 +49,8 @@ class MediaView(View):
         if (media := Media.objects.filter(id=model_id).first()) is not None and (media.h1 == "" or media.title == "" or media.description == ""):
             main_data = generations_for_news(validated_data)
             self.test_service.update(model_id=model_id, data=main_data)
-        self.test_service.update(model_id=model_id, data=validated_data)
+        else:
+            self.test_service.update(model_id=model_id, data=validated_data)
         return JsonResponse(None, safe=False)
         
 class ImageView(View):
