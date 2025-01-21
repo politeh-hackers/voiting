@@ -1,49 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quick start with Yandex Maps (TypeScript)</title>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=5325d15d-232d-4c0f-880e-faa5da31699b&lang=ru_RU" type="text/javascript"></script>
-    {% load static %}
-    <script src="{% static 'appeals/index.js' %}" type="module"></script>
-  </head>
 
-  <body>
-    <div id="map" style="width: 600px; height: 400px;"></div>
-    
-    
-    <!-- Форма для ввода данных -->
-    <form id="appealForm">
-      <label for="category">Категория:</label>
-      <select id="category" name="category">
-        <option value="">Выберите категорию</option>
-      </select>
-      <div>
-        <label for="lastName">Фамилия:</label>
-        <input type="text" id="lastName" name="last_name" />
-      </div>
-      <div>
-        <label for="firstName">Имя:</label>
-        <input type="text" id="firstName" name="first_name" />
-      </div>
-      <div>
-        <label for="patronymic">Отчество:</label>
-        <input type="text" id="patronymic" name="patronymic" />
-      </div>
-      <div>
-        <label for="phone">Телефон:</label>
-        <input type="text" id="phone" name="phone" />
-      </div>
-      <div>
-        <label for="text">Текст обращения:</label>
-        <textarea id="text" name="text"></textarea>
-      </div>
-      <div>
-        <label for="photos">Фото:</label>
-        <input type="file" id="photos" name="photos" accept="image/*" multiple />
-      </div>
-    </form>
-    <button id="saveBtn">Отправить обращение</button>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick start with Yandex Maps (TypeScript)</title>
+  <script src="https://api-maps.yandex.ru/2.1/?apikey=5325d15d-232d-4c0f-880e-faa5da31699b&lang=ru_RU"
+    type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.7/dist/inputmask.min.js"></script>
+  {% load static %}
+  <script src="{% static 'appeals/index.js' %}" type="module"></script>
+</head>
+
+<body>
+  <div id="map" style="width: 600px; height: 400px;"></div>
+
+
+  <!-- Форма для ввода данных -->
+  <form id="appealForm">
+    <label for="category">Категория:</label>
+    <select id="category" name="category">
+      <option value="" hidden selected>Выберите категорию</option>
+      {% for category in categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+      {% endfor %}
+    </select>
+    <div>
+      <label for="header">Заголовок:</label>
+      <input type="text" id="header" name="header" />
+    </div>
+    <div>
+      <label for="lastName">Фамилия:</label>
+      <input type="text" id="lastName" name="last_name" />
+    </div>
+    <div>
+      <label for="firstName">Имя:</label>
+      <input type="text" id="firstName" name="first_name" />
+    </div>
+    <div>
+      <label for="patronymic">Отчество:</label>
+      <input type="text" id="patronymic" name="patronymic" />
+    </div>
+    <div>
+      <label for="phone">Телефон:</label>
+      <input type="text" id="phone" name="phone" />
+    </div>
+    <div>
+      <label for="text">Текст обращения:</label>
+      <textarea id="text" name="text"></textarea>
+    </div>
+    <div>
+      <label for="photos">Фото:</label>
+      <input type="file" id="photos" name="photos" accept="image/*" multiple />
+    </div>
+  </form>
+  <button id="saveBtn">Отправить обращение</button>
+</body>
+
 </html>

@@ -10,6 +10,7 @@ from django.core.paginator import Paginator, PageNotAnInteger
 from gpt.views import generations_for_appeals
 import os
 from django.core.handlers.wsgi import WSGIRequest
+from category.models import Category
 
 class AppealsClientView(View):
     test_service = AppealService(model=Appeal)
@@ -18,6 +19,7 @@ class AppealsClientView(View):
         page = request.GET.get('page', 1)  
         per_page = int(request.GET.get('per_page', 3))
         appeals = Appeal.objects.all()  
+        categories = Category.objects.all()
         paginator = Paginator(appeals, per_page)
         try:
             appeals_page = paginator.page(page)
@@ -31,8 +33,12 @@ class AppealsClientView(View):
             "total_pages": paginator.num_pages,
             "total_items": paginator.count,
             "all_pages": all_pages,
+            "categories": categories
         }
-        return render(request, "appeals.html", context)
+        return render(request, "ModalAppeals.html", context)
+
+
+
 
 class AppealView(View):
     test_service = AppealService(model=Appeal)
@@ -44,6 +50,11 @@ class AppealView(View):
         data = json.loads(request.body)
         validated_data: dict = AppealClientFieldsSchema.model_validate(data).model_dump()
         main_data = generations_for_appeals(validated_data)
+        category_id = data.get('category')
+        category = Category.objects.filter(id=category_id).first()
+        validated_data: dict = AppealClientFieldsSchema.model_validate(data).model_dump()
+        main_data = generations_for_appeals(validated_data)
+        main_data["category"] = category
         self.test_service.create(main_data)
         return JsonResponse(None, safe=False)
 

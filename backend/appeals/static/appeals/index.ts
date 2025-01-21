@@ -80,13 +80,15 @@ function initMap(): void {
                
                 const formData = new FormData(document.getElementById('appealForm') as HTMLFormElement);
                 const appealData = {
+                    header: formData.get('header'),
                     location: position,
                     last_name: formData.get('last_name'),
                     first_name: formData.get('first_name'),
                     patronymic: formData.get('patronymic'),
                     phone: formData.get('phone'),
                     text: formData.get('text'),
-                    photos: formData.getAll('photos') 
+                    photos: formData.getAll('photos') as File[],
+                    category: formData.get('category')
                 };
 
                 sendDataToServer(appealData);
