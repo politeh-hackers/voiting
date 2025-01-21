@@ -32,10 +32,16 @@ class AppealClientFieldsSchema(BaseModel):
             description=f"Поле должно содержать от {Constants.MIN_LEN_TEXT} до {Constants.MAX_LEN_TEXT}"
         )
         location: str = Field(
-            ...
+            ...,
+            min_length=4, 
+            max_length=Constants.MAX_LEN_NAME_FIELD, 
+            description=f"Поле должно содержать от 4 до {Constants.MAX_LEN_NAME_FIELD}"
         )
         phone: str = Field(
-            ...
+            ...,
+            min_length=4, 
+            max_length=Constants.MAX_LEN_NAME_FIELD, 
+            description=f"Поле должно содержать от 4 до {Constants.MAX_LEN_NAME_FIELD}"
         )
 
 

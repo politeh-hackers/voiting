@@ -108,7 +108,7 @@ function initMap() {
     if (saveButton) {
         saveButton.addEventListener('click', function () {
             if (isMarkerInPolygon()) {
-                var position = marker.geometry.getCoordinates();
+                var position = marker.geometry.getCoordinates().toString();
                 var formData = new FormData(document.getElementById('appealForm'));
                 var appealData = {
                     header: formData.get('header'),
@@ -118,7 +118,8 @@ function initMap() {
                     patronymic: formData.get('patronymic'),
                     phone: formData.get('phone'),
                     text: formData.get('text'),
-                    photos: formData.getAll('photos')
+                    photos: formData.getAll('photos'),
+                    category: formData.get('category')
                 };
                 sendDataToServer(appealData);
             }

@@ -87,7 +87,8 @@ function initMap(): void {
                     patronymic: formData.get('patronymic'),
                     phone: formData.get('phone'),
                     text: formData.get('text'),
-                    photos: formData.getAll('photos') 
+                    photos: formData.getAll('photos') as File[],
+                    category: formData.get('category')
                 };
 
                 sendDataToServer(appealData);
