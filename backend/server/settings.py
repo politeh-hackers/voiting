@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'users',
     'gpt',
     'biography',
-    'mainpage'
+    'mainpage',
+    'telegram_bot'
 ]
 
 REST_FRAMEWORK = {
@@ -149,3 +150,6 @@ SIMPLE_JWT = {
     'SIGNING_KEY': 'your-secret-key',  
     'ALGORITHM': 'HS256',             
 }
+
+TELEGRAM_BOT_TOKEN = "7755969574:AAGAcXtSjoCsr6mB82JG3zSMuW7rgM_g3Iw"
+TELEGRAM_CHANNEL_ID = "@MartynovOfficialNews"

@@ -2,11 +2,6 @@ from pydantic import BaseModel, Field
 from base.constants import Constants
 
 class AppealClientFieldsSchema(BaseModel):
-        header: str = Field(
-            ..., 
-            min_length=Constants.MIN_LEN_HEADER, 
-            max_length=Constants.MAX_LEN_HEADER, 
-            description=f"Поле должно содержать от 4 до {Constants.MAX_LEN_HEADER}")
         first_name: str = Field(
             ..., 
             min_length=4, 

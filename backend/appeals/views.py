@@ -8,6 +8,8 @@ from django.views import View
 from django.shortcuts import render
 from django.core.paginator import Paginator, PageNotAnInteger
 from gpt.views import generations_for_appeals
+import os
+from django.core.handlers.wsgi import WSGIRequest
 
 class AppealsClientView(View):
     test_service = AppealService(model=Appeal)
@@ -32,14 +34,6 @@ class AppealsClientView(View):
         }
         return render(request, "appeals.html", context)
 
-    def post(self, request: HttpRequest):
-        data = json.loads(request.body)
-        validated_data: dict = AppealClientFieldsSchema.model_validate(data).model_dump()
-        main_data = generations_for_appeals(validated_data)
-        self.test_service.create(main_data)
-        return JsonResponse(None, safe=False)
-
-
 class AppealView(View):
     test_service = AppealService(model=Appeal)
 
@@ -48,8 +42,9 @@ class AppealView(View):
     
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
-        validated_data: dict = AppealAdminFieldsSchema.model_validate(data).model_dump()
-        self.test_service.create(validated_data)
+        validated_data: dict = AppealClientFieldsSchema.model_validate(data).model_dump()
+        main_data = generations_for_appeals(validated_data)
+        self.test_service.create(main_data)
         return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
@@ -65,4 +60,44 @@ class AppealView(View):
             self.test_service.update(model_id=model_id, data=main_data)
         else:
             self.test_service.update(model_id=model_id, data=validated_data)
+        return JsonResponse(None, safe=False)
+
+class ImageView(View):
+    test_service = AppealService(model=Appeal) 
+
+    def get(self, request: HttpRequest):
+        return JsonResponse(self.test_service.get_all(), safe=False)
+
+    def post(self, request: WSGIRequest):
+        if "main_photo" in request.FILES:
+            data = request.FILES["main_photo"]
+        elif "image" in request.FILES:
+            data = request.FILES["image"]
+        else:
+            return JsonResponse({"error": "No image provided"}, status=400)
+        file_name = str(data)
+        image_dir = os.path.join('static/image')
+        os.makedirs(image_dir, exist_ok=True)  
+        image_path = os.path.join(image_dir, file_name)
+        base_name, extension = os.path.splitext(file_name)
+        counter = 1
+        while os.path.exists(image_path):
+            file_name = f"{base_name}_{counter}{extension}"
+            image_path = os.path.join(image_dir, file_name)
+            counter += 1
+        with open(image_path, 'wb') as image_file:
+            for chunk in data.chunks():
+                image_file.write(chunk)
+                return JsonResponse(
+                {
+                    "url": f"http://localhost:8000/static/image/{file_name}",
+                    "name": file_name,
+                    "size": data.size,
+                    "type": data.content_type
+                }, safe=False)
+
+    def delete(self, request: HttpRequest, file_name: str):
+        image_path = os.path.join('static/image', file_name)
+        if os.path.exists(image_path):
+            os.remove(image_path)
         return JsonResponse(None, safe=False)

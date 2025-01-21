@@ -15,8 +15,9 @@ class BaseService(Generic[T]):
     def get_all(self) -> List[dict]:
         return list(self.model.objects.values())
 
-    def create(self, data: T) -> None:
-        self.model.objects.create(**data)
+    def create(self, data):
+        instance = self.model.objects.create(**data)
+        return instance
 
     def update(self, model_id: uuid.UUID, data: Dict) -> None:
         self.model.objects.filter(id=model_id).update(**data)

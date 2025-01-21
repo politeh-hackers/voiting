@@ -10,6 +10,7 @@ from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.core.handlers.wsgi import WSGIRequest
 from gpt.views import generations_for_news
+from telegram_bot.bot import send_news_to_telegram
 
 class MediaView(View):
 
@@ -22,7 +23,14 @@ class MediaView(View):
         data = request.POST.dict()
         validated_data: dict = MediaActualFieldsSchema.model_validate(data).model_dump()
         main_data = generations_for_news(validated_data)
-        self.test_service.create(main_data)
+        media_instance = self.test_service.create(main_data)
+
+        send_news_to_telegram(
+            title=main_data["title"],
+            description=main_data["description"],
+            url=f"http://localhost:8000/media/{media_instance.id}"
+        )
+
         return JsonResponse({"message": "success"}, status=200)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
