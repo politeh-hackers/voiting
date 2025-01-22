@@ -15,7 +15,7 @@ class Appeal(BaseUUID):
     on_website = models.BooleanField(default=False)
     date = models.DateField(default=timezone.now, null=False, blank=True)
     text = models.CharField(max_length=200, null=False, blank=True)
-    photos = models.CharField(max_length=255, null=True, blank=True)
+    photos = models.ImageField(upload_to='static/images', blank=True)
     official_response = models.CharField(max_length=500, null=True, blank=True)
     category = models.CharField(max_length=200, blank=True, null=False)
 

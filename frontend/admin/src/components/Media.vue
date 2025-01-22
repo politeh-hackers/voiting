@@ -444,7 +444,7 @@ const addPost = async () => {
   const formattedDate = post.value.date_created.toLocaleDateString("en-CA");
   content.append("h1", post.value.h1);
   content.append("title", post.value.title);
-  content.append("descripton", post.value.description);
+  content.append("description", post.value.description);
   content.append("content", post.value.content);
   content.append("header", post.value.header);
   content.append("summary", post.value.summary);

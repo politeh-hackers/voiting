@@ -153,3 +153,5 @@ SIMPLE_JWT = {
 
 TELEGRAM_BOT_TOKEN = "7755969574:AAGAcXtSjoCsr6mB82JG3zSMuW7rgM_g3Iw"
 TELEGRAM_CHANNEL_ID = "@MartynovOfficialNews"
+MEDIA_URL = '/media/'  # URL, по которому будут доступны медиафайлы
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Папка, в которой будут храниться медиафайлы

@@ -60,7 +60,7 @@ export interface Post extends BaseUUIDSchema {
     date:Date
     text:string
     on_website:boolean
-    photos:string
+    photos:string[]
     official_response:string
 }
 
