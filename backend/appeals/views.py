@@ -1,5 +1,5 @@
 import json
-from .schemas import AppealClientFieldsSchema, AppealAdminFieldsSchema
+from .schemas import AppealCreateSchema, AppealUpdateSchema
 from .models import Appeal
 from .services import AppealService
 import uuid
@@ -11,6 +11,9 @@ from gpt.views import generations_for_appeals
 import os
 from django.core.handlers.wsgi import WSGIRequest
 from category.models import Category
+from telegram_bot.bot import send_appeal_to_telegram
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from typing import cast
 
 class AppealsClientView(View):
     test_service = AppealService(model=Appeal)
@@ -38,8 +41,6 @@ class AppealsClientView(View):
         return render(request, "ModalAppeals.html", context)
 
 
-
-
 class AppealView(View):
     test_service = AppealService(model=Appeal)
 
@@ -48,12 +49,28 @@ class AppealView(View):
     
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
-        validated_data: dict = AppealClientFieldsSchema.model_validate(data).model_dump()
-        main_data = generations_for_appeals(validated_data)
         category_id = data.get('category')
         category = Category.objects.filter(id=category_id).first()
+<<<<<<< HEAD
         main_data["category"] = category
         self.test_service.create(main_data)
+=======
+        data["category"] = category  
+        validated_data: dict = AppealCreateSchema.model_validate(data).model_dump()
+
+        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "":
+            main_data = generations_for_appeals(validated_data)
+            appeal_instance: Appeal = self.test_service.create(main_data)
+        else:
+            appeal_instance: Appeal = cast(Appeal, self.test_service.create(data))
+        response = send_appeal_to_telegram(
+            category=appeal_instance.category,  
+            date=appeal_instance.date,         
+            url=f"http://localhost:8000/appeals/{appeal_instance.id}"  
+        )
+
+        print(f"Telegram response: {response}") 
+>>>>>>> d6e09b93a979ce0e7578a00d4ed6e3dd625eb21d
         return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
@@ -62,13 +79,18 @@ class AppealView(View):
 
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
         data = json.loads(request.body)
-        validated_data: dict = AppealAdminFieldsSchema.model_validate(data).model_dump()
-        validated_data.update(AppealClientFieldsSchema.model_validate(data).model_dump())
+        validated_data: dict = AppealUpdateSchema.model_validate(data).model_dump()
         if (appeal := Appeal.objects.filter(id=model_id).first()) is not None and (appeal.h1 == "" or appeal.title == "" or appeal.description == ""):
             main_data = generations_for_appeals(validated_data)
-            self.test_service.update(model_id=model_id, data=main_data)
         else:
-            self.test_service.update(model_id=model_id, data=validated_data)
+            main_data = validated_data
+        self.test_service.update(model_id=model_id, data=main_data)    
+        response = send_appeal_to_telegram(
+            category=data.category,
+            date=data.date, 
+            url=f"http://localhost:8000/appeals/{data.id}" #нужен публичный url
+        )
+        print(f"Telegram response: {response}") 
         return JsonResponse(None, safe=False)
 
 class ImageView(View):
@@ -77,33 +99,37 @@ class ImageView(View):
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
+<<<<<<< HEAD
     def post(self, request: WSGIRequest):
         if "photos" in request.FILES:
             data = request.FILES["photos"]
         elif "image" in request.FILES:
             data = request.FILES["image"]
+=======
+    def post(self, request):
+        if "photos" in request.FILES:
+            images = request.FILES.getlist("photos") 
+>>>>>>> d6e09b93a979ce0e7578a00d4ed6e3dd625eb21d
         else:
-            return JsonResponse({"error": "No image provided"}, status=400)
-        file_name = str(data)
-        image_dir = os.path.join('static/image')
-        os.makedirs(image_dir, exist_ok=True)  
-        image_path = os.path.join(image_dir, file_name)
-        base_name, extension = os.path.splitext(file_name)
-        counter = 1
-        while os.path.exists(image_path):
-            file_name = f"{base_name}_{counter}{extension}"
+            return JsonResponse({"error": "No images provided"}, status=400)
+        image_dir = os.path.join('static', 'image')
+        os.makedirs(image_dir, exist_ok=True)
+        saved_photos = []  
+        for data in images:
+            file_name = str(data)
             image_path = os.path.join(image_dir, file_name)
-            counter += 1
-        with open(image_path, 'wb') as image_file:
-            for chunk in data.chunks():
-                image_file.write(chunk)
-                return JsonResponse(
-                {
-                    "url": f"http://localhost:8000/static/image/{file_name}",
-                    "name": file_name,
-                    "size": data.size,
-                    "type": data.content_type
-                }, safe=False)
+            base_name, extension = os.path.splitext(file_name)
+            counter = 1
+            while os.path.exists(image_path):  
+                file_name = f"{base_name}_{counter}{extension}"
+                image_path = os.path.join(image_dir, file_name)
+                counter += 1
+            with open(image_path, 'wb') as image_file:
+                for chunk in data.chunks():
+                    image_file.write(chunk)
+            saved_photos.append(f"http://localhost:8000/static/image/{file_name}")
+
+        return JsonResponse({"photos": saved_photos, "message": "Photos uploaded successfully"}, safe=False)
 
     def delete(self, request: HttpRequest, file_name: str):
         image_path = os.path.join('static/image', file_name)

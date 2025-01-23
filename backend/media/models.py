@@ -14,7 +14,7 @@ class Media(BaseUUID):
  
     def __str__(self):
         return self.header
-
+ 
     class Meta:
         verbose_name = "media"
         verbose_name_plural = "media"

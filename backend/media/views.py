@@ -73,6 +73,7 @@ def MediaClientView(request: HttpRequest):
     }
 
     return render(request, "media.html", context)
+    
 class MediaView(View):
 
     test_service = MediaService(model=Media)
@@ -82,16 +83,19 @@ class MediaView(View):
 
     def post(self, request):
         data = request.POST.dict()
-        validated_data: dict = MediaActualFieldsSchema.model_validate(data).model_dump()
-        main_data = generations_for_news(validated_data)
-        media_instance = self.test_service.create(main_data)
-
+        validated_data = MediaActualFieldsSchema.model_validate(data).model_dump()
+        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "":
+            main_data = generations_for_news(validated_data)
+            media_instance: Media = self.test_service.create(main_data)
+        else:
+            media_instance: Media = self.test_service.create(data)
+        main_photo = os.path.join('static', 'image', media_instance.main_photo)
         send_news_to_telegram(
-            title=main_data["title"],
-            description=main_data["description"],
-            url=f"http://localhost:8000/media/{media_instance.id}"
+            header=media_instance.header,
+            summary=media_instance.summary,
+            main_photo=main_photo,  
+            url=f"http://localhost:8000/media/{media_instance.id}" #нужен публичный url
         )
-
         return JsonResponse({"message": "success"}, status=200)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):

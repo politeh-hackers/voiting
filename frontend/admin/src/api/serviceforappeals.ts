@@ -64,7 +64,7 @@ export interface Post extends BaseUUIDSchema {
     status:string
     text:string
     on_website:boolean
-    photos:string
+    photos:string[]
     official_response:string
 }
 

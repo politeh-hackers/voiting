@@ -11,6 +11,7 @@ from .schemas import MediaActualFieldsSchema
 from gpt.services import generations_for_news
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
+from telegram_bot.bot import send_news_to_telegram
 
 def ActualClientView(request: HttpRequest):
     page = request.GET.get('page', 1)  
@@ -42,8 +43,18 @@ class ActualView(View):
     def post(self, request):
         data = request.POST.dict()
         validated_data: dict = MediaActualFieldsSchema.model_validate(data).model_dump()
-        main_data = generations_for_news(validated_data)
-        self.test_service.create(main_data)
+        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "":
+            main_data = generations_for_news(validated_data)
+            actual_instance: Actual = self.test_service.create(main_data)
+        else:
+            actual_instance: Actual = self.test_service.create(data)
+        main_photo = os.path.join('static', 'image', actual_instance.main_photo)
+        send_news_to_telegram(
+            header=actual_instance.header,
+            summary=actual_instance.summary,
+            main_photo=main_photo,  
+            url=f"http://localhost:8000/actual/{actual_instance.id}" #нужен публичный url
+        )
         return JsonResponse({"message": "success"}, status=200)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
