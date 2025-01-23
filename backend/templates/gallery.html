@@ -1,0 +1,168 @@
+{% load static %}
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        {% for media in medias %}
+        <div class="swiper-slide">
+            <div class="gallery"
+                style="background: linear-gradient(0deg, rgba(35, 35, 35, 0.6), rgba(35, 35, 35, 0.6)),
+                linear-gradient(179.55deg, rgba(35, 35, 35, 0) 65.29%, rgba(35, 35, 35, 0.5) 99.62%),
+                url('{% static 'image/' %}{{ media.main_photo }}');">
+                <div class="gallery__block">
+                    <div class="gallery__content">
+                        <div class="gallery_card-header">
+                            {{ media.header }}
+                        </div>
+                        <div class="gallery_card-summary">
+                            {{ media.summary }}
+                        </div>
+                        <div class="gallery_card-button">
+                            <a href="#">Подробнее ⟶</a>
+                        </div>
+                    </div>
+
+                    <div class="gallery__date">
+                        <div class="date-flag">
+                            <div class="date-flag__day">{{ media.date_created|date:"d" }}</div>
+                            <div class="date-flag__month">{{ media.date_created|date:"b" }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Пагинация внутри карточки -->
+
+        </div>
+        {% endfor %}
+
+    </div>
+    <div class="swiper-pagination"></div>
+</div>
+
+<style>
+    .gallery__content{
+        
+        flex-direction: column;
+        width: 513px;
+        word-break: break-word;
+    }
+    .swiper-pagination-bullet {
+    background-color: white; /* Белый цвет */
+    opacity: 1; /* Убираем прозрачность */
+}
+
+/* Зелёная точка для активной */
+.swiper-pagination-bullet-active {
+    background-color: #28a745; /* Зелёный цвет */
+}
+    
+
+    .swiper-container {
+        height: 480px;
+        /* Высота контейнера */
+        overflow: hidden;
+        /* Скрыть всё, что выходит за пределы */
+    }
+
+    .swiper-pagination {
+        position: relative;
+        bottom: 30px !important;
+    }
+
+    .gallery {
+        width: 745px;
+        height: 480px;
+        display: flex;
+        border-radius: 6px;
+        color: white;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+
+    .gallery__block {
+        width: 100%;
+        height: 100%;
+        padding-top: 42px;
+        padding-bottom: 52px;
+        padding-left: 42px;
+        padding-right: 42px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .swiper-slide {
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+
+    .gallery__date {
+        width: 74px;
+        height: 111px;
+        background-image: url("{% static 'media/Vector 7 (1).svg' %}");
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    /* Внутренний элемент с вырезом */
+    .date-flag {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding-bottom: 20px;
+    }
+
+
+    .date-flag__day {
+        font-size: 36px;
+        font-weight: 500;
+    }
+
+    .date-flag__month {
+        font-size: 20px;
+        font-weight: 400;
+    }
+
+    .gallery_card-summary {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 12px;
+        letter-spacing: -0.02em;
+        padding-top: 16px;
+        padding-bottom: 24px;
+    }
+
+    .gallery_card-button {
+        border: 1px solid white;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 12px;
+        letter-spacing: -0.02em;
+        padding: 12px 16px;
+        display: inline-block;
+    }
+
+    .gallery_card-date {}
+
+    .gallery a {
+        color: white;
+    }
+
+    .gallery__block {}
+
+    .card__summary {}
+
+    .gallery_card-header {
+        font-weight: 500;
+        font-size: 48px;
+
+        border-bottom: 1px solid white;
+        padding-bottom: 16px;
+        display: inline-block;
+    }
+</style>

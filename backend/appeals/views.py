@@ -52,8 +52,6 @@ class AppealView(View):
         main_data = generations_for_appeals(validated_data)
         category_id = data.get('category')
         category = Category.objects.filter(id=category_id).first()
-        validated_data: dict = AppealClientFieldsSchema.model_validate(data).model_dump()
-        main_data = generations_for_appeals(validated_data)
         main_data["category"] = category
         self.test_service.create(main_data)
         return JsonResponse(None, safe=False)
@@ -80,8 +78,8 @@ class ImageView(View):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
     def post(self, request: WSGIRequest):
-        if "main_photo" in request.FILES:
-            data = request.FILES["main_photo"]
+        if "photos" in request.FILES:
+            data = request.FILES["photos"]
         elif "image" in request.FILES:
             data = request.FILES["image"]
         else:

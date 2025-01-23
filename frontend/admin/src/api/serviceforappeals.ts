@@ -51,6 +51,9 @@ export class ApiService<T> {
 }
 
 export interface Post extends BaseUUIDSchema {
+    h1:string
+    title:string
+    description:string
     category:string
     map_point:string
     last_name:string
@@ -58,6 +61,7 @@ export interface Post extends BaseUUIDSchema {
     patronymic:string
     phone:string
     date:Date
+    status:string
     text:string
     on_website:boolean
     photos:string

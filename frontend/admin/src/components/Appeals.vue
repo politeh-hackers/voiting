@@ -10,11 +10,11 @@
       <div class="components">
         <div class="category">
           <Select
-            disabled
+            
             v-model="selectedCategory"
             :options="items"
             optionLabel="name"
-            placeholder="Select a Category"
+            :placeholder= post.category
           />
         </div>
         <div class="name">
@@ -75,7 +75,7 @@
         />
         <div class="card flex flex-wrap justify-center gap-4">
           <Select
-            v-model="statusitems"
+            v-model="post.status"
             :options="status"
             optionLabel="name"
             placeholder="Select a Status"
@@ -87,7 +87,7 @@
               v-model="post.on_website"
               inputId="CheckWorked"
               name="on_website"
-              value="OnWebsite"
+              binary
             />
             <label for="CheckWorked"> На сайте </label>
           </div>
@@ -102,6 +102,11 @@
           />
           <label for="on_label">Оффициальный ответ</label>
         </FloatLabel>
+        <Button
+              icon="pi pi-check"
+              
+              @click="SavePost()"
+            />
       </div>
     </div>
   </Dialog>
@@ -156,6 +161,7 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import { ref, onMounted, computed, watch } from "vue";
 import InputText from "primevue/inputtext";
 import DatePicker from "primevue/datepicker";
@@ -171,11 +177,16 @@ import InputMask from "primevue/inputmask";
 import Checkbox from "primevue/checkbox";
 import Image from "primevue/image";
 import FloatLabel from "primevue/floatlabel";
-import { getToken } from "../utils/auth";
+import { getToken, isAuthenticated } from "../utils/auth";
+import { title } from "process";
+
 const checked = ref(false);
 const phone_number = ref("");
 const selectedCategory = ref();
 const post = ref<Post>({
+  h1:"",
+  title:"",
+  description:"",
   category: "",
   map_point: "",
   first_name: "",
@@ -183,13 +194,14 @@ const post = ref<Post>({
   patronymic: "",
   phone: "",
   photos: "",
+  status: "",
   text: "",
   on_website: false,
   date: new Date(),
   official_response: "",
 });
 const token = getToken()
-
+const router = useRouter()
 const status = ref([
   { name: "Принято в работу", code: "Accepted" },
   { name: "Отклонено", code: "Abort" },
@@ -226,8 +238,38 @@ const loadCategories = async () => {
   });
   items.value = await response.json();
 };
+const deletePost = async (postId: string) => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
+  try {
+    const response = await fetch(
+      `http://localhost:8000/appeals/${postId}`,
+      {
+        method: "DELETE",
+        headers:{
+          'Authorization': `${token}`
+        }
+      }
+    );
+    
 
+    if (response.ok) {
+      console.log("Post deleted successfully");
+      loadAppeals();
+    } else {
+      console.error("Error deleting post:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 const editPost = (newsItem) => {
+  post.value.category = newsItem.category
+  post.value.h1 = newsItem.h1
+  post.value.title = newsItem.title
+  post.value.description = newsItem.description
   post.value.id = newsItem.id;
   post.value.text = newsItem.text;
   post.value.map_point = newsItem.map_point;
@@ -235,10 +277,70 @@ const editPost = (newsItem) => {
   post.value.photos = newsItem.photos;
   post.value.first_name = newsItem.first_name;
   post.value.date = newsItem.date;
+  post.value.status = newsItem.status;
   post.value.last_name = newsItem.last_name;
   post.value.patronymic = newsItem.patronymic;
   visibledt.value = true;
 };
+
+const SavePost = async () =>{
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'Home' }); 
+    return;
+  }
+  console.log(post.value);
+  const postData = {
+    category: post.value.category,
+    h1: post.value.h1,
+    title: post.value.title,
+    description: post.value.description,
+    text: post.value.text,
+    on_website: post.value.on_website,
+    status: post.value.status
+  };
+  try {
+    const response = await fetch(
+      `http://localhost:8000/appeals/${post.value.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          'Authorization': `${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({postData}),
+      }
+    );
+
+    if (response.ok) {
+      console.log("Пост успешно отредактирован");
+      loadAppeals();
+      post.value = {
+        h1:"",
+        title:"",
+        description:"",
+        category: "",
+        map_point: "",
+        first_name: "",
+        last_name: "",
+        patronymic: "",
+        phone: "",
+        photos: "",
+        text: "",
+        status: "",
+        on_website: false,
+        date: new Date(),
+        official_response: "",
+      };
+      visibledt.value = false;
+    } else {
+      const errorData = await response.json();
+      console.error("Ошибка при обновлении поста:", errorData);
+    }
+  } catch (error) {
+    console.error("Ошибка:", error);
+  }
+};
+
 onMounted(() => {
   loadAppeals();
   loadCategories();

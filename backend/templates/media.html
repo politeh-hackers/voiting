@@ -6,41 +6,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     {% load static %}
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <script src="{% static 'media/index.js' %}" type="module"></script>
 </head>
 
 <body>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     {% include 'header.html' %}
     <main class="content">
         <div class="container">
             <div class="top__content">
-                {% for media in medias %}
-                <div class="gallery" style="background-image: url('{% static 'image/' %}{{ media.main_photo }}');">
-                    <div class="gallery__block">
-                        <div class="gallery__content">
-                        <div class="gallery_card-header">
-                            {{ media.header }}
+                <div class="left_main-content">
+                    {% include 'gallery.html' %}
+                </div>
+                <div class="right_main-content">  
+                        {% include 'rightCards.html' %}
+                </div>
+            </div>
+            <div class="main__cards-header">
+                Медиа
+            </div>
+            <div class="main__cards-content">
+                <div class="main__cards">
+                    {% for item1 in additional_data_2 %}
+                    <div class="main__card">
+                        <div class="main__card-date">
+                            <div class="main__date-flag">
+                                <div class="main__date-flag__day">{{ item1.date_created|date:"d" }}</div>
+                                <div class="main__date-flag__month">{{ item1.date_created|date:"b" }}</div>
+                            </div>
                         </div>
-                        <div class="gallery_card-summary">
-                            {{ media.summary }}
+                        <div class="main__card-image">
+                            <img src="{% static 'image/' %}{{ item1.main_photo }} " alt="" class="main__card-photo">
                         </div>
-
-                        <div class="gallery_card-button">
+                        <div class="main__card-header">
+                            {{item1.header|slice:43}}{% if item1.header|length > 43 %}...{% endif %}
+                        </div>
+                        <div class="main__card-summary">
+                            {{item1.summary|slice:137}}{% if item1.summary|length > 137 %}...{% endif %}
+                        </div>
+                        <div class="main__card-button">
                             <a href="#">Подробнее ⟶</a>
                         </div>
                     </div>
-                    <div class="gallery__date">
-                        <div class="date-flag">
-                            <div class="date-flag__day">{{ media.date_created|date:"d" }}</div>
-                            <div class="date-flag__month">{{ media.date_created|date:"b" }}</div>
-                        </div>
-                        
-                    </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
-
-            {% endfor %}
-            
+            {% include 'paginationForMedia.html' %}
         </div>
         </div>
         </div>
@@ -50,74 +62,113 @@
 
 </html>
 <style>
-    .date-flag{
-        
-        justify-content: center;
-        
-        width: 0;
-  height: 100px;
-  border-right: 50px solid white;
-  border-left: 50px solid white;
-  border-bottom: 50px solid rgba(0, 0, 0, 0);
-  background-color: transparent;
-    }
+    .main__card-photo {
+        width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    object-fit: cover;
     
-    .date-flag__day {
-        font-size: 36px;
-        font-weight: 500;
     }
-    .date-flag__month{
+    .main__cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+        margin: 0;
+        padding: 0;
+    }
+    .main__card {
+        width: 302px;
+        height: 281px;
+        word-wrap: break-word;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+    .main__card-date {
+        position: absolute; /* Размещаем поверх изображения */
+        right: 29px;
+        color: white; /* Белый текст */
+   
+    
+    }
+    .main__cards-content{
+        padding-bottom: 72px;
+    }
+    .main__date-flag {
+        padding-bottom: 10px;
+        display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 39px;
+    height: 56px;
+    background-color: green;
+    position: relative;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 75%, 0% 100%);
+    }
+    .main__date-flag__day {
+        font-weight: 400;
         font-size: 20px;
-        font-weight: 400;
+        letter-spacing: -0,02em;
+        line-height: 20px;
     }
-    .gallery_card-summary {
+    .main__date-flag__month {
+        font-weight: 400;
         font-size: 12px;
-        font-weight: 400;
+        letter-spacing: -0,02em;
         line-height: 12px;
-        letter-spacing: -0.02em;
-        padding-top: 16px;
-        padding-bottom: 24px;
     }
-    .gallery_card-button {
-        border: 1px solid white;
+    .main__card-image {
+        width: 302px;
+        height: 128px;
+
+    }
+    .main__card-header {
+        font-weight: 500;
+        font-size: 20px;
+        letter-spacing: -0,02em;
+        line-height: 20px;
+        padding-top: 24px;
+        padding-bottom: 16px;
+    }
+    .main__card-summary {
+        font-weight: 400;
         font-size: 12px;
-        font-weight: 400;
+        letter-spacing: -0,02em;
         line-height: 12px;
-        letter-spacing: -0.02em;
-        padding: 12px 16px;
-        display: inline-block;
     }
-    .gallery_card-date {
+    .main__card-button {
+        font-size: 12px;
+        display: flex;
+        justify-content: flex-start;
+        margin-top: auto;
+        cursor: pointer;
+
     }
-    .gallery a{
-        color: white;
+    .main__cards-header::after{
+        content: "";
+        flex-grow: 1;
+        height: 1px;
+        background-color: #868693;
+        margin-left: 44px;
     }
-    .gallery__block {
+    .main__cards-header {
+        font-weight: 500;
+        font-size: 36px;
+        letter-spacing: -0,02em;
+        line-height: 36px;
+        display: flex;
+        position: relative;
+        align-items: center;
+        padding-bottom: 44px;
+    }
+
+    .top__content {
         display: flex;
         justify-content: space-between;
-        padding-top: 42px;
-        padding-bottom: 52px;
-        padding-left: 42px;
-        padding-right: 42px;
-    }
-    .card__summary {}
-
-    .gallery_card-header {
-        font-weight: 500;
-        font-size: 48px;
-        
-        border-bottom: 1px solid white;
-        padding-bottom: 16px;
-        display: inline-block;
-    }
-
-    .gallery {
-        color: white;
-        width: 745px;
         height: 480px;
-        border-radius: 6px;
+        padding-bottom: 44px;
     }
-
     body {
         margin: 0;
         padding: 0;

@@ -1,0 +1,57 @@
+<div class="pagination">
+    {% if page2 > 1 %}
+    <a href="?page2={{ page2|add:'-1' }}&per_page2={{ per_page2 }}">⟵ Пред</a>
+    {% endif %}
+
+    {% if page2 > 3 %}
+        <a href="?page2=1&per_page2={{ per_page2 }}">1</a>
+        <span>...</span>
+    {% endif %}
+
+    {% for i in all_pages3 %}
+        {% if i == page2 %}
+            <span class="active">{{ i }}</span>  <!-- Текущая страница с активным классом -->
+        {% elif i > page2|add:'-3' and i < page2|add:'3' %}
+            <a href="?page2={{ i }}&per_page2={{ per_page2 }}">{{ i }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page2 < data2_total_pages|add:'-3' %}
+        <span>...</span>
+        <a href="?page2={{ total_pages2 }}&per_page2={{ per_page2 }}">{{ total_pages2 }}</a>
+    {% endif %}
+
+    {% if page2 < data2_total_pages %}
+    <a href="?page2={{ page|add:'1' }}&per_page2={{ per_page2 }}">След ⟶</a>
+    {% endif %}
+</div>
+
+<style>
+    .pagination {
+    margin-top: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555555;
+    gap: 12px;
+}
+
+.pagination a {
+    text-decoration: none;
+    color: #555555; /* Серый цвет для ссылок */
+    padding: 6px 6px;
+    border-radius: 5px;
+}
+
+.pagination a:hover {
+    background-color: #f0f0f0; /* Подсветка при наведении */
+}
+
+.pagination .active {
+    background-color: #EA424C;  /* Красный фон для активной страницы */
+    color: white;           /* Белый текст для активной страницы */
+    padding: 6px 6px;
+    
+    border-radius: 5px;
+}
+</style>

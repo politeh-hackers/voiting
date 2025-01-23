@@ -38,6 +38,12 @@ class AppealClientFieldsSchema(BaseModel):
             max_length=Constants.MAX_LEN_NAME_FIELD, 
             description=f"Поле должно содержать от 4 до {Constants.MAX_LEN_NAME_FIELD}"
         )
+        photos: list = Field(
+            ...,
+            min_length=1, 
+            max_length=Constants.MAX_LEN_NAME_FIELD, 
+            description=f"Поле должно содержать от 4 до {Constants.MAX_LEN_NAME_FIELD}"
+        )
 
 
 class AppealAdminFieldsSchema(BaseModel):
