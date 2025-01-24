@@ -13,6 +13,8 @@ from gpt.views import generations_for_news
 from telegram_bot.bot import send_news_to_telegram
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import Http404
+
 
 def MediaClientView(request: HttpRequest):
 # pagination for gallery
@@ -20,7 +22,6 @@ def MediaClientView(request: HttpRequest):
     per_page = int(request.GET.get('per_page', 5))
     medias = Media.objects.all()  # Получаем все объекты модели
     paginator = Paginator(medias, per_page)
-
     try:
         media_page = paginator.page(page)
     except PageNotAnInteger:
@@ -49,6 +50,7 @@ def MediaClientView(request: HttpRequest):
         data_page_2 = paginator2.page(1)
     except EmptyPage:
         data_page_2 = paginator2.page(paginator2.num_pages)
+
     context = {
         "additional_data_1": data_page_1,
         "additional_data_2": data_page_2,
@@ -73,7 +75,12 @@ def MediaClientView(request: HttpRequest):
     }
 
     return render(request, "media.html", context)
-    
+
+def MediaCard(request, model_id: uuid.UUID):
+    content = get_object_or_404(Media, id=model_id)
+    content_data = json.loads(content.content)
+    return render(request, "hui.html", {"content": content_data})
+
 class MediaView(View):
 
     test_service = MediaService(model=Media)

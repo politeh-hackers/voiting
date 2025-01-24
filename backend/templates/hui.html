@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% if content.blocks %}
+    {% for block in content.blocks %}
+        {% if block.type == "paragraph" %}
+            <p>{{ block.data.text|safe }}</p>
+        {% elif block.type == "header" %}
+            <h{{ block.data.level }}>{{ block.data.text }}</h{{ block.data.level }}>
+
+        {% elif block.type == "image" %}
+            <figure>
+                <img src="{{ block.data.file.url }}" 
+                     alt="{{ block.data.caption }}" 
+                     style="{% if block.data.stretched %}width: 100%;{% endif %}
+                            {% if block.data.withBorder %}border: 1px solid #000;{% endif %}
+                            {% if block.data.withBackground %}background-color: #f0f0f0;{% endif %}">
+                <figcaption>{{ block.data.caption }}</figcaption>
+            </figure>
+
+        {% elif block.type == "list" %}
+            {% if block.data.style == "ordered" %}
+                <ol>
+                    {% for item in block.data.items %}
+                        <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ol>
+            {% else %}
+                <ul>
+                    {% for item in block.data.items %}
+                        <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+        {% elif block.type == "quote" %}
+            <blockquote>
+                <p>{{ block.data.text }}</p>
+                <cite>{{ block.data.caption }}</cite>
+            </blockquote>
+
+        {% else %}
+            <p>Неизвестный тип блока: {{ block.type }}</p>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p>Нет блоков контента.</p>
+{% endif %}
+
+</body>
+</html>

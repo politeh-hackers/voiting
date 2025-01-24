@@ -51,8 +51,6 @@ class AppealView(View):
         data = json.loads(request.body)
         category_id = data.get('category')
         category = Category.objects.filter(id=category_id).first()
-        main_data["category"] = category
-        self.test_service.create(main_data)
         data["category"] = category  
         validated_data: dict = AppealCreateSchema.model_validate(data).model_dump()
 
