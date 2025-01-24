@@ -37,7 +37,12 @@ def ActualClientView(request: HttpRequest):
 def ActualCard(request, model_id: uuid.UUID):
     content = get_object_or_404(Actual, id=model_id)
     content_data = json.loads(content.content)
-    return render(request, "hui.html", {"content": content_data})
+    context = {
+        "content": content,
+        "content_data": content_data  # Если нужно передать и JSON данные тоже
+    }
+    
+    return render(request, "hui.html", context)
 
 class ActualView(View):
 

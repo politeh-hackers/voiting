@@ -3,54 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Media Card</title>
 </head>
 <body>
-    {% if content.blocks %}
-    {% for block in content.blocks %}
-        {% if block.type == "paragraph" %}
-            <p>{{ block.data.text|safe }}</p>
-        {% elif block.type == "header" %}
-            <h{{ block.data.level }}>{{ block.data.text }}</h{{ block.data.level }}>
+    <h1>{{ content.h1 }}</h1>
+    <h2>{{ content.title }}</h2>
+    <p>{{ content.description }}</p>
+    <p><strong>Header:</strong> {{ content.header }}</p>
+    <p><strong>Summary:</strong> {{ content.summary }}</p>
+    <p><strong>Created on:</strong> {{ content.date_created }}</p>
+    <p><strong>Tags:</strong> {{ content.media_tags }}</p>
 
-        {% elif block.type == "image" %}
+    <h3>Content Data (JSON):</h3>
+    <pre>{{ content_data|json_script:"content_data" }}</pre>  <!-- Вывод JSON содержимого из поля 'content' -->
+
+    <h3>Image Blocks (if any):</h3>
+    {% for block in content_data.blocks %}
+        {% if block.type == "image" %}
             <figure>
-                <img src="{{ block.data.file.url }}" 
-                     alt="{{ block.data.caption }}" 
-                     style="{% if block.data.stretched %}width: 100%;{% endif %}
-                            {% if block.data.withBorder %}border: 1px solid #000;{% endif %}
-                            {% if block.data.withBackground %}background-color: #f0f0f0;{% endif %}">
+                <img src="{{ block.data.file.url }}" alt="{{ block.data.caption }}" style="width: 100%;">
                 <figcaption>{{ block.data.caption }}</figcaption>
             </figure>
-
-        {% elif block.type == "list" %}
-            {% if block.data.style == "ordered" %}
-                <ol>
-                    {% for item in block.data.items %}
-                        <li>{{ item|safe }}</li>
-                    {% endfor %}
-                </ol>
-            {% else %}
-                <ul>
-                    {% for item in block.data.items %}
-                        <li>{{ item|safe }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-        {% elif block.type == "quote" %}
-            <blockquote>
-                <p>{{ block.data.text }}</p>
-                <cite>{{ block.data.caption }}</cite>
-            </blockquote>
-
-        {% else %}
-            <p>Неизвестный тип блока: {{ block.type }}</p>
         {% endif %}
     {% endfor %}
-{% else %}
-    <p>Нет блоков контента.</p>
-{% endif %}
-
 </body>
 </html>
