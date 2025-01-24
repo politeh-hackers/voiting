@@ -1,7 +1,9 @@
 from django.db import models
 from base.models import BaseUUID
+import uuid
 
-class Media(BaseUUID):
+class Media(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     h1 = models.CharField(max_length=60, blank=True)
     title = models.CharField(max_length=80, blank=True)
     description = models.CharField(max_length=160, blank=True)

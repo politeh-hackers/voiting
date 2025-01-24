@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import MediaView, MediaClientView
+from .views import MediaView, MediaClientView, MediaCard
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -7,7 +7,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', MediaView.as_view()),  # Обработчик для MediaView
     path('<uuid:model_id>', MediaView.as_view()),  # Обработчик для MediaView с параметром model_id
-    path('media', MediaClientView)  # Обработчик для MediaClientView
+    path('media', MediaClientView),  # Обработчик для MediaClientView
+    path('media/<uuid:model_id>/', MediaCard)
 ]
 
 # Настройка обслуживания медиафайлов в режиме DEBUG
