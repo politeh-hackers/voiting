@@ -27,30 +27,7 @@
                 Медиа
             </div>
             <div class="main__cards-content">
-                <div class="main__cards">
-                    {% for item1 in additional_data_2 %}
-                    <div class="main__card">
-                        <div class="main__card-date">
-                            <div class="main__date-flag">
-                                <div class="main__date-flag__day">{{ item1.date_created|date:"d" }}</div>
-                                <div class="main__date-flag__month">{{ item1.date_created|date:"b" }}</div>
-                            </div>
-                        </div>
-                        <div class="main__card-image">
-                            <img src="{% static 'image/' %}{{ item1.main_photo }} " alt="" class="main__card-photo">
-                        </div>
-                        <div class="main__card-header">
-                            {{item1.header|slice:43}}{% if item1.header|length > 43 %}...{% endif %}
-                        </div>
-                        <div class="main__card-summary">
-                            {{item1.summary|slice:137}}{% if item1.summary|length > 137 %}...{% endif %}
-                        </div>
-                        <div class="main__card-button">
-                            <a href="#">Подробнее ⟶</a>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+                {% include 'mediaCards.html' %}
             </div>
             {% include 'paginationForMedia.html' %}
         </div>
@@ -62,89 +39,7 @@
 
 </html>
 <style>
-    .main__card-photo {
-        width: 100%;
-    height: 100%;
-    border-radius: 6px;
-    object-fit: cover;
     
-    }
-    .main__cards {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 30px;
-        margin: 0;
-        padding: 0;
-    }
-    .main__card {
-        width: 302px;
-        height: 281px;
-        word-wrap: break-word;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
-    .main__card-date {
-        position: absolute; /* Размещаем поверх изображения */
-        right: 29px;
-        color: white; /* Белый текст */
-   
-    
-    }
-    .main__cards-content{
-        padding-bottom: 72px;
-    }
-    .main__date-flag {
-        padding-bottom: 10px;
-        display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 39px;
-    height: 56px;
-    background-color: green;
-    position: relative;
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 75%, 0% 100%);
-    }
-    .main__date-flag__day {
-        font-weight: 400;
-        font-size: 20px;
-        letter-spacing: -0,02em;
-        line-height: 20px;
-    }
-    .main__date-flag__month {
-        font-weight: 400;
-        font-size: 12px;
-        letter-spacing: -0,02em;
-        line-height: 12px;
-    }
-    .main__card-image {
-        width: 302px;
-        height: 128px;
-
-    }
-    .main__card-header {
-        font-weight: 500;
-        font-size: 20px;
-        letter-spacing: -0,02em;
-        line-height: 20px;
-        padding-top: 24px;
-        padding-bottom: 16px;
-    }
-    .main__card-summary {
-        font-weight: 400;
-        font-size: 12px;
-        letter-spacing: -0,02em;
-        line-height: 12px;
-    }
-    .main__card-button {
-        font-size: 12px;
-        display: flex;
-        justify-content: flex-start;
-        margin-top: auto;
-        cursor: pointer;
-
-    }
     .main__cards-header::after{
         content: "";
         flex-grow: 1;

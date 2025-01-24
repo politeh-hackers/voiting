@@ -7,10 +7,10 @@
     <div class="right__card-info">
         <div class="right__card-content">
             <div class="right_card-header">
-                {{ item.header }}
+                {{ item.header|slice:43 }}{% if item.header|length > 43 %}...{% endif %}
             </div>
             <div class="right_card-summary">
-                {{ item.summary }}
+                {{ item.summary|slice:137 }}{% if item.summary|length > 137 %}...{% endif %}
             </div>
             <div class="right_card-button">
                 <a href="#">Подробнее ⟶</a>
@@ -58,9 +58,9 @@
     }
     .right_card-summary {
         font-weight: 400;
-        font-size: 10px;
+        font-size: 12px;
         letter-spacing: -0.02em;
-        line-height: 10px;
+        line-height: 12px;
     }
     .right_card-button {
     }
