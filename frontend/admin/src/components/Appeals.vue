@@ -77,7 +77,9 @@
           <Select
             v-model="post.status"
             :options="status"
+            
             optionLabel="name"
+            option-value="name"
             placeholder="Select a Status"
           />
         </div>
@@ -296,9 +298,11 @@ const SavePost = async () =>{
     description: post.value.description,
     text: post.value.text,
     on_website: post.value.on_website,
-    status: post.value.status
+    status: post.value.status,
+    official_responce:post.value.official_response
   };
   try {
+    console.log(postData)
     const response = await fetch(
       `http://localhost:8000/appeals/${post.value.id}`,
       {
