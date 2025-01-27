@@ -109,16 +109,20 @@ function initMap() {
         saveButton.addEventListener('click', function () {
             if (isMarkerInPolygon()) {
                 var position = marker.geometry.getCoordinates();
+                var positionString = position.toString();
+                // Получаем выбранное значение категории как текст
+                var categorySelect = document.getElementById('category');
+                var selectedCategoryText = categorySelect.options[categorySelect.selectedIndex].text;
                 var formData = new FormData(document.getElementById('appealForm'));
                 var appealData = {
-                    location: position,
+                    location: positionString,
                     last_name: formData.get('last_name'),
                     first_name: formData.get('first_name'),
                     patronymic: formData.get('patronymic'),
                     phone: formData.get('phone'),
                     text: formData.get('text'),
                     photos: formData.getAll('photos'),
-                    category: formData.get('category')
+                    category: selectedCategoryText
                 };
                 sendDataToServer(appealData);
             }
@@ -127,5 +131,10 @@ function initMap() {
             }
         });
     }
+}
+var phoneInput = document.getElementById('phone');
+if (phoneInput) {
+    var phoneMask = new Inputmask('+375 (99) 999-99-99'); // Маска для российского номера
+    phoneMask.mask(phoneInput); // Применяем маску к полю
 }
 ymaps.ready(initMap);

@@ -77,18 +77,22 @@ function initMap(): void {
             
             if (isMarkerInPolygon()) {
                 const position = marker.geometry.getCoordinates();
-               
+                const positionString = position.toString();
+
+                // Получаем выбранное значение категории как текст
+            const categorySelect = document.getElementById('category') as HTMLSelectElement;
+            const selectedCategoryText = categorySelect.options[categorySelect.selectedIndex].text;
                 const formData = new FormData(document.getElementById('appealForm') as HTMLFormElement);
                 const appealData = {
                     
-                    location: position,
+                    location: positionString,
                     last_name: formData.get('last_name'),
                     first_name: formData.get('first_name'),
                     patronymic: formData.get('patronymic'),
                     phone: formData.get('phone'),
                     text: formData.get('text'),
                     photos: formData.getAll('photos'),
-                    category: formData.get('category')
+                    category: selectedCategoryText
                 };
 
                 sendDataToServer(appealData);
@@ -99,4 +103,9 @@ function initMap(): void {
     }
 }
 
+const phoneInput = document.getElementById('phone') as HTMLInputElement;
+    if (phoneInput) {
+        const phoneMask = new Inputmask('+375 (99) 999-99-99'); // Маска для российского номера
+        phoneMask.mask(phoneInput); // Применяем маску к полю
+    }
 ymaps.ready(initMap);
