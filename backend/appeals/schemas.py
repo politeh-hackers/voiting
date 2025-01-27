@@ -39,6 +39,9 @@ class AppealBaseSchema(BaseModel):
         max_length=Constants.MAX_LEN_TEXT, 
         description=f"Поле должно содержать от {Constants.MIN_LEN_TEXT} до {Constants.MAX_LEN_TEXT}"
     )
+    category: str = Field(
+        ...
+    )
     # photos: Optional[str] = Field(
     #     None, 
     #     description="Может отсутствовать или быть несколько"

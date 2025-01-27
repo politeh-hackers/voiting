@@ -2,5 +2,8 @@
   "devDependencies": {
     "@types/inputmask": "^5.0.7",
     "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "tsc": "^2.0.4"
   }
 }

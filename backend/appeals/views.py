@@ -14,6 +14,7 @@ from category.models import Category
 from telegram_bot.bot import send_appeal_to_telegram
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from typing import cast
+from django.shortcuts import get_object_or_404
 
 class AppealsClientView(View):
     test_service = AppealService(model=Appeal)
@@ -49,23 +50,24 @@ class AppealView(View):
     
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
-        category_id = data.get('category')
-        category = Category.objects.filter(id=category_id).first()
-        data["category"] = category  
-        validated_data: dict = AppealCreateSchema.model_validate(data).model_dump()
+        category_name = data.get('category')
+        if (category := Category.objects.filter(name=category_name).first()) is not None:
+            data["category"] = category.name 
 
-        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "":
-            main_data = generations_for_appeals(validated_data)
+        if not data.get("h1") or not data.get("title") or not data.get("description"):
+            main_data = generations_for_appeals(data)  
             appeal_instance: Appeal = self.test_service.create(main_data)
         else:
-            appeal_instance: Appeal = cast(Appeal, self.test_service.create(data))
+            validated_data: dict = AppealCreateSchema.model_validate(data).model_dump()
+            appeal_instance: Appeal = cast(Appeal, self.test_service.create(validated_data))
+
         response = send_appeal_to_telegram(
-            category=appeal_instance.category,  
-            date=appeal_instance.date,         
-            url=f"http://localhost:8000/appeals/{appeal_instance.id}"  
+            category=appeal_instance.category,
+            date=appeal_instance.date,
+            url=f"http://localhost:8000/appeals/{appeal_instance.id}"
         )
 
-        print(f"Telegram response: {response}") 
+        print(f"Telegram response: {response}")
         return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):

@@ -44,20 +44,20 @@ function initMap() {
         [55.194158, 30.229461],
         [55.197758, 30.266929],
         [55.208433, 30.271005],
-        [55.208408, 30.243153]
+        [55.208408, 30.243153],
     ];
     var polygon = new ymaps.Polygon([coordinates], {}, {
         fillColor: '#6699FF33',
         strokeColor: '#0000FF',
-        strokeWidth: 2
+        strokeWidth: 2,
     });
     map.geoObjects.add(polygon);
-    // Создаем маркер
     var marker = new ymaps.Placemark([55.199440, 30.225416], {
-        hintContent: 'Перетащи меня!'
+        hintContent: 'Перетащи меня!',
+    }, {
+        draggable: true,
     });
     map.geoObjects.add(marker);
-    marker.options.set('draggable', true);
     var lastValidPosition = [55.199440, 30.225416];
     function isMarkerInPolygon() {
         var position = marker.geometry.getCoordinates();
@@ -65,32 +65,34 @@ function initMap() {
     }
     function sendDataToServer(data) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, error_1;
+            var response, errorData, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, fetch('http://127.0.0.1:8000/appeals/', {
                                 method: 'POST',
                                 headers: {
-                                    'Content-Type': 'application/json'
+                                    'Content-Type': 'application/json',
                                 },
-                                body: JSON.stringify(data)
+                                body: JSON.stringify(data),
                             })];
                     case 1:
                         response = _a.sent();
-                        if (response.ok) {
-                            console.log('Данные успешно отправлены');
-                        }
-                        else {
-                            console.error('Ошибка при отправке данных');
-                        }
-                        return [3 /*break*/, 3];
-                    case 2:
+                        if (!response.ok) return [3 /*break*/, 2];
+                        console.log('Данные успешно отправлены');
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, response.json()];
+                    case 3:
+                        errorData = _a.sent();
+                        console.error('Ошибка при отправке данных:', errorData);
+                        _a.label = 4;
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
                         error_1 = _a.sent();
                         console.error('Ошибка сети:', error_1);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -110,7 +112,10 @@ function initMap() {
             if (isMarkerInPolygon()) {
                 var position = marker.geometry.getCoordinates();
                 var positionString = position.toString();
-                // Получаем выбранное значение категории как текст
+                var photosInput = document.getElementById('photos');
+                var fileNames = photosInput.files
+                    ? Array.from(photosInput.files).map(function (file) { return file.name; }).join(', ')
+                    : ''; // Пустая строка, если файлов нет
                 var categorySelect = document.getElementById('category');
                 var selectedCategoryText = categorySelect.options[categorySelect.selectedIndex].text;
                 var formData = new FormData(document.getElementById('appealForm'));
@@ -121,9 +126,10 @@ function initMap() {
                     patronymic: formData.get('patronymic'),
                     phone: formData.get('phone'),
                     text: formData.get('text'),
-                    photos: formData.getAll('photos'),
-                    category: selectedCategoryText
+                    photos: fileNames,
+                    category: selectedCategoryText,
                 };
+                console.log('Отправляемые данные:', appealData);
                 sendDataToServer(appealData);
             }
             else {
@@ -131,10 +137,10 @@ function initMap() {
             }
         });
     }
-}
-var phoneInput = document.getElementById('phone');
-if (phoneInput) {
-    var phoneMask = new Inputmask('+375 (99) 999-99-99'); // Маска для российского номера
-    phoneMask.mask(phoneInput); // Применяем маску к полю
+    var phoneInput = document.getElementById('phone');
+    if (phoneInput) {
+        var phoneMask = new Inputmask('+375 (99) 999-99-99');
+        phoneMask.mask(phoneInput);
+    }
 }
 ymaps.ready(initMap);
