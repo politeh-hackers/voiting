@@ -10,7 +10,8 @@
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="{% static 'media_page/index.js' %}" type="module"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=634d8a52-4b1e-4392-a9d2-b5890ef84bd8&lang=ru_RU"
+        type="text/javascript"></script>
 </head>
 
 <body>
@@ -27,101 +28,117 @@
                     {{ content.date_created }}
                 </div>
             </div>
-            
+
             <div class="media__page-header">{{ content.header }}</div>
             <div class="media__page-data">
-            {% for block in content_data.blocks %}
-            {% if block.type == "image" %}
-            <div class="image">
-                <img src="{{ block.data.file.url }}" alt="{{ block.data.caption }}">
-                <div class="caption">{{ block.data.caption }}</div>
-            </div>
-
-            {% elif block.type == "gallery" %}
-            <div class="swiper-container">
-                <div class="swiper-wrapper">
-                    {% for file in block.data.files %}
-                    <div class="swiper-slide" style="background-image: url('{{ file.url }}');">
-                        <!-- Optional caption can go here if needed -->
-                    </div>
-                    {% endfor %}
+                {% for block in content_data.blocks %}
+                {% if block.type == "image" %}
+                <div class="image">
+                    <img src="{{ block.data.file.url }}" alt="{{ block.data.caption }}">
+                    <div class="caption">{{ block.data.caption }}</div>
                 </div>
-                <!-- Пагинация -->
-                <div class="swiper-pagination"></div>
-            </div>
 
-            {% elif block.type == "table" %}
-            <table border="1" style="border-collapse: collapse; width: 100%;">
-                {% for row in block.data.content %}
-                <tr>
-                    {% for cell in row %}
-                    <td>{{ cell }}</td>
+                {% elif block.type == "gallery" %}
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        {% for file in block.data.files %}
+                        <div class="swiper-slide" style="background-image: url('{{ file.url }}');">
+                            <!-- Optional caption can go here if needed -->
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Пагинация -->
+                    <div class="swiper-pagination"></div>
+                </div>
+
+                {% elif block.type == "table" %}
+                <table border="1" style="border-collapse: collapse; width: 100%;">
+                    {% for row in block.data.content %}
+                    <tr>
+                        {% for cell in row %}
+                        <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
                     {% endfor %}
-                </tr>
-                {% endfor %}
-            </table>
+                </table>
 
-            {% elif block.type == "quote" %}
-            <div class="quote">
-                <div class="quote_content">
-                <cite class="quote_text">{{ block.data.text }}</cite>
-                <cite class="quote_name">{{ block.data.caption }}</cite>
-            </div>
-            </div>
+                {% elif block.type == "quote" %}
+                <div class="quote">
+                    <div class="quote_content">
+                        <cite class="quote_text">{{ block.data.text }}</cite>
+                        <cite class="quote_name">{{ block.data.caption }}</cite>
+                    </div>
+                </div>
 
-            {% elif block.type == "header" %}
-            <h{{ block.data.level }}>{{ block.data.text }}</h{{ block.data.level }}>
+                {% elif block.type == "header" %}
+                <h{{ block.data.level }}>{{ block.data.text }}</h{{ block.data.level }}>
 
-            {% elif block.type == "paragraph" %}
-            <div class="paragraph">{{ block.data.text|safe }}</div>
+                {% elif block.type == "paragraph" %}
+                <div class="paragraph">{{ block.data.text|safe }}</div>
 
-            {% elif block.type == "list" %}
-            {% if block.data.style == "ordered" %}
-            <ol>
-                {% for item in block.data.items %}
-                <li>{{ item|safe }}</li>
-                {% endfor %}
-            </ol>
-            {% else %}
-            <ul>
-                {% for item in block.data.items %}
-                <li>{{ item|safe }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-
-            {% elif block.type == "embed" %}
-            <div class="embed-block">
-                <iframe src="{{ block.data.embed }}"></iframe>
-                {% if block.data.caption %}
-                <div class="caption">{{ block.data.caption }}</div>
+                {% elif block.type == "list" %}
+                {% if block.data.style == "ordered" %}
+                <ol>
+                    {% for item in block.data.items %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ol>
+                {% else %}
+                <ul>
+                    {% for item in block.data.items %}
+                    <li>{{ item|safe }}</li>
+                    {% endfor %}
+                </ul>
                 {% endif %}
-            </div>
 
-            {% else %}
-            <p>Unknown block type: {{ block.type }}</p>
-            {% endif %}
-            {% endfor %}
-        </div>
+                {% elif block.type == "embed" %}
+                <div class="embed-block">
+                    <iframe src="{{ block.data.embed }}"></iframe>
+                    {% if block.data.caption %}
+                    <div class="caption">{{ block.data.caption }}</div>
+                    {% endif %}
+                </div>
+
+                {% elif block.type == "map" %}
+                <div class="map-block" id="map-{{ block.id }}" style="width: 100%; height: 400px;"></div>
+                <script type="module">
+                    import { initializeMap } from '{% static "media_page/index.js" %}';
+                    document.addEventListener('DOMContentLoaded', function () {
+                        initializeMap('map-{{ block.id }}', [{{ block.data.points.0.coordinates.0 }}, {{ block.data.points.0.coordinates.1 }}],);
+                    });
+                </script>
+                <div class="caption">'{{ block.data.caption }}</div>
+
+                {% else %}
+                <p>Unknown block type: {{ block.type }}</p>
+                {% endif %}
+                {% endfor %}
+            </div>
         </div>
     </main>
     {% include 'footer.html' %}
 </body>
 <style>
-    .quote{
+    [class*="ground-pane"] {
+        filter: grayscale(1);
+    }
+
+    .quote {
         display: flex;
         justify-content: center;
-        
+
     }
-    .quote_content{
+
+    .quote_content {
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        gap:12px;
+        gap: 12px;
         max-width: 527px;
     }
-    .quote .quote_text{
+
+    .quote .quote_text {
         display: flex;
         font-size: 20px;
         font-weight: 550;
@@ -129,48 +146,56 @@
         letter-spacing: -0.02em;
         text-align: center;
     }
-    .quote .quote_name{
+
+    .quote .quote_name {
         color: #868693;
         font-size: 16px;
         line-height: 16px;
         letter-spacing: -0.02em;
     }
+
     .quote_content::before,
     .quote_content::after {
-      content: '';
-      display: block;
-      width: 156px; 
-      height: 1px; 
-      background-color: #868693; 
-      margin: 26px 0; 
+        content: '';
+        display: block;
+        width: 156px;
+        height: 1px;
+        background-color: #868693;
+        margin: 26px 0;
     }
-    .paragraph{
+
+    .paragraph {
         font-size: 36px;
         font-weight: 500px;
         line-height: 36px;
         letter-spacing: -0.02em;
     }
-    .embed-block iframe{
+
+    .embed-block iframe {
         width: 100%;
         height: 100%;
     }
-    .image{
+
+    .image {
         margin: 0;
         width: 967px;
         height: 439px;
         position: relative;
     }
-    .embed-block{
+
+    .embed-block {
         margin: 0;
         width: 967px;
         height: 439px;
         position: relative;
     }
-    .media__page-data{
+
+    .media__page-data {
         display: flex;
         flex-direction: column;
         gap: 44px;
     }
+
     .caption {
         color: #868693;
         font-size: 16px;
@@ -240,7 +265,7 @@
         margin: 0;
         object-fit: cover;
 
-        
+
     }
 
     .media__page-container {
@@ -251,7 +276,7 @@
         flex-direction: column;
     }
 
-    
+
 
     .swiper-container {
         width: 967px;
