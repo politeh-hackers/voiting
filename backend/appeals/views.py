@@ -53,21 +53,19 @@ class AppealView(View):
         category_name = data.get('category')
         if (category := Category.objects.filter(name=category_name).first()) is not None:
             data["category"] = category.name 
-
+        validated_data: dict = AppealCreateSchema.model_validate(data).model_dump()
         if not data.get("h1") or not data.get("title") or not data.get("description"):
             main_data = generations_for_appeals(data)  
             appeal_instance: Appeal = self.test_service.create(main_data)
         else:
-            validated_data: dict = AppealCreateSchema.model_validate(data).model_dump()
             appeal_instance: Appeal = cast(Appeal, self.test_service.create(validated_data))
 
-        response = send_appeal_to_telegram(
+        send_appeal_to_telegram(
             category=appeal_instance.category,
             date=appeal_instance.date,
             url=f"http://localhost:8000/appeals/{appeal_instance.id}"
         )
 
-        print(f"Telegram response: {response}")
         return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
@@ -79,15 +77,15 @@ class AppealView(View):
         validated_data: dict = AppealUpdateSchema.model_validate(data).model_dump()
         if (appeal := Appeal.objects.filter(id=model_id).first()) is not None and (appeal.h1 == "" or appeal.title == "" or appeal.description == ""):
             main_data = generations_for_appeals(validated_data)
+            self.test_service.update(model_id=model_id, data=main_data)
         else:
-            main_data = validated_data
-        self.test_service.update(model_id=model_id, data=main_data)    
-        response = send_appeal_to_telegram(
-            category=data.category,
-            date=data.date, 
-            url=f"http://localhost:8000/appeals/{data.id}" #нужен публичный url
-        )
-        print(f"Telegram response: {response}") 
+            self.test_service.update(model_id=model_id, data=validated_data)
+        if (Appeal.status == "Исполнено"):    
+            response = send_appeal_to_telegram(
+                category=data.category,
+                date=data.date, 
+                url=f"http://localhost:8000/appeals/{data.id}" #нужен публичный url
+            )
         return JsonResponse(None, safe=False)
 
 class ImageView(View):

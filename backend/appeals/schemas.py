@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 from base.constants import Constants
 
-class AppealBaseSchema(BaseModel):
+class AppealCreateSchema(BaseModel):
     first_name: str = Field(
         ..., 
         min_length=4, 
@@ -42,21 +42,20 @@ class AppealBaseSchema(BaseModel):
     category: str = Field(
         ...
     )
-    # photos: Optional[str] = Field(
-    #     None, 
-    #     description="Может отсутствовать или быть несколько"
-    # )
 
-class AppealCreateSchema(AppealBaseSchema):    
-    pass
-
-class AppealUpdateSchema(AppealBaseSchema):
+class AppealUpdateSchema(BaseModel):
     official_response: Optional[str] = Field(
         None, 
         min_length=Constants.MIN_LEN_TEXT, 
         max_length=Constants.MAX_LEN_TEXT, 
         description=f"Поле должно содержать от {Constants.MIN_LEN_TEXT} до {Constants.MAX_LEN_TEXT}"
     )
-    status: str = Field(...)
-    on_website: bool = Field(...)
-    category: str = Field(...)
+    first_name: Optional[str] = Field(None)
+    last_name: Optional[str] = Field(None)
+    patronymic: Optional[str] = Field(None)
+    phone: Optional[str] = Field(None)
+    location: Optional[str] = Field(None)
+    text: Optional[str] = Field(None)
+    category: Optional[str] = Field(None)
+    status: Optional[str] = Field(None)
+    on_website: Optional[bool] = Field(None)
