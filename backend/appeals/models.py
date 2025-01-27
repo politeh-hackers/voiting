@@ -15,7 +15,7 @@ class Appeal(models.Model):
     phone = models.CharField(max_length=100, null=True, blank=True)
     location = models.JSONField(max_length=255, null=True, blank=True, )
     status = models.CharField(max_length=10, null=True, blank=True)
-    on_website = models.BooleanField(default=False, null=True, )
+    on_website = models.BooleanField(default=False, null=True, blank=True)
     date = models.DateField(default=timezone.now, null=True, blank=True)
     text = models.CharField(max_length=200, null=True, blank=True)
     photos = models.CharField(max_length=200, null=True, blank=True)

@@ -79,13 +79,13 @@ class AppealView(View):
             main_data = generations_for_appeals(validated_data)
             self.test_service.update(model_id=model_id, data=main_data)
         else:
-            self.test_service.update(model_id=model_id, data=validated_data)
-        if (Appeal.status == "Исполнено"):    
-            response = send_appeal_to_telegram(
-                category=data.category,
-                date=data.date, 
-                url=f"http://localhost:8000/appeals/{data.id}" #нужен публичный url
-            )
+            self.test_service.update(model_id=model_id, data=data)
+        # if (Appeal.status == "Исполнено"):    
+        #     response = send_appeal_to_telegram(
+        #         category=data.category,
+        #         date=data.date, 
+        #         url=f"http://localhost:8000/appeals/{data.id}" #нужен публичный url
+        #     )
         return JsonResponse(None, safe=False)
 
 class ImageView(View):
