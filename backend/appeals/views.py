@@ -15,6 +15,11 @@ from telegram_bot.bot import send_appeal_to_telegram
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from typing import cast
 from django.shortcuts import get_object_or_404
+from django.views.generic import DetailView
+class AppealDetailView(DetailView):
+    model = Appeal
+    template_name = "appeals/appeal_detail.html"  # Укажи свой шаблон
+    context_object_name = "appeal"  # Имя объекта в контексте
 
 class AppealsClientView(View):
     test_service = AppealService(model=Appeal)

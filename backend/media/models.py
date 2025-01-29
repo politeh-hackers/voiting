@@ -3,6 +3,7 @@ from base.models import BaseUUID
 import uuid
 
 class Media(models.Model):
+    slug = models.SlugField(unique=True)
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     h1 = models.CharField(max_length=60, blank=True)
     title = models.CharField(max_length=80, blank=True)
@@ -13,7 +14,8 @@ class Media(models.Model):
     content = models.JSONField(null=False, blank=True)
     date_created = models.DateField(null=False, blank=True)
     media_tags = models.CharField(max_length=100, unique=False)
- 
+    count = models.IntegerField(default=0)
+
     def __str__(self):
         return self.header
  

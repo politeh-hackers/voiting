@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -48,7 +49,8 @@ INSTALLED_APPS = [
     'gpt',
     'biography',
     'mainpage',
-    'telegram_bot'
+    'telegram_bot',
+    'sitemap'
 ]
 
 REST_FRAMEWORK = {
