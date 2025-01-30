@@ -35,6 +35,8 @@ def generations_for_news(data: dict):
                 match = re.search(quote_pattern, line)
                 if line.startswith("1.") and match:
                     data['h1'] = match.group(1).strip()
+                elif line.startswith("1.") and match:
+                    data['slug'] = match.group(1).strip()
                 elif line.startswith("2.") and match:
                     data['title'] = match.group(1).strip()
                 elif line.startswith("3.") and match:
