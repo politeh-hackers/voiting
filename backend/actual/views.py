@@ -59,7 +59,7 @@ class ActualView(View):
     def post(self, request):
         data = request.POST.dict()
         validated_data: dict = MediaActualFieldsSchema.model_validate(data).model_dump()
-        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "":
+        if data.get("h1") == "" or data.get("title") == "" or data.get("slug") == "" or data.get("description") == "" :
             main_data = generations_for_news(validated_data)
             actual_instance: Actual = self.test_service.create(main_data)
         else:
