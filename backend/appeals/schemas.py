@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from pydantic import BaseModel, Field, constr
+from typing import List, Optional, Union
 from base.constants import Constants
 
 class AppealCreateSchema(BaseModel):
@@ -44,6 +44,7 @@ class AppealCreateSchema(BaseModel):
     )
 
 class AppealUpdateSchema(BaseModel):
-    official_response: Optional[str] = Field(
-        None)
-    
+    official_response: Optional[Union[constr(min_length=500, max_length=3000), None]] = Field(
+        None,
+        description="Поле может быть пустым или содержать от 500 до 3000 символов."
+    )

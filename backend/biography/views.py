@@ -10,6 +10,11 @@ from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render
+from django.views.generic import DetailView
+class BiographyDetailView(DetailView):
+    model = Biography
+    template_name = "biography/biography_detail.html"  # Укажи свой шаблон
+    context_object_name = "biography"  # Имя объекта в контексте
 
 def BiographyClientView(request):
     return render(request, "biography.html")

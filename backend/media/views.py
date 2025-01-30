@@ -14,7 +14,11 @@ from telegram_bot.bot import send_news_to_telegram
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
-
+from django.views.generic import DetailView
+class MediaDetailView(DetailView):
+    model = Media
+    template_name = "media/media_detail.html"  # Укажи свой шаблон
+    context_object_name = "media"  # Имя объекта в контексте
 
 def MediaClientView(request: HttpRequest):
 # pagination for gallery

@@ -5,6 +5,7 @@ from django.utils import timezone
 import uuid
 
 class Appeal(models.Model):
+    slug = models.SlugField(unique=True)
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     h1 = models.CharField(max_length=60, null=True, blank=True)
     title = models.CharField(max_length=80, null=True, blank=True)
@@ -22,6 +23,7 @@ class Appeal(models.Model):
     official_response = models.JSONField(max_length=500, null=True, blank=True)
     category = models.CharField(max_length=200, null=True, blank=True)
 
+    
     class Meta:
         ordering = ['-date']
         verbose_name_plural = "Appeals"

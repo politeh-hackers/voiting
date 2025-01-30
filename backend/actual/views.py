@@ -12,6 +12,11 @@ from gpt.services import generations_for_news
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from telegram_bot.bot import send_news_to_telegram
+from django.views.generic import DetailView
+class ActualDetailView(DetailView):
+    model = Actual
+    template_name = "actual/actual_detail.html"  # Укажи свой шаблон
+    context_object_name = "actual"  # Имя объекта в контексте
 
 def ActualClientView(request: HttpRequest):
     page = request.GET.get('page', 1)  
