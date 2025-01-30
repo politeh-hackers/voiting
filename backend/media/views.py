@@ -80,12 +80,20 @@ class MediaView(View):
 
     def post(self, request):
         data = request.POST.dict()
-        validated_data = MediaActualFieldsSchema.model_validate(data).model_dump()
-        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "":
+        validated_data: dict = MediaActualFieldsSchema.model_validate(data).model_dump()
+        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "" or data.get("slug") == "":
             main_data = generations_for_news(validated_data)
-            media_instance: Media = self.test_service.create(main_data)
         else:
-            media_instance: Media = self.test_service.create(data)
+            main_data = data
+        slug = main_data.get("slug")
+        if slug:
+            counter = 1
+            original_slug = slug
+            while Media.objects.filter(slug=slug).exists():  
+                slug = f"{original_slug}-{counter}" 
+                counter += 1
+            main_data["slug"] = slug 
+        media_instance: Media = self.test_service.create(main_data)
         main_photo = os.path.join('static', 'image', media_instance.main_photo)
         send_news_to_telegram(
             header=media_instance.header,
