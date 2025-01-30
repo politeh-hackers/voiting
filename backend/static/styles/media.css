@@ -1,0 +1,142 @@
+
+.main__cards-header::after{
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background-color: #868693;
+    margin-left: 44px;
+}
+.main__cards-header {
+    font-weight: 500;
+    font-size: 36px;
+    letter-spacing: -0,02em;
+    line-height: 36px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    padding-bottom: 44px;
+}
+
+.top__content {
+    display: flex;
+    justify-content: space-between;
+    height: 480px;
+    padding-bottom: 44px;
+}
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    /* Устанавливаем высоту для использования Flexbox */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main.content {
+    flex: 1;
+    /* Заставляет main занимать оставшееся пространство */
+}
+
+.container {
+    width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 60px;
+}
+
+    
+.right_card-button {
+    font-size: 12px;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: auto;
+    cursor: pointer;
+}
+.right__card-info {
+    width: 432px;
+    height: 141px;
+    display: flex;
+    justify-content: space-between;
+}
+.right__card-content {
+    width: 325px;
+    display: flex;
+    flex-direction: column;
+    word-break: break-word;
+    
+}
+.right_card-header {
+    font-weight: 500;
+    font-size: 28px;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+    line-height: 28px;
+}
+.right_card-summary {
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: -0.02em;
+    line-height: 12px;
+}
+.right_card-button {
+}
+.right__card-date {
+    background-image: url("/static/media/Vector 1.svg ");
+    width: 41px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.right_date-flag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding-bottom: 12px;
+}
+.right__date-flag__day {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0,02em;
+}
+.right__date-flag__month {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 12px;
+    letter-spacing: 0,02em;
+}
+.right__cards {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.right__card a{
+   color: white;
+}
+.right__card {
+    color: white;
+    border-radius: 6px;
+    width: 525px;
+    height: 225px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover !important;
+    background-position: center !important;
+}
+.left_main-content {
+    width: 745px;
+    height: 480px;
+}
+
+.right_main-content {
+    width: 525px;
+    height: 480px;
+}

@@ -4,14 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Мартынов Павел - Медиа</title>
     {% load static %}
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <script src="{% static 'media/index.js' %}" type="module"></script>
+    <link rel="stylesheet" href="{% static 'styles/header.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/media.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/gallerry.css' %}">
+    <meta name = "description" content="Медиа новости Павла Николаевича Мартынова">
+    <meta property = "og:title" content="Мартынов Павел - Медиа">
+    <meta property = "og:description" content="Медиа новости Павла Николаевича Мартынова">
 </head>
 
 <body>
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     {% include 'header.html' %}
     <main class="content">
         <div class="container">
@@ -40,53 +45,3 @@
 </body>
 
 </html>
-<style>
-    
-    .main__cards-header::after{
-        content: "";
-        flex-grow: 1;
-        height: 1px;
-        background-color: #868693;
-        margin-left: 44px;
-    }
-    .main__cards-header {
-        font-weight: 500;
-        font-size: 36px;
-        letter-spacing: -0,02em;
-        line-height: 36px;
-        display: flex;
-        position: relative;
-        align-items: center;
-        padding-bottom: 44px;
-    }
-
-    .top__content {
-        display: flex;
-        justify-content: space-between;
-        height: 480px;
-        padding-bottom: 44px;
-    }
-    body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        /* Устанавливаем высоту для использования Flexbox */
-    }
-
-    body {
-        display: flex;
-        flex-direction: column;
-    }
-
-    main.content {
-        flex: 1;
-        /* Заставляет main занимать оставшееся пространство */
-    }
-
-    .container {
-        width: 1300px;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 60px;
-    }
-</style>
