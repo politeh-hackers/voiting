@@ -1,14 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./MainPageOutput.css" rel="stylesheet">
-    <title>Document</title>
+    <title>Павел Мартынов - Главная</title>
     {% load static %}
-    <script src="{% static 'base/index.js' %}" type="module"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="{% static 'styles/gallerry.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/header.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/footer.css' %}">
+    <script src="{% static 'media/index.js' %}" type="module"></script>
+    <meta name="description" content="Мне 41 год. Родился в г. Витебске. Трудовую деятельность начал в 2000 году с работы в
+    качестве коммерческого агента в отделе сбыта фирмы «Марко». ">
+    <meta property="og:title" content="Мартынов Павел - Главная">
+    <meta property="og:description" content="Мне 41 год. Родился в г. Витебске. Трудовую деятельность начал в 2000 году с работы в
+    качестве коммерческого агента в отделе сбыта фирмы «Марко». ">
+
 </head>
+
 <body>
-    <h1 class="text-green-500">Security</h1>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    {% include 'header.html' %}
+    <main class="mainPage-content">
+        <div class="container">
+            <div class="top-cards">
+                <div class="gallery-block">
+                    {% include 'galleryActual.html' %}
+                </div>
+                <div class="cards-block">
+                        {% for actual in actuals|slice:"2:4" %}
+                        <div class="right-card__actual">
+                            <div class="card__actual__imagecontainer">
+                                <div class="card__actual__image">
+                                    <img src="{% static 'image/' %}{{ actual.main_photo }}" alt="" class="card__photo__actual">
+                                </div>
+                            </div>
+                            <div class="card__actual__content">
+                                <div class="card__actual__time">
+                                    <img src="{% static 'appeals/clock.svg' %}" alt="" class="time__image">
+                                    {{ actual.date_created }}
+                                </div>
+                                <div class="card__actual__header">
+                                    {{ actual.header }}
+                                </div>
+                                <div class="card__actual__summary">
+                                    {{actual.summary}}
+                                </div>
+                                <div class="card__actual__button">
+                                    <a href="#">Подробнее ⟶</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    {% include 'footer.html' %}
 </body>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        /* Устанавливаем высоту для использования Flexbox */
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    main.mainPage-content {
+        flex: 1;
+    }
+    .container {
+        width: 1300px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    .mainPage-content {
+        padding: 47px;
+    }
+    .gallery-block{
+        width: 745px;
+        height: 483px;
+        border-radius: 6px;
+    }
+    .top-cards{
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+
 </html>

@@ -1,5 +1,4 @@
 declare var Swiper: any;
-declare var ymaps: any; 
 const initGallery = (): void => {
     const swiper = new Swiper('.swiper-container', {
         loop: true,

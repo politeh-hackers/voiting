@@ -1,25 +1,25 @@
 {% load static %}
 
 <div class="main__cards">
-    {% for item1 in additional_data_2 %}
+    {% for item in medias %}
     <div class="main__card">
         <div class="main__card-date">
             <div class="main__date-flag">
-                <div class="main__date-flag__day">{{ item1.date_created|date:"d" }}</div>
-                <div class="main__date-flag__month">{{ item1.date_created|date:"b" }}</div>
+                <div class="main__date-flag__day">{{ item.date_created|date:"d" }}</div>
+                <div class="main__date-flag__month">{{ item.date_created|date:"b" }}</div>
             </div>
         </div>
         <div class="main__card-image">
-            <img src="{% static 'image/' %}{{ item1.main_photo }} " alt="" class="main__card-photo">
+            <img src="{% static 'image/' %}{{ item.main_photo }} " alt="" class="main__card-photo">
         </div>
         <div class="main__card-header">
-            {{item1.header|slice:43}}{% if item1.header|length > 43 %}...{% endif %}
+            {{item.header|slice:43}}{% if item.header|length > 43 %}...{% endif %}
         </div>
         <div class="main__card-summary">
-            {{item1.summary|slice:137}}{% if item1.summary|length > 137 %}...{% endif %}
+            {{item.summary|slice:137}}{% if item.summary|length > 137 %}...{% endif %}
         </div>
         <div class="main__card-button">
-            <a href="http://127.0.0.1:8000/media/media/{{item1.id}}">Подробнее ⟶</a>
+            <a href="http://127.0.0.1:8000/media/media/{{item.id}}">Подробнее ⟶</a>
         </div>
     </div>
     {% endfor %}

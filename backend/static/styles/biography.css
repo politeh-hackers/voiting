@@ -1,0 +1,140 @@
+.marko__text {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 20px;
+    color: white;
+    display: flex;
+    position: absolute;
+    z-index: 100;
+    top:20%;
+    right: 1%;
+    letter-spacing: -0.02em;
+    text-align: right; 
+}
+.right__side span {
+    font-size: 20px;
+    color: white;
+    display: flex;
+    position: absolute;
+}
+.image__container {
+    display: flex;
+    justify-content: space-between;
+}
+.martynov__img {
+    margin-bottom: 12px;
+}
+
+.quote__image {
+    font-size: 12px;
+    color: #868693;
+}
+
+.quote__text {
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+}
+
+.notation {
+    font-size: 16px;
+    margin-bottom: 30px;
+    line-height: 16px;
+}
+
+.h2 {
+    padding-bottom: 24px;
+}
+
+.date__biography {
+    margin-bottom: 30px;
+    padding: 16px 8px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #868693;
+    border-top: 1px solid #868693;
+    gap: 10px;
+    width: fit-content;
+}
+
+.quote__container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+}
+
+.quote {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-bottom: 1px solid #868693;
+    padding-bottom: 38px;
+    margin-bottom: 44px;
+}
+
+.calendar {}
+
+.date__text {
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: #EA424C;
+}
+
+.content__main {
+    padding-top: 44px;
+}
+
+.h2__text {
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 48px;
+    letter-spacing: -0.02em;
+    padding-bottom: 24px;
+}
+
+.left__side {
+    margin-top: 59px;
+    width: 525px;
+}
+
+.content__header {
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 64px;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #868693;
+    padding-bottom: 44px;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    /* Устанавливаем высоту для использования Flexbox */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main.content {
+    flex: 1;
+    /* Заставляет main занимать оставшееся пространство */
+}
+
+.content {
+    width: 1259px;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+}
