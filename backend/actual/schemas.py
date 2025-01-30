@@ -3,12 +3,6 @@ from base.constants import Constants
 from datetime import date
 
 class MediaActualFieldsSchema(BaseModel):
-        slug: str = Field(
-            ...,
-            min_length=Constants.MIN_LEN_H1,
-            max_length=Constants.MAX_LEN_H1,
-            description=f"Поле должно содержать от {Constants.MIN_LEN_H1} до {Constants.MAX_LEN_H1}"
-        )
         header: str = Field(
             ..., 
             min_length=Constants.MIN_LEN_HEADER, 

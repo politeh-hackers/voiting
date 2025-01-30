@@ -5,7 +5,7 @@ import re
 from base.constants import Constants
 
 def generations_for_news(data: dict):
-    if not data.get('h1') or not data.get('title') or not data.get('description'):
+    if not data.get('h1') or not data.get('title') or not data.get('description') or not data.get('slug'):
             formatted_request = (
                 "На основе следующего текста новости сгенерируйте:\n"
                 "1. H1 (заголовок): Напишите заголовок H1 от {min_h1} до {max_h1} символов, используя транслит через дефисы (например: 'zagadka-s-privet').\n"
