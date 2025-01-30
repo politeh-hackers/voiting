@@ -29,11 +29,19 @@ class BiographyView(View):
     def post(self, request):
         data = request.POST.dict()
         validated_data = BiographySchema.model_validate(data).model_dump() 
-        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "":
+        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "" or data.get("slug") == "":
             main_data = generations_for_biography(validated_data)
-            self.test_service.create(main_data)
         else:
-            self.test_service.create(validated_data)
+            main_data = data
+        slug = main_data.get("slug")
+        if slug:
+            counter = 1
+            original_slug = slug
+            while Biography.objects.filter(slug=slug).exists():  
+                slug = f"{original_slug}-{counter}" 
+                counter += 1
+            main_data["slug"] = slug 
+        self.test_service.create(main_data)
         return JsonResponse({"message": "success"}, status=200)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
