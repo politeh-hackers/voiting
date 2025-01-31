@@ -1,0 +1,39 @@
+{% load static %}
+
+<div class="media_swiper-container">
+    <div class="swiper-wrapper">
+        {% for media in medias|slice:":5" %}
+        <div class="swiper-slide">
+            <div class="media_gallery" style="background: linear-gradient(0deg, rgba(35, 35, 35, 0.6), rgba(35, 35, 35, 0.6)),
+                linear-gradient(179.55deg, rgba(35, 35, 35, 0) 65.29%, rgba(35, 35, 35, 0.5) 99.62%),
+                url('{% static 'image/' %}{{ media.main_photo }}');">
+                <div class="gallery__block">
+                    <div class="gallery__content">
+                        <div class="gallery_card-header">
+                            {{ media.header }}
+                        </div>
+                        <div class="gallery_card-summary">
+                            {{ media.summary }}
+                        </div>
+                        <div class="gallery_card-button">
+                            <a href="#">Подробнее ⟶</a>
+                        </div>
+                    </div>
+
+                    <div class="gallery__date">
+                        <div class="date-flag">
+                            <div class="date-flag__day">{{ media.date_created|date:"d" }}</div>
+                            <div class="date-flag__month">{{ media.date_created|date:"b" }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Пагинация внутри карточки -->
+
+        </div>
+        {% endfor %}
+
+    </div>
+    <div class="swiper-pagination"></div>
+</div>
+

@@ -1,5 +1,6 @@
 from django.db import models
 from base.models import BaseUUID
+from django_editorjs import EditorJsField
 
 class Media(BaseUUID):
     h1 = models.CharField(max_length=60, blank=True)
@@ -8,7 +9,9 @@ class Media(BaseUUID):
     header = models.CharField(max_length=200, unique=True, blank=True)
     summary = models.CharField(max_length=100, blank=True, unique=True, null=False)
     main_photo = models.TextField(blank=True, null=False)
-    content = models.JSONField(null=False, blank=True)
+    content = EditorJsField(editorjs_config={
+        
+    })
     date_created = models.DateField(null=False, blank=True)
     media_tags = models.CharField(max_length=100, unique=False)
  

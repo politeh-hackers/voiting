@@ -51,10 +51,6 @@ class AppealView(View):
         data = json.loads(request.body)
         category_id = data.get('category')
         category = Category.objects.filter(id=category_id).first()
-<<<<<<< HEAD
-        main_data["category"] = category
-        self.test_service.create(main_data)
-=======
         data["category"] = category  
         validated_data: dict = AppealCreateSchema.model_validate(data).model_dump()
 
@@ -70,7 +66,6 @@ class AppealView(View):
         )
 
         print(f"Telegram response: {response}") 
->>>>>>> d6e09b93a979ce0e7578a00d4ed6e3dd625eb21d
         return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
@@ -99,17 +94,9 @@ class ImageView(View):
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
 
-<<<<<<< HEAD
-    def post(self, request: WSGIRequest):
-        if "photos" in request.FILES:
-            data = request.FILES["photos"]
-        elif "image" in request.FILES:
-            data = request.FILES["image"]
-=======
     def post(self, request):
         if "photos" in request.FILES:
             images = request.FILES.getlist("photos") 
->>>>>>> d6e09b93a979ce0e7578a00d4ed6e3dd625eb21d
         else:
             return JsonResponse({"error": "No images provided"}, status=400)
         image_dir = os.path.join('static', 'image')
