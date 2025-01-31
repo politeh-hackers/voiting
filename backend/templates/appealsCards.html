@@ -2,7 +2,9 @@
 
 <div class="cards">
     {% for appeal in appeals %}
+    {% if appeal.on_website %}
     <div class="card__appeal">
+        <div class="card-content">
         <div class="card__statustime">
             <div class="card__status 
                 {% if appeal.status == 'Исполнено' %}status--completed
@@ -16,7 +18,7 @@
             </div>
         </div>
         <div class="card__header">
-            {{ appeal.header }}
+            {{ appeal.category }}
         </div>
         <div class="card__content">
             {% if appeal.photos %}
@@ -29,6 +31,8 @@
             <a href="#">Подробнее ⟶</a>
         </div>
     </div>
+    </div>
+    {% endif %}
     {% endfor %}
 </div>
 

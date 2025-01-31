@@ -82,8 +82,17 @@ body {
     display: flex;
     background-color: white;
     flex-direction: column;
-    padding: 16px;
     border-radius: 12px;
     height: 273px;
-    max-width: 296px;
+    width: 302px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-content{
+    width: 264px;
+    height: 241px;
+    display: flex;
+    flex-direction: column;
 }

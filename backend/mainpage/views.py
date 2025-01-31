@@ -10,17 +10,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def MainPageClientView(request):
     # пагинация для обращений
-    AppealPage = request.GET.get('page', 1)  
-    appeals_per_page = int(request.GET.get('per_page', 8))
     appeals = Appeal.objects.all()  
     categories = Category.objects.all()
-    appeal_paginator = Paginator(appeals, appeals_per_page)
-    try:
-        appeals_page = appeal_paginator.page(AppealPage)
-    except PageNotAnInteger:
-        appeals_page = appeal_paginator.page(1)
-    appeals_all_pages = list(range(1, appeal_paginator.num_pages + 1))
-    
+
     # пагинация для актуальных
     page = request.GET.get('page', 1)  
     per_page = int(request.GET.get('per_page', 5))
@@ -45,14 +37,8 @@ def MainPageClientView(request):
         media_page = media_paginator.page(paginator.num_pages)
     media_all_pages = list(range(1, media_paginator.num_pages + 1))
     context = {
-        "appeals": list(appeals_page.object_list.values()),  
-        "AppealPage": appeals_page.number,
-        "appeals_per_page": appeals_per_page,
-        "appeals_total_pages": appeal_paginator.num_pages,
-        "appeal_total_items": appeal_paginator.count,
-        "appeals_all_pages": appeals_all_pages,
+        "appeals": appeals,  
         "categories": categories,
-        
         "medias": list(media_page.object_list.values()),  
         "MediaPage": media_page.number,
         "media_per_page": media_per_page,

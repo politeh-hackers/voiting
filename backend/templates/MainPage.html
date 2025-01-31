@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="{% static 'styles/MainPage.css' %}">
     <link rel="stylesheet" href="{% static 'styles/MediaGallery.css' %}">
     <link rel="stylesheet" href="{% static 'styles/AppealsCards.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="{% static 'AppealsCards/index.js' %}" type="module"></script>
     <script src="{% static 'media/index.js' %}" type="module"></script>
     <meta name="description" content="Мне 41 год. Родился в г. Витебске. Трудовую деятельность начал в 2000 году с работы в
     качестве коммерческого агента в отделе сбыта фирмы «Марко». ">
@@ -50,6 +52,14 @@
             <div class="appeals-cards_container">
                 {% include 'appealsCards.html' %}
             </div>
+            <div class="gradient-container">
+                <div class="load-more-container">
+                    <div id="load-more-button" class="load-more-button">
+                        Смотреть все обращения
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
         </div>
         </div>
     </main>
@@ -79,10 +89,12 @@
         display: flex;
         flex-direction: column;
         gap: 44px;
+        position: relative;
     }
 
     .mainPage-content {
         padding: 47px;
+        position: relative;
     }
 
     .gallery-block {
@@ -200,6 +212,26 @@
     display: flex;
     position: relative;
     align-items: center;
+}
+
+.gradient-container {
+    position: absolute;
+    bottom: 0;
+    width: 1300px;
+    height: 309px;
+    background: linear-gradient(to top, #F7F7F7 0%, rgba(247, 247, 247, 0) 100%);
+    z-index: 10; 
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    transition: opacity 0.3s ease; 
+}
+.load-more-button{
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    gap: 10px; 
+    font-size: 16px;
 }
 </style>
 

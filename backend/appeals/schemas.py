@@ -42,6 +42,7 @@ class AppealCreateSchema(BaseModel):
     category: str = Field(
         ...
     )
+    photos: Optional[str] = Field(None)
 
 class AppealUpdateSchema(BaseModel):
     official_response: Optional[str] = Field(
