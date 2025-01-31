@@ -5,17 +5,39 @@
     
 }
 
-.card-container {
-    border-radius: 6px;
-    height: 480px;
-    overflow: hidden;
+.swiper-pagination-bullet {
+    background-color: white;
+    /* Белый цвет */
+    opacity: 1;
+    /* Убираем прозрачность */
+}
+
+/* Зелёная точка для активной */
+.swiper-pagination-bullet-active {
+    background-color: #28a745;
+    /* Зелёный цвет */
 }
 
 
+.swiper-container {
+    border-radius: 6px;
+    height: 480px;
+    /* Высота контейнера */
+    overflow: hidden;
+    /* Скрыть всё, что выходит за пределы */
+}
+
+.swiper-pagination {
+    position: relative;
+    bottom: 30px !important;
+}
+
 .gallery {
+
     width: 745px;
     height: 480px;
     display: flex;
+    
     color: white;
     background-size: cover !important;
     background-position: center !important;
@@ -28,10 +50,18 @@
     padding-bottom: 52px;
     padding-left: 42px;
     padding-right: 42px;
+    
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
+
+.swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 
 .gallery__date {
@@ -44,6 +74,7 @@
 }
 
 
+/* Внутренний элемент с вырезом */
 .date-flag {
     display: flex;
     align-items: center;
@@ -87,9 +118,14 @@
     color: white;
 }
 
+.gallery__block {}
+
+.card__summary {}
+
 .gallery_card-header {
     font-weight: 500;
     font-size: 48px;
+
     border-bottom: 1px solid white;
     padding-bottom: 16px;
     display: inline-block;

@@ -1,0 +1,33 @@
+{% load static %}
+
+{% for actual in actuals|slice:"3:5" %}
+<div class="right-card__actual">
+    <div class="card__actual__imagecontainer">
+        <div class="card__actual__image">
+            <img src="{% static 'image/' %}{{ actual.main_photo }}" alt="" class="card__photo__actual">
+        </div>
+    </div>
+    <div class="card__actual__content">
+        <div class="card__actual__time">
+            <img src="{% static 'appeals/clock.svg' %}" alt="" class="time__image">
+            {{ actual.date_created }}
+        </div>
+        <div class="card__actual__header">
+            {{ actual.header }}
+        </div>
+        <div class="card__actual__summary">
+            {{actual.summary}}
+        </div>
+        <div class="card__actual__button">
+            <a href="#">Подробнее ⟶</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<div class="tg-button">
+    <button class="actual-tg__button">
+        <img src="{% static 'footer/telegram.svg' %}" alt="" class="telegram__image">
+        <a>Подписаться на телеграм рассылку</a>
+    </button>
+
+</div>

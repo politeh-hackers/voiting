@@ -1,0 +1,57 @@
+
+.card__text {
+    font-size: 12px;
+    word-break: break-word;
+}
+.card__button {
+    font-size: 12px;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    cursor: pointer;
+}
+.card__status {
+    font-size: 10px;
+    border: 1px solid black; 
+    padding: 8px 16px;
+    border-radius: 30px;
+}
+
+.status--completed {
+    color: #ffffff;
+    background-color: #009739;
+    border-color: #009739;
+}
+.status--rejected {
+    color: #ffffff;
+    background-color: #EA424C;
+    border-color: #EA424C;
+}
+
+.card__time {
+    font-size: 12px;
+    color: #868693;
+}
+
+.card__statustime {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.card__header {
+    font-weight: 500;
+    font-size: 28px;
+    margin-bottom: 16px;
+}
+
+.card__appeal {
+    display: flex;
+    background-color: white;
+    flex-direction: column;
+    padding: 16px;
+    border-radius: 12px;
+    height: 273px;
+    max-width: 296px;
+}
