@@ -5,9 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
-    <title>Document</title>
+    <title>Мартынов Павел - Актуальное</title>
+    
+    <link rel="stylesheet" href="{% static 'styles/actual.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/header.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/footer.css' %}">
+    
+    <meta name = "description" content="Актуальные новости Павла Николаевича Мартынова">
+    <meta property = "og:title" content="Мартынов Павел - Актуальное">
+    <meta property = "og:description" content="Актуальные новости Павла Николаевича Мартынова">
 </head>
-
 <body>
     {% include 'header.html' %}
     <main class="content">
@@ -34,72 +41,3 @@
 </body>
 
 </html>
-<style>
-    body{
-        
-    }
-    .actual__header {
-        font-size: 36px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 36px;
-        letter-spacing: -0.02em;
-        padding-top: 47px;
-        padding-bottom: 44px;
-        display: flex;
-        align-items: center;
-        position: relative;
-    }
-
-    .actual__header::after {
-        content: "";
-        flex-grow: 1;
-        /* Растягивает линию на оставшееся пространство */
-        height: 1px;
-        /* Толщина линии */
-        background-color: #868693;
-        /* Цвет линии */
-        margin-left: 44px;
-        /* Отступ линии от текста */
-    }
-
-    .left__side {
-        width: 968px;
-    }
-
-    .right__side {
-        width: 299px;
-    }
-
-    html,
-    body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        /* Устанавливаем высоту для использования Flexbox */
-    }
-
-    body {
-        display: flex;
-        flex-direction: column;
-    }
-
-    main.content {
-        flex: 1;
-        /* Заставляет main занимать оставшееся пространство */
-    }
-
-    .container {
-        max-width: 1307px;
-        margin-left: auto;
-        margin-right: auto;
-        display: flex;
-        justify-content: space-between;
-    }
-
-
-    /* карточки */
-
-    
-    
-</style>

@@ -37,6 +37,7 @@ def generations_for_news(validated_data):
         match = re.search(quote_pattern, line)
         if line.startswith("1.") and match:
             validated_data['h1'] = match.group(1).strip()
+            validated_data['slug'] = match.group(1).strip()
         elif line.startswith("2.") and match:
             validated_data['title'] = match.group(1).strip()
         elif line.startswith("3.") and match:
@@ -74,6 +75,7 @@ def generations_for_appeals(validated_data):
         match = re.search(quote_pattern, line)
         if line.startswith("1.") and match:
             validated_data['h1'] = match.group(1).strip()
+            validated_data['slug'] = match.group(1).strip()
         elif line.startswith("2.") and match:
             validated_data['title'] = match.group(1).strip()
         elif line.startswith("3.") and match:
@@ -111,6 +113,7 @@ def generations_for_biography(validated_data):
         match = re.search(quote_pattern, line)
         if line.startswith("1.") and match:
             validated_data['h1'] = match.group(1).strip()
+            validated_data['slug'] = match.group(1).strip()
         elif line.startswith("2.") and match:
             validated_data['title'] = match.group(1).strip()
         elif line.startswith("3.") and match:

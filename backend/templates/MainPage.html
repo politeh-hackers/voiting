@@ -1,14 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./MainPageOutput.css" rel="stylesheet">
-    <title>Document</title>
+    <title>Павел Мартынов - Главная</title>
     {% load static %}
-    <script src="{% static 'base/index.js' %}" type="module"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="{% static 'styles/ActualGallery.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/header.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/MainPage.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/MediaGallery.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/AppealsCards.css' %}">
+    <script src="{% static 'media/index.js' %}" type="module"></script>
+    <meta name="description" content="Мне 41 год. Родился в г. Витебске. Трудовую деятельность начал в 2000 году с работы в
+    качестве коммерческого агента в отделе сбыта фирмы «Марко». ">
+    <meta property="og:title" content="Мартынов Павел - Главная">
+    <meta property="og:description" content="Мне 41 год. Родился в г. Витебске. Трудовую деятельность начал в 2000 году с работы в
+    качестве коммерческого агента в отделе сбыта фирмы «Марко». ">
+
 </head>
+
 <body>
-    <h1 class="text-green-500">Security</h1>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    {% include 'header.html' %}
+    <main class="mainPage-content">
+        <div class="container">
+            <div class="top-cards">
+                <div class="gallery-block">
+                    {% include 'galleryActual.html' %}
+                </div>
+                <div class="cards-block">
+                    {% include 'ActualRightCards.html' %}
+                </div>
+            </div>
+            <div class="main__cards-header">
+                Медиа
+            </div>
+            <div class="MediaGallery-block">
+            {% include 'MediaGallery.html' %}
+            <div class="media-cards">
+                {% include 'MainPageMediaCards.html' %}
+            </div>
+            </div>
+            <div class="main__cards-header">
+                Обращения
+            </div>
+            <div class="appeals-cards_container">
+                {% include 'appealsCards.html' %}
+            </div>
+        </div>
+        </div>
+    </main>
+    {% include 'footer.html' %}
 </body>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        /* Устанавливаем высоту для использования Flexbox */
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    main.mainPage-content {
+        flex: 1;
+    }
+
+    .container {
+        width: 1300px;
+        margin-right: auto;
+        margin-left: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 44px;
+    }
+
+    .mainPage-content {
+        padding: 47px;
+    }
+
+    .gallery-block {
+        width: 745px;
+        height: 483px;
+        border-radius: 6px;
+    }
+
+    .top-cards {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .cards-block {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .right-card__actual {
+        width: 525px;
+        height: 191px;
+        display: flex;
+        gap: 16px;
+    }
+
+    .card__actual__imagecontainer {}
+
+    .card__actual__image {
+        width: 200px;
+        height: 191px;
+    }
+
+    .card__photo__actual {
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+        object-fit: cover;
+    }
+
+    .card__actual__content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card__actual__time {
+        display: flex;
+        align-items: center;
+        color: #555555;
+        font-size: 12px;
+        gap: 4px;
+        padding-bottom: 12px;
+    }
+
+    .time__image {}
+
+    .card__actual__header {
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 28px;
+        letter-spacing: -0.02em;
+        padding-bottom: 16px;
+    }
+
+    .card__actual__summary {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 14px;
+        letter-spacing: -0.02em;
+    }
+
+    .card__actual__button {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 14px;
+        letter-spacing: -0.02em;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: auto;
+    }
+
+    .actual-tg__button {
+        background: #27A7E7;
+        font-size: 12px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 150px;
+        gap: 10px;
+        cursor: pointer;
+    }
+
+    .actual-tg__button a {
+        color: white;
+    }
+    .MediaGallery-block {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    .main__cards-header::after{
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background-color: #868693;
+    margin-left: 44px;
+}
+.main__cards-header {
+    font-weight: 500;
+    font-size: 36px;
+    letter-spacing: -0,02em;
+    line-height: 36px;
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+</style>
+
 </html>

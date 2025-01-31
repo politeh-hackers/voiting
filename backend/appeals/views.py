@@ -14,6 +14,12 @@ from category.models import Category
 from telegram_bot.bot import send_appeal_to_telegram
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from typing import cast
+from django.shortcuts import get_object_or_404
+from django.views.generic import DetailView
+class AppealDetailView(DetailView):
+    model = Appeal
+    template_name = "appeals/appeal_detail.html"  # Укажи свой шаблон
+    context_object_name = "appeal"  # Имя объекта в контексте
 
 class AppealsClientView(View):
     test_service = AppealService(model=Appeal)
@@ -49,23 +55,23 @@ class AppealView(View):
     
     def post(self, request: HttpRequest):
         data = json.loads(request.body)
-        category_id = data.get('category')
-        category = Category.objects.filter(id=category_id).first()
-        data["category"] = category  
+        category_name = data.get('category')
+        if (category := Category.objects.filter(name=category_name).first()) is not None:
+            data["category"] = category.name 
         validated_data: dict = AppealCreateSchema.model_validate(data).model_dump()
-
-        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "":
+        if not data.get("h1") or not data.get("title") or not data.get("description") or not data.get("slug") :
             main_data = generations_for_appeals(validated_data)
-            appeal_instance: Appeal = self.test_service.create(main_data)
         else:
-            appeal_instance: Appeal = cast(Appeal, self.test_service.create(data))
-        response = send_appeal_to_telegram(
-            category=appeal_instance.category,  
-            date=appeal_instance.date,         
-            url=f"http://localhost:8000/appeals/{appeal_instance.id}"  
-        )
-
-        print(f"Telegram response: {response}") 
+            main_data = data
+        slug = main_data.get("slug")
+        if slug:
+            counter = 1
+            original_slug = slug
+            while Appeal.objects.filter(slug=slug).exists():  
+                slug = f"{original_slug}-{counter}" 
+                counter += 1
+            main_data["slug"] = slug
+        self.test_service.create(main_data)
         return JsonResponse(None, safe=False)
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
@@ -74,19 +80,21 @@ class AppealView(View):
 
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
         data = json.loads(request.body)
+        category_name = data.get("category")
+        if (category := Category.objects.filter(name=category_name).first()) is not None:
+            data["category"] = category.name 
         validated_data: dict = AppealUpdateSchema.model_validate(data).model_dump()
-        if (appeal := Appeal.objects.filter(id=model_id).first()) is not None and (appeal.h1 == "" or appeal.title == "" or appeal.description == ""):
-            main_data = generations_for_appeals(validated_data)
-        else:
-            main_data = validated_data
-        self.test_service.update(model_id=model_id, data=main_data)    
-        response = send_appeal_to_telegram(
-            category=data.category,
-            date=data.date, 
-            url=f"http://localhost:8000/appeals/{data.id}" #нужен публичный url
-        )
-        print(f"Telegram response: {response}") 
+        appeal_instance = Appeal.objects.filter(id=model_id).first()
+        self.test_service.update(model_id=model_id, data=validated_data)
+        if data.get("status") == "Исполнено":
+            send_appeal_to_telegram(
+                category=appeal_instance.category,
+                date=appeal_instance.date, 
+                url=f"http://localhost:8000/appeals/{appeal_instance.id}"
+                )
+
         return JsonResponse(None, safe=False)
+
 
 class ImageView(View):
     test_service = AppealService(model=Appeal) 

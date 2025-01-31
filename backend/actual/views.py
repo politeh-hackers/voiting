@@ -8,10 +8,15 @@ from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.core.handlers.wsgi import WSGIRequest
 from .schemas import MediaActualFieldsSchema
-from gpt.services import generations_for_news
+from gpt.views import generations_for_news
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from telegram_bot.bot import send_news_to_telegram
+from django.views.generic import DetailView
+class ActualDetailView(DetailView):
+    model = Actual
+    template_name = "actual/actual_detail.html"  # Укажи свой шаблон
+    context_object_name = "actual"  # Имя объекта в контексте
 
 def ActualClientView(request: HttpRequest):
     page = request.GET.get('page', 1)  
@@ -33,6 +38,17 @@ def ActualClientView(request: HttpRequest):
     }
 
     return render(request, "actual.html", context)
+
+def ActualCard(request, model_id: uuid.UUID):
+    content = get_object_or_404(Actual, id=model_id)
+    content_data = json.loads(content.content)
+    context = {
+        "content": content,
+        "content_data": content_data  # Если нужно передать и JSON данные тоже
+    }
+    
+    return render(request, "hui.html", context)
+
 class ActualView(View):
 
     test_service = ActualService(model=Actual)
@@ -43,17 +59,25 @@ class ActualView(View):
     def post(self, request):
         data = request.POST.dict()
         validated_data: dict = MediaActualFieldsSchema.model_validate(data).model_dump()
-        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "":
+        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "" or data.get("slug") == "":
             main_data = generations_for_news(validated_data)
-            actual_instance: Actual = self.test_service.create(main_data)
         else:
-            actual_instance: Actual = self.test_service.create(data)
+            main_data = data
+        slug = main_data.get("slug")
+        if slug:
+            counter = 1
+            original_slug = slug
+            while Actual.objects.filter(slug=slug).exists():  
+                slug = f"{original_slug}-{counter}" 
+                counter += 1
+            main_data["slug"] = slug 
+        actual_instance: Actual = self.test_service.create(main_data)
         main_photo = os.path.join('static', 'image', actual_instance.main_photo)
         send_news_to_telegram(
             header=actual_instance.header,
             summary=actual_instance.summary,
             main_photo=main_photo,  
-            url=f"http://localhost:8000/actual/{actual_instance.id}" #нужен публичный url
+            url=f"http://localhost:8000/actual/{actual_instance.id}"  # Нужен публичный URL
         )
         return JsonResponse({"message": "success"}, status=200)
 

@@ -77,7 +77,9 @@
           <Select
             v-model="post.status"
             :options="status"
+            
             optionLabel="name"
+            option-value="name"
             placeholder="Select a Status"
           />
         </div>
@@ -280,6 +282,8 @@ const editPost = (newsItem) => {
   post.value.status = newsItem.status;
   post.value.last_name = newsItem.last_name;
   post.value.patronymic = newsItem.patronymic;
+  post.value.official_response = newsItem.official_response;
+  post.value.on_website = newsItem.on_website
   visibledt.value = true;
 };
 
@@ -296,9 +300,11 @@ const SavePost = async () =>{
     description: post.value.description,
     text: post.value.text,
     on_website: post.value.on_website,
-    status: post.value.status
+    status: post.value.status,
+    official_response:post.value.official_response
   };
   try {
+    console.log(postData)
     const response = await fetch(
       `http://localhost:8000/appeals/${post.value.id}`,
       {
@@ -307,7 +313,7 @@ const SavePost = async () =>{
           'Authorization': `${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({postData}),
+        body: JSON.stringify(postData),
       }
     );
 

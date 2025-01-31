@@ -1,5 +1,4 @@
 declare var Swiper: any;
-
 const initGallery = (): void => {
     const swiper = new Swiper('.swiper-container', {
         loop: true,
@@ -21,3 +20,8 @@ const initGallery = (): void => {
 document.addEventListener('DOMContentLoaded', () => {
     initGallery();
 });
+
+// map.ts
+
+
+

@@ -2,6 +2,7 @@ from django.db import models
 from base.models import BaseUUID
 
 class Biography(BaseUUID):
+    slug = models.SlugField(unique=True)
     h1 = models.CharField(max_length=60, blank=True)
     title = models.CharField(max_length=80, blank=True)
     description = models.CharField(max_length=160, blank=True)

@@ -1,8 +1,8 @@
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from pydantic import BaseModel, Field, constr
+from typing import List, Optional, Union
 from base.constants import Constants
 
-class AppealBaseSchema(BaseModel):
+class AppealCreateSchema(BaseModel):
     first_name: str = Field(
         ..., 
         min_length=4, 
@@ -39,21 +39,14 @@ class AppealBaseSchema(BaseModel):
         max_length=Constants.MAX_LEN_TEXT, 
         description=f"Поле должно содержать от {Constants.MIN_LEN_TEXT} до {Constants.MAX_LEN_TEXT}"
     )
-    # photos: Optional[str] = Field(
-    #     None, 
-    #     description="Может отсутствовать или быть несколько"
-    # )
-
-class AppealCreateSchema(AppealBaseSchema):    
-    pass
-
-class AppealUpdateSchema(AppealBaseSchema):
-    official_response: Optional[str] = Field(
-        None, 
-        min_length=Constants.MIN_LEN_TEXT, 
-        max_length=Constants.MAX_LEN_TEXT, 
-        description=f"Поле должно содержать от {Constants.MIN_LEN_TEXT} до {Constants.MAX_LEN_TEXT}"
+    category: str = Field(
+        ...
     )
-    status: str = Field(...)
-    on_website: bool = Field(...)
-    category: str = Field(...)
+
+class AppealUpdateSchema(BaseModel):
+    official_response: Optional[str] = Field(
+        None,
+        description="Поле может быть пустым или содержать от 500 до 3000 символов."
+    )
+    status: Optional[str] = Field(None)
+    on_website: Optional[bool] = Field(None)

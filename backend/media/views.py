@@ -13,14 +13,19 @@ from gpt.views import generations_for_news
 from telegram_bot.bot import send_news_to_telegram
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import Http404
+from django.views.generic import DetailView
+class MediaDetailView(DetailView):
+    model = Media
+    template_name = "media/media_detail.html"  # Укажи свой шаблон
+    context_object_name = "media"  # Имя объекта в контексте
 
 def MediaClientView(request: HttpRequest):
 # pagination for gallery
     page = request.GET.get('page', 1)
-    per_page = int(request.GET.get('per_page', 5))
-    medias = Media.objects.all()  # Получаем все объекты модели
+    per_page = int(request.GET.get('per_page', 8))
+    medias = Media.objects.all()[3:]  # Получаем все объекты модели
     paginator = Paginator(medias, per_page)
-
     try:
         media_page = paginator.page(page)
     except PageNotAnInteger:
@@ -29,51 +34,43 @@ def MediaClientView(request: HttpRequest):
         media_page = paginator.page(paginator.num_pages)
 # pagination for left cards
     page1 = request.GET.get('page1', 1)
-    additional_data_1 = Media.objects.all()  # Замените на вашу модель
-    per_page1 = int(request.GET.get('per_page', 2))
-    paginator1 = Paginator(additional_data_1, per_page1)
+    medias1 = Media.objects.all() 
+    per_page1 = int(request.GET.get('per_page1', 3))
+    paginator1 = Paginator(medias1, per_page1)
     try:
-        data_page_1 = paginator1.page(page1)
+        media_page1 = paginator1.page(page1)
     except PageNotAnInteger:
-        data_page_1 = paginator1.page(1)
+        media_page1 = paginator1.page(1)
     except EmptyPage:
-        data_page_1 = paginator1.page(paginator1.num_pages)
-# paginatoin for main cards
-    page2 = request.GET.get('page2', 1)
-    additional_data_2 = Media.objects.all()  # Замените на вашу модель
-    per_page2 = int(request.GET.get('per_page', 8))
-    paginator2 = Paginator(additional_data_2, per_page2)
-    try:
-        data_page_2 = paginator2.page(page2)
-    except PageNotAnInteger:
-        data_page_2 = paginator2.page(1)
-    except EmptyPage:
-        data_page_2 = paginator2.page(paginator2.num_pages)
+        media_page1 = paginator1.page(paginator1.num_pages)
+
     context = {
-        "additional_data_1": data_page_1,
-        "additional_data_2": data_page_2,
-        "data1_total_pages": paginator1.num_pages,
-        "data1_total_items": paginator1.count,
-        "data2_total_pages": paginator2.num_pages,
-        "data2_total_items": paginator2.count,
+        "medias1": media_page1,
+        "total_items2": paginator1.count,
         "medias": media_page,  # Передаем объекты, а не список значений
         "page": media_page.number,
-        "page1": data_page_1.number,
-        "page2" : data_page_2.number,
+        "page1": media_page1.number,
         "per_page": per_page,
         "per_page1": per_page1,
-        "per_page2": per_page2,
         "total_pages": paginator.num_pages,
-        "total_pages1": paginator.num_pages,
-        "total_pages2": paginator.num_pages,
+        "total_pages1": paginator1.num_pages,
         "total_items": paginator.count,
         "all_pages": list(paginator.page_range),
         "all_pages2": list(paginator1.page_range),
-        "all_pages3":list(paginator2.page_range)
     }
-
-    return render(request, "media.html", context)
     
+    return render(request, "media.html", context)
+
+def MediaCard(request, model_id: uuid.UUID):
+    content = get_object_or_404(Media, id=model_id)
+    content_data = json.loads(content.content)
+    context = {
+        "content": content,
+        "content_data": content_data  # Если нужно передать и JSON данные тоже
+    }
+    
+    return render(request, "MediaPage.html", context)
+
 class MediaView(View):
 
     test_service = MediaService(model=Media)
@@ -83,12 +80,20 @@ class MediaView(View):
 
     def post(self, request):
         data = request.POST.dict()
-        validated_data = MediaActualFieldsSchema.model_validate(data).model_dump()
-        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "":
+        validated_data: dict = MediaActualFieldsSchema.model_validate(data).model_dump()
+        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "" or data.get("slug") == "":
             main_data = generations_for_news(validated_data)
-            media_instance: Media = self.test_service.create(main_data)
         else:
-            media_instance: Media = self.test_service.create(data)
+            main_data = data
+        slug = main_data.get("slug")
+        if slug:
+            counter = 1
+            original_slug = slug
+            while Media.objects.filter(slug=slug).exists():  
+                slug = f"{original_slug}-{counter}" 
+                counter += 1
+            main_data["slug"] = slug 
+        media_instance: Media = self.test_service.create(main_data)
         main_photo = os.path.join('static', 'image', media_instance.main_photo)
         send_news_to_telegram(
             header=media_instance.header,
