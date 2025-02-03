@@ -74,7 +74,7 @@ class ActualView(View):
         slug = main_data.get("slug")
         if slug:
             counter = 1
-            original_slug = slug
+            original_slug = slug 
             while Actual.objects.filter(slug=slug).exists():  
                 slug = f"{original_slug}-{counter}" 
                 counter += 1

@@ -27,8 +27,9 @@ SECRET_KEY = 'django-insecure-16r6b2%e7f#j$fj+#&mm!tpda0m+b%sy^096xus&ou5#c441w2
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost:5173', '127.0.0.1', 'localhost']
+SITE_ID = 1
+SITE_URL = "127.0.0.1:8000"  
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django.contrib.sitemaps',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -49,8 +51,7 @@ INSTALLED_APPS = [
     'gpt',
     'biography',
     'mainpage',
-    'telegram_bot',
-    'sitemap'
+    'telegram_bot'
 ]
 
 REST_FRAMEWORK = {

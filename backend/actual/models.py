@@ -14,6 +14,7 @@ class Actual(BaseUUID):
     date_created = models.DateField(null=False)
     actual_tags = models.CharField(max_length=100, unique=False)
     count = models.IntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
     class Meta:
         verbose_name = "actual"
         verbose_name_plural = "actual"
