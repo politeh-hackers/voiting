@@ -130,6 +130,13 @@ if (searchButton && searchPopup) {
     console.error('Не найдены необходимые элементы для поиска!');
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const burgerMenu = document.getElementById('burgerMenu') as HTMLElement;
+    const headerCenter = document.querySelector('.header__center') as Element;
 
+    burgerMenu.addEventListener('click', () => {
+        headerCenter.classList.toggle('active'); // Переключаем класс active
+    });
+});
     
 ymaps.ready(initMap);

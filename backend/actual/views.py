@@ -19,8 +19,10 @@ class ActualDetailView(DetailView):
     context_object_name = "actual"  # Имя объекта в контексте
 
 def ActualClientView(request: HttpRequest):
+    popular_actuals = Actual.objects.order_by('-count')[:4]
+    
     page = request.GET.get('page', 1)  
-    per_page = int(request.GET.get('per_page', 3))
+    per_page = int(request.GET.get('per_page', 9))
     actuals = Actual.objects.all()  
     paginator = Paginator(actuals, per_page)
     try:
@@ -29,6 +31,7 @@ def ActualClientView(request: HttpRequest):
         actual_page = paginator.page(1)
     all_pages = list(range(1, paginator.num_pages + 1))
     context = {
+        "popular_actuals":popular_actuals,
         "actuals": list(actual_page.object_list.values()),  
         "page": actual_page.number,
         "per_page": per_page,
@@ -41,13 +44,16 @@ def ActualClientView(request: HttpRequest):
 
 def ActualCard(request, model_id: uuid.UUID):
     content = get_object_or_404(Actual, id=model_id)
+    content.count += 1
+    
+    content.save()
     content_data = json.loads(content.content)
     context = {
         "content": content,
         "content_data": content_data  # Если нужно передать и JSON данные тоже
     }
     
-    return render(request, "hui.html", context)
+    return render(request, "MediaPage.html", context)
 
 class ActualView(View):
 

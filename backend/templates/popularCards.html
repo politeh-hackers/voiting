@@ -1,6 +1,6 @@
 {% load static %}
 <div class="popular__cards">
-    {% for actual in actuals %}
+    {% for actual in popular_actuals %}
     <div class="popular__card">
         <div class="card__popular__imagecontainer">
             <div class="card__popular__image">
@@ -22,7 +22,7 @@
             
         </div>
         <div class="card__popular__button">
-            <a href="#">Подробнее ⟶</a>
+            <a href="http://127.0.0.1:8000/actual/actual/{{actual.id}}">Подробнее ⟶</a>
         </div>
     </div>
     {% endfor %}
