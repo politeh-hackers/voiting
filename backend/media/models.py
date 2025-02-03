@@ -15,7 +15,8 @@ class Media(models.Model):
     date_created = models.DateField(null=False, blank=True)
     media_tags = models.CharField(max_length=100, unique=False)
     count = models.IntegerField(default=0)
-
+    updated_at = models.DateTimeField(auto_now=True)
+    
     def __str__(self):
         return self.header
  

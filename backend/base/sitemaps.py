@@ -1,68 +1,70 @@
 from django.contrib.sitemaps import Sitemap
-from django.urls import reverse
 from actual.models import Actual
 from appeals.models import Appeal
 from biography.models import Biography
 from media.models import Media
+from django.contrib.sites.models import Site
 
-# Sitemap для Actual
+
 class ActualSitemap(Sitemap):
+    protocol = 'http'
     changefreq = "weekly"
     priority = 0.8
 
     def items(self):
         return Actual.objects.all()
 
-    def location(self, obj):
-        return reverse('actual_detail', args=[obj.id])  # Указание URL для каждого объекта
-
     def lastmod(self, obj):
         return obj.updated_at
 
-# Sitemap для Appeals
+    def location(self, obj):
+        return f"/actual/{Actual.slug}/"   
+
+    # def get_domain(self):  
+    #     return Site.objects.get_current().domain
+
 class AppealsSitemap(Sitemap):
+    protocol = 'http'
     changefreq = "daily"
     priority = 1.0
 
     def items(self):
         return Appeal.objects.all()
 
-    def location(self, obj):
-        return reverse('appeal_detail', args=[obj.id])  # Указание URL для каждого объекта
-
     def lastmod(self, obj):
         return obj.updated_at
 
-# Sitemap для Biography
+    def location(self, obj):
+        return f"/appeals/{Appeal.slug}/"   
+
 class BiographySitemap(Sitemap):
+    protocol = 'http'
     changefreq = "weekly"
     priority = 0.8
 
     def items(self):
         return Biography.objects.all()
 
-    def location(self, obj):
-        return reverse('biography_detail', args=[obj.id])  # Указание URL для каждого объекта
-
     def lastmod(self, obj):
         return obj.updated_at
 
-# Sitemap для Media
+    def location(self, obj):
+        return f"/biography/{Biography.slug}/" 
+
 class MediaSitemap(Sitemap):
+    protocol = 'http'
     changefreq = "weekly"
     priority = 0.8
 
     def items(self):
         return Media.objects.all()
 
-    def location(self, obj):
-        return reverse('media_detail', args=[obj.id])  # Указание URL для каждого объекта
-
     def lastmod(self, obj):
         return obj.updated_at
 
+    def location(self, obj):
+        return f"/media/{Media.slug}/" 
 
-# Объединяем все Sitemap в один словарь
 sitemaps = {
     "actual": ActualSitemap(),
     "appeals": AppealsSitemap(),

@@ -29,6 +29,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost:5173', '127.0.0.1', 'localhost']
 
 # Application definition
+SITE_ID = 1
+
+SITE_URL = "http://127.0.0.1:8000"  # Укажите ваш домен
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django.contrib.sitemaps',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -49,8 +53,7 @@ INSTALLED_APPS = [
     'gpt',
     'biography',
     'mainpage',
-    'telegram_bot',
-    'sitemap'
+    'telegram_bot'
 ]
 
 REST_FRAMEWORK = {
