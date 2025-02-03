@@ -3,17 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=634d8a52-4b1e-4392-a9d2-b5890ef84bd8&lang=ru_RU" type="text/javascript"></script>
+    
     <title>Мартынов Павел - Обращения</title>
     {% load static %}
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=5325d15d-232d-4c0f-880e-faa5da31699b&lang=ru_RU"
+    type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.7/dist/inputmask.min.js"></script>
+    
     <link rel="stylesheet" href="{% static 'styles/header.css' %}">
     <link rel="stylesheet" href="{% static 'styles/footer.css' %}">
     <link rel="stylesheet" href="{% static 'styles/appeals.css' %}">
-    <script src="{% static 'map/index.js' %}" type="module"></script>
+    
     <meta name = "description" content="Обращения по г.Витебск Чапаевского района">
     <meta property = "og:title" content="Мартынов Павел - Обращения">
     <meta property = "og:description" content="Обращения по г.Витебск Чапаевского района">
 </head>
+{% include 'ModalAppeals.html' %}
 <body>
 
     {% include 'header.html' %}

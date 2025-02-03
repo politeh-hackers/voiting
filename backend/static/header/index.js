@@ -34,9 +34,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-console.log("dddddddd");
 function initMap() {
-    console.log("dddddddd");
+    console.log("Map initialized");
     var map = new ymaps.Map('map', {
         center: [55.200000, 30.250000],
         zoom: 10,
@@ -54,7 +53,6 @@ function initMap() {
         strokeWidth: 2
     });
     map.geoObjects.add(polygon);
-    // Создаем маркер
     var marker = new ymaps.Placemark([55.199440, 30.225416], {
         hintContent: 'Перетащи меня!'
     });
@@ -110,17 +108,31 @@ function initMap() {
     if (saveButton) {
         saveButton.addEventListener('click', function () {
             if (isMarkerInPolygon()) {
+                console.log("Кнопка нажата");
                 var position = marker.geometry.getCoordinates();
-                var formData = new FormData(document.getElementById('appealForm'));
+                var positionString = position.toString();
+                var photosInput = document.getElementById('photos');
+                var fileNames = photosInput.files
+                    ? Array.from(photosInput.files).map(function (file) { return file.name; }).join(', ')
+                    : ''; // Пустая строка, если файлов нет
+                var categorySelect = document.getElementById('category');
+                var selectedCategoryText = categorySelect.options[categorySelect.selectedIndex].text;
+                var lastName = document.getElementById('lastName').value;
+                var firstName = document.getElementById('firstName').value;
+                var patronymic = document.getElementById('patronymic').value;
+                var phone = document.getElementById('phone').value;
+                var text = document.getElementById('text').value;
                 var appealData = {
-                    location: position,
-                    last_name: formData.get('last_name'),
-                    first_name: formData.get('first_name'),
-                    patronymic: formData.get('patronymic'),
-                    phone: formData.get('phone'),
-                    text: formData.get('text'),
-                    photos: formData.getAll('photos')
+                    location: positionString,
+                    last_name: lastName,
+                    first_name: firstName,
+                    patronymic: patronymic,
+                    phone: phone,
+                    text: text,
+                    photos: fileNames,
+                    category: selectedCategoryText,
                 };
+                console.log('Отправляемые данные:', appealData);
                 sendDataToServer(appealData);
             }
             else {
@@ -129,40 +141,65 @@ function initMap() {
         });
     }
 }
-var searchButton = document.getElementById('searchButton');
-var searchPopup = document.getElementById('searchPopup');
-var isActive = false;
-// Проверка на существование элементов
-if (searchButton && searchPopup) {
-    searchButton.addEventListener('click', function () {
-        if (!isActive) {
-            // Открыть окно поиска
-            searchPopup.style.display = 'flex';
-            isActive = true;
-        }
-        else {
-            // Закрыть окно поиска
-            searchPopup.style.display = 'none';
-            isActive = false;
-        }
-    });
-    // Закрытие окна при клике вне области окна поиска
-    window.addEventListener('click', function (event) {
-        if (event.target === searchPopup) {
-            searchPopup.style.display = 'none';
-            isActive = false;
-            console.log('Закрытие при клике вне окна, isActive:', isActive);
-        }
-    });
-}
-else {
-    console.error('Не найдены необходимые элементы для поиска!');
-}
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
+    var _a;
     var burgerMenu = document.getElementById('burgerMenu');
     var headerCenter = document.querySelector('.header__center');
-    burgerMenu.addEventListener('click', function () {
-        headerCenter.classList.toggle('active'); // Переключаем класс active
+    if (burgerMenu) {
+        burgerMenu.addEventListener('click', function () {
+            headerCenter.classList.toggle('active'); // Переключаем класс active
+        });
+    }
+    var modal = document.getElementById("appealForm");
+    var closeModal = document.querySelector(".close-modal");
+    var sendCodeBtn = document.getElementById("sendCodeBtn");
+    var confirmCodeBtn = document.getElementById("confirmCodeBtn");
+    var step1 = document.getElementById("step1");
+    var step2 = document.getElementById("step2");
+    var codeInputs = document.querySelectorAll(".code-box");
+    // Маска для телефона
+    var phoneInput = document.getElementById("phone");
+    if (phoneInput) {
+        new Inputmask("+375 (99) 999-99-99").mask(phoneInput);
+    }
+    // Открытие формы
+    (_a = document.querySelector(".appeals__button")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", function () {
+        if (modal) {
+            modal.style.display = "flex";
+        }
+    });
+    // Закрытие формы
+    closeModal === null || closeModal === void 0 ? void 0 : closeModal.addEventListener("click", function () {
+        if (modal) {
+            modal.style.display = "none";
+        }
+    });
+    // Отправка кода подтверждения
+    sendCodeBtn === null || sendCodeBtn === void 0 ? void 0 : sendCodeBtn.addEventListener("click", function () {
+        if (sendCodeBtn) {
+            sendCodeBtn.disabled = true;
+        }
+        alert("Код отправлен! Введите его ниже.");
+        if (confirmCodeBtn) {
+            confirmCodeBtn.disabled = false;
+        }
+    });
+    // Автоматический переход между полями кода
+    codeInputs.forEach(function (input, index) {
+        input.addEventListener("input", function (e) {
+            var target = e.target;
+            if (target.value && index < codeInputs.length - 1) {
+                codeInputs[index + 1].focus(); // Переход к следующему полю
+            }
+        });
+    });
+    // Подтверждение кода
+    confirmCodeBtn === null || confirmCodeBtn === void 0 ? void 0 : confirmCodeBtn.addEventListener("click", function () {
+        alert("Телефон подтвержден!");
+        if (step1 && step2) {
+            step1.style.display = "none";
+            step2.style.display = "block";
+        }
     });
 });
 ymaps.ready(initMap);

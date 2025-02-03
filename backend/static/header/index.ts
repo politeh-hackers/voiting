@@ -1,13 +1,12 @@
-console.log("dddddddd")
-
-declare var ymaps: any; 
+declare var Inputmask: any;
+declare var ymaps: any;
 
 function initMap(): void {
-    console.log("dddddddd")
-    
+    console.log("Map initialized");
+
     const map = new ymaps.Map('map', {
-        center: [55.200000, 30.250000], 
-        zoom: 10, 
+        center: [55.200000, 30.250000],
+        zoom: 10,
     });
 
     const coordinates = [
@@ -19,18 +18,17 @@ function initMap(): void {
     ];
 
     const polygon = new ymaps.Polygon([coordinates], {}, {
-        fillColor: '#6699FF33', 
-        strokeColor: '#0000FF', 
+        fillColor: '#6699FF33',
+        strokeColor: '#0000FF',
         strokeWidth: 2
     });
     map.geoObjects.add(polygon);
 
-    // Создаем маркер
     const marker = new ymaps.Placemark([55.199440, 30.225416], {
         hintContent: 'Перетащи меня!'
     });
     map.geoObjects.add(marker);
-    marker.options.set('draggable', true); 
+    marker.options.set('draggable', true);
 
     let lastValidPosition: number[] = [55.199440, 30.225416];
 
@@ -39,7 +37,6 @@ function initMap(): void {
         return polygon.geometry.contains(position);
     }
 
-    
     async function sendDataToServer(data: any): Promise<void> {
         try {
             const response = await fetch('http://127.0.0.1:8000/appeals/', {
@@ -47,7 +44,7 @@ function initMap(): void {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data) 
+                body: JSON.stringify(data)
             });
 
             if (response.ok) {
@@ -61,82 +58,125 @@ function initMap(): void {
     }
 
     marker.events.add('drag', function () {
-        
         const position: number[] = marker.geometry.getCoordinates();
 
-        
         if (!isMarkerInPolygon()) {
-            
             marker.geometry.setCoordinates(lastValidPosition);
         } else {
-            
             lastValidPosition = position;
         }
     });
 
-    const saveButton = document.getElementById('saveBtn');
+    const saveButton = document.getElementById('saveBtn') as HTMLButtonElement;
     if (saveButton) {
         saveButton.addEventListener('click', function () {
-            
             if (isMarkerInPolygon()) {
-                const position = marker.geometry.getCoordinates();
-               
-                const formData = new FormData(document.getElementById('appealForm') as HTMLFormElement);
-                const appealData = {
-                    location: position,
-                    last_name: formData.get('last_name'),
-                    first_name: formData.get('first_name'),
-                    patronymic: formData.get('patronymic'),
-                    phone: formData.get('phone'),
-                    text: formData.get('text'),
-                    photos: formData.getAll('photos') 
-                };
+                console.log("Кнопка нажата");
 
+                const position = marker.geometry.getCoordinates();
+                const positionString = position.toString();
+
+                const photosInput = document.getElementById('photos') as HTMLInputElement;
+                const fileNames = photosInput.files 
+                    ? Array.from(photosInput.files).map(file => file.name).join(', ') 
+                    : ''; // Пустая строка, если файлов нет
+
+                const categorySelect = document.getElementById('category') as HTMLSelectElement;
+                const selectedCategoryText = categorySelect.options[categorySelect.selectedIndex].text;
+
+                const lastName = (document.getElementById('lastName') as HTMLInputElement).value;
+                const firstName = (document.getElementById('firstName') as HTMLInputElement).value;
+                const patronymic = (document.getElementById('patronymic') as HTMLInputElement).value;
+                const phone = (document.getElementById('phone') as HTMLInputElement).value;
+                const text = (document.getElementById('text') as HTMLTextAreaElement).value;
+
+                const appealData = {
+                    location: positionString,
+                    last_name: lastName,
+                    first_name: firstName,
+                    patronymic: patronymic,
+                    phone: phone,
+                    text: text,
+                    photos: fileNames,
+                    category: selectedCategoryText,
+                };
+                console.log('Отправляемые данные:', appealData);
                 sendDataToServer(appealData);
+                
             } else {
                 alert('Маркер находится вне полигона. Переместите его внутрь полигона перед сохранением.');
             }
         });
     }
 }
-const searchButton = document.getElementById('searchButton');
-const searchPopup = document.getElementById('searchPopup');
-let isActive: boolean = false;
 
-// Проверка на существование элементов
-if (searchButton && searchPopup) {
-    searchButton.addEventListener('click', function () {
-        if (!isActive) {
-            // Открыть окно поиска
-            searchPopup.style.display = 'flex';
-            isActive = true;
-        } else {
-            // Закрыть окно поиска
-            searchPopup.style.display = 'none';
-            isActive = false;
-        }
-        
-    });
-
-    // Закрытие окна при клике вне области окна поиска
-    window.addEventListener('click', function (event) {
-        if (event.target === searchPopup) {
-            searchPopup.style.display = 'none';
-            isActive = false;
-            console.log('Закрытие при клике вне окна, isActive:', isActive);
-        }
-    });
-} else {
-    console.error('Не найдены необходимые элементы для поиска!');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     const burgerMenu = document.getElementById('burgerMenu') as HTMLElement;
-    const headerCenter = document.querySelector('.header__center') as Element;
+    const headerCenter = document.querySelector('.header__center') as HTMLElement;
 
-    burgerMenu.addEventListener('click', () => {
-        headerCenter.classList.toggle('active'); // Переключаем класс active
+    if (burgerMenu) {
+        burgerMenu.addEventListener('click', () => {
+            headerCenter.classList.toggle('active'); // Переключаем класс active
+        });
+    }
+
+    const modal = document.getElementById("appealForm") as HTMLElement;
+    const closeModal = document.querySelector(".close-modal") as HTMLElement;
+    const sendCodeBtn = document.getElementById("sendCodeBtn") as HTMLButtonElement;
+    const confirmCodeBtn = document.getElementById("confirmCodeBtn") as HTMLButtonElement;
+    const step1 = document.getElementById("step1") as HTMLElement;
+    const step2 = document.getElementById("step2") as HTMLElement;
+    const codeInputs = document.querySelectorAll(".code-box") as NodeListOf<HTMLInputElement>;
+
+    // Маска для телефона
+    const phoneInput = document.getElementById("phone") as HTMLInputElement;
+    if (phoneInput) {
+        new Inputmask("+375 (99) 999-99-99").mask(phoneInput);
+    }
+
+    // Открытие формы
+    document.querySelector(".appeals__button")?.addEventListener("click", () => {
+        if (modal) {
+            modal.style.display = "flex";
+        }
+    });
+
+    // Закрытие формы
+    closeModal?.addEventListener("click", () => {
+        if (modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    // Отправка кода подтверждения
+    sendCodeBtn?.addEventListener("click", () => {
+        if (sendCodeBtn) {
+            sendCodeBtn.disabled = true;
+        }
+        alert("Код отправлен! Введите его ниже.");
+        if (confirmCodeBtn) {
+            confirmCodeBtn.disabled = false;
+        }
+    });
+
+    // Автоматический переход между полями кода
+    codeInputs.forEach((input, index) => {
+        input.addEventListener("input", (e) => {
+            const target = e.target as HTMLInputElement;
+            if (target.value && index < codeInputs.length - 1) {
+                codeInputs[index + 1].focus();  // Переход к следующему полю
+            }
+        });
+    });
+
+    // Подтверждение кода
+    confirmCodeBtn?.addEventListener("click", () => {
+        alert("Телефон подтвержден!");
+        if (step1 && step2) {
+            step1.style.display = "none";
+            step2.style.display = "block";
+        }
     });
 });
-    
+
 ymaps.ready(initMap);
