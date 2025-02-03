@@ -5,9 +5,7 @@ from biography.models import Biography
 from media.models import Media
 from django.contrib.sites.models import Site
 
-
 class ActualSitemap(Sitemap):
-    protocol = 'http'
     changefreq = "weekly"
     priority = 0.8
 
@@ -18,13 +16,10 @@ class ActualSitemap(Sitemap):
         return obj.updated_at
 
     def location(self, obj):
-        return f"/actual/{Actual.slug}/"   
-
-    # def get_domain(self):  
-    #     return Site.objects.get_current().domain
+        domain = Site.objects.get_current().domain
+        return f"/actual/{obj.slug}/"  # Протокол и домен
 
 class AppealsSitemap(Sitemap):
-    protocol = 'http'
     changefreq = "daily"
     priority = 1.0
 
@@ -35,10 +30,10 @@ class AppealsSitemap(Sitemap):
         return obj.updated_at
 
     def location(self, obj):
-        return f"/appeals/{Appeal.slug}/"   
+        domain = Site.objects.get_current().domain
+        return f"/appeals/{obj.slug}/"  # Протокол и домен
 
 class BiographySitemap(Sitemap):
-    protocol = 'http'
     changefreq = "weekly"
     priority = 0.8
 
@@ -49,10 +44,10 @@ class BiographySitemap(Sitemap):
         return obj.updated_at
 
     def location(self, obj):
-        return f"/biography/{Biography.slug}/" 
+        domain = Site.objects.get_current().domain
+        return f"/biography/{obj.slug}/"  # Протокол и домен
 
 class MediaSitemap(Sitemap):
-    protocol = 'http'
     changefreq = "weekly"
     priority = 0.8
 
@@ -63,7 +58,8 @@ class MediaSitemap(Sitemap):
         return obj.updated_at
 
     def location(self, obj):
-        return f"/media/{Media.slug}/" 
+        domain = Site.objects.get_current().domain
+        return f"/media/{obj.slug}/"  # Протокол и домен
 
 sitemaps = {
     "actual": ActualSitemap(),
