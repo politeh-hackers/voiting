@@ -19,7 +19,7 @@ class Appeal(models.Model):
     on_website = models.BooleanField(default=False, null=True, blank=True)
     date = models.DateField(default=timezone.now, null=True, blank=True)
     text = models.CharField(max_length=200, null=True, blank=True)
-    photos = models.CharField(max_length=200, null=True, blank=True)
+    photos = models.JSONField(null=True, blank=True)
     official_response = models.JSONField(max_length=500, null=True, blank=True)
     category = models.CharField(max_length=200, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)

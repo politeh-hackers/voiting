@@ -1,4 +1,5 @@
 import json
+import base64
 from .schemas import AppealCreateSchema, AppealUpdateSchema
 from .models import Appeal
 from .services import AppealService
@@ -16,6 +17,9 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from typing import cast
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
+from PIL import Image
+from io import BytesIO
+
 class AppealDetailView(DetailView):
     model = Appeal
     template_name = "appeals/appeal_detail.html"  # Укажи свой шаблон
@@ -27,7 +31,7 @@ class AppealsClientView(View):
     def get(self, request):
         page = request.GET.get('page', 1)  
         per_page = int(request.GET.get('per_page', 3))
-        appeals = Appeal.objects.all()  
+        appeals = Appeal.objects.filter(on_website=True)  
         categories = Category.objects.all()
         paginator = Paginator(appeals, per_page)
         try:
@@ -101,13 +105,14 @@ class ImageView(View):
 
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
-
-    def post(self, request):
+        
+    def post(self, request:WSGIRequest):
         if "photos" in request.FILES:
             images = request.FILES.getlist("photos") 
+            print(request.FILES)
         else:
             return JsonResponse({"error": "No images provided"}, status=400)
-        image_dir = os.path.join('static', 'image')
+        image_dir = os.path.join('static/image')
         os.makedirs(image_dir, exist_ok=True)
         saved_photos = []  
         for data in images:

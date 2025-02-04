@@ -34,6 +34,46 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+document.addEventListener("DOMContentLoaded", function () {
+    var searchButton = document.getElementById("searchButton");
+    var searchPopup = document.getElementById("searchPopup");
+    var clearButton = document.getElementById("clearButton");
+    if (searchButton && searchPopup) {
+        searchButton.addEventListener("click", function () {
+            searchPopup.style.display = searchPopup.style.display === "block" ? "none" : "block";
+        });
+    }
+    if (clearButton) {
+        clearButton.addEventListener("click", function () {
+            document.querySelector(".input__search").value = "";
+        });
+    }
+    // Закрытие попапа при клике вне его
+    document.addEventListener("click", function (event) {
+        if (searchPopup.style.display === "block" &&
+            !searchPopup.contains(event.target) &&
+            !searchButton.contains(event.target)) {
+            searchPopup.style.display = "none";
+        }
+    });
+});
+function resetForm() {
+    document.getElementById('lastName').value = "";
+    document.getElementById('firstName').value = "";
+    document.getElementById('patronymic').value = "";
+    document.getElementById('phone').value = "";
+    document.getElementById('text').value = "";
+    document.getElementById('category').selectedIndex = 0;
+    document.getElementById('photos').value = "";
+    document.querySelectorAll(".code-box").forEach(function (input) { return input.value = ""; });
+    // Переключаемся обратно на первую часть формы
+    var step1 = document.getElementById("step1");
+    var step2 = document.getElementById("step2");
+    step1.style.display = "flex";
+    step2.style.display = "none";
+    // Отключаем кнопку подтверждения кода
+    document.getElementById("confirmCodeBtn").disabled = true;
+}
 function initMap() {
     console.log("Map initialized");
     var map = new ymaps.Map('map', {
@@ -63,6 +103,7 @@ function initMap() {
         var position = marker.geometry.getCoordinates();
         return polygon.geometry.contains(position);
     }
+    var modal = document.getElementById("appealForm");
     function sendDataToServer(data) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_1;
@@ -73,14 +114,16 @@ function initMap() {
                         return [4 /*yield*/, fetch('http://127.0.0.1:8000/appeals/', {
                                 method: 'POST',
                                 headers: {
-                                    'Content-Type': 'application/json'
+                                    'Content-Type': 'application/json',
                                 },
-                                body: JSON.stringify(data)
+                                body: JSON.stringify(data),
                             })];
                     case 1:
                         response = _a.sent();
                         if (response.ok) {
                             console.log('Данные успешно отправлены');
+                            resetForm(); // Очистка формы после отправки
+                            modal.style.display = "none";
                         }
                         else {
                             console.error('Ошибка при отправке данных');
@@ -95,68 +138,92 @@ function initMap() {
             });
         });
     }
-    marker.events.add('drag', function () {
-        var position = marker.geometry.getCoordinates();
-        if (!isMarkerInPolygon()) {
-            marker.geometry.setCoordinates(lastValidPosition);
-        }
-        else {
-            lastValidPosition = position;
-        }
-    });
+    function convertFileToBase64(file) {
+        return new Promise(function (resolve, reject) {
+            var reader = new FileReader();
+            reader.onloadend = function () { return resolve(reader.result); };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
     var saveButton = document.getElementById('saveBtn');
     if (saveButton) {
         saveButton.addEventListener('click', function () {
-            if (isMarkerInPolygon()) {
-                console.log("Кнопка нажата");
-                var position = marker.geometry.getCoordinates();
-                var positionString = position.toString();
-                var photosInput = document.getElementById('photos');
-                var fileNames = photosInput.files
-                    ? Array.from(photosInput.files).map(function (file) { return file.name; }).join(', ')
-                    : ''; // Пустая строка, если файлов нет
-                var categorySelect = document.getElementById('category');
-                var selectedCategoryText = categorySelect.options[categorySelect.selectedIndex].text;
-                var lastName = document.getElementById('lastName').value;
-                var firstName = document.getElementById('firstName').value;
-                var patronymic = document.getElementById('patronymic').value;
-                var phone = document.getElementById('phone').value;
-                var text = document.getElementById('text').value;
-                var appealData = {
-                    location: positionString,
-                    last_name: lastName,
-                    first_name: firstName,
-                    patronymic: patronymic,
-                    phone: phone,
-                    text: text,
-                    photos: fileNames,
-                    category: selectedCategoryText,
-                };
-                console.log('Отправляемые данные:', appealData);
-                sendDataToServer(appealData);
-            }
-            else {
-                alert('Маркер находится вне полигона. Переместите его внутрь полигона перед сохранением.');
-            }
+            return __awaiter(this, void 0, void 0, function () {
+                var position, positionString, photosInput, files, fileNames, categorySelect, selectedCategoryText, lastName, firstName, patronymic, phone, text, base64Files, _a, appealData;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            if (!isMarkerInPolygon()) return [3 /*break*/, 4];
+                            console.log("Кнопка нажата");
+                            position = marker.geometry.getCoordinates();
+                            positionString = position.toString();
+                            photosInput = document.getElementById('photos');
+                            files = photosInput.files;
+                            fileNames = files ? Array.from(files).map(function (file) { return file.name; }).join(', ') : '';
+                            categorySelect = document.getElementById('category');
+                            selectedCategoryText = categorySelect.options[categorySelect.selectedIndex].text;
+                            lastName = document.getElementById('lastName').value;
+                            firstName = document.getElementById('firstName').value;
+                            patronymic = document.getElementById('patronymic').value;
+                            phone = document.getElementById('phone').value;
+                            text = document.getElementById('text').value;
+                            if (!files) return [3 /*break*/, 2];
+                            return [4 /*yield*/, Promise.all(Array.from(files).map(function (file) { return convertFileToBase64(file); }))];
+                        case 1:
+                            _a = _b.sent();
+                            return [3 /*break*/, 3];
+                        case 2:
+                            _a = [];
+                            _b.label = 3;
+                        case 3:
+                            base64Files = _a;
+                            appealData = {
+                                location: positionString,
+                                last_name: lastName,
+                                first_name: firstName,
+                                patronymic: patronymic,
+                                phone: phone,
+                                text: text,
+                                photos: base64Files, // Добавляем изображения как base64 строки
+                                category: selectedCategoryText,
+                            };
+                            console.log('Отправляемые данные:', appealData);
+                            sendDataToServer(appealData);
+                            return [3 /*break*/, 5];
+                        case 4:
+                            alert('Маркер находится вне полигона. Переместите его внутрь полигона перед сохранением.');
+                            _b.label = 5;
+                        case 5: return [2 /*return*/];
+                    }
+                });
+            });
         });
     }
 }
 document.addEventListener("DOMContentLoaded", function () {
     var _a;
-    var burgerMenu = document.getElementById('burgerMenu');
-    var headerCenter = document.querySelector('.header__center');
-    if (burgerMenu) {
-        burgerMenu.addEventListener('click', function () {
-            headerCenter.classList.toggle('active'); // Переключаем класс active
-        });
-    }
     var modal = document.getElementById("appealForm");
     var closeModal = document.querySelector(".close-modal");
     var sendCodeBtn = document.getElementById("sendCodeBtn");
     var confirmCodeBtn = document.getElementById("confirmCodeBtn");
-    var step1 = document.getElementById("step1");
-    var step2 = document.getElementById("step2");
     var codeInputs = document.querySelectorAll(".code-box");
+    var countdownTimer = null;
+    function startCountdown(duration) {
+        var remainingTime = duration;
+        sendCodeBtn.disabled = true;
+        countdownTimer = setInterval(function () {
+            if (remainingTime > 0) {
+                sendCodeBtn.textContent = "\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043F\u043E\u0432\u0442\u043E\u0440\u043D\u043E (".concat(remainingTime, ")");
+                remainingTime--;
+            }
+            else {
+                clearInterval(countdownTimer);
+                sendCodeBtn.textContent = "Отправить повторно";
+                sendCodeBtn.disabled = false;
+            }
+        }, 1000);
+    }
     // Маска для телефона
     var phoneInput = document.getElementById("phone");
     if (phoneInput) {
@@ -164,25 +231,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     // Открытие формы
     (_a = document.querySelector(".appeals__button")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", function () {
-        if (modal) {
-            modal.style.display = "flex";
-        }
+        modal.style.display = "flex";
+        resetForm(); // Сбрасываем форму перед открытием
     });
     // Закрытие формы
     closeModal === null || closeModal === void 0 ? void 0 : closeModal.addEventListener("click", function () {
-        if (modal) {
+        var isConfirmed = confirm("Вы действительно хотите закрыть форму? Введённые данные будут утеряны.");
+        if (isConfirmed) {
             modal.style.display = "none";
+            resetForm();
         }
     });
     // Отправка кода подтверждения
     sendCodeBtn === null || sendCodeBtn === void 0 ? void 0 : sendCodeBtn.addEventListener("click", function () {
-        if (sendCodeBtn) {
-            sendCodeBtn.disabled = true;
-        }
         alert("Код отправлен! Введите его ниже.");
-        if (confirmCodeBtn) {
-            confirmCodeBtn.disabled = false;
-        }
+        startCountdown(60); // Запуск таймера на 60 секунд
+        confirmCodeBtn.disabled = false;
     });
     // Автоматический переход между полями кода
     codeInputs.forEach(function (input, index) {
@@ -196,10 +260,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Подтверждение кода
     confirmCodeBtn === null || confirmCodeBtn === void 0 ? void 0 : confirmCodeBtn.addEventListener("click", function () {
         alert("Телефон подтвержден!");
-        if (step1 && step2) {
-            step1.style.display = "none";
-            step2.style.display = "block";
-        }
+        document.getElementById("step1").style.display = "none";
+        sendCodeBtn.disabled = false;
+        document.getElementById("step2").style.display = "block";
     });
 });
 ymaps.ready(initMap);

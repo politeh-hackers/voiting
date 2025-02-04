@@ -1,3 +1,4 @@
+{% load static %}
 <div id="appealForm" class="modal" style="display: none;">
   <div class="modal-content">
     <!-- Карта -->
@@ -12,7 +13,7 @@
       </div>
 
       <!-- Первая часть: Ввод номера и подтверждение -->
-      <div class = "step1" id="step1">
+      <div class="step1" id="step1">
         <div class="name_surname">
           <div class="name-field">
             <label for="lastName">Фамилия:</label>
@@ -25,30 +26,33 @@
         </div>
 
         <div class="data">
-          
-          <label for="patronymic">Отчество:</label>
-          <input type="text" id="patronymic" name="patronymic" placeholder="Прим. Иванович" />
-
-          <label for="phone">Телефон:</label>
-          <input type="text" id="phone" name="phone" />
-
-          <!-- Кнопка "Отправить код" -->
-          <button id="sendCodeBtn">Отправить код</button>
-        
-        <!-- Поле ввода кода подтверждения -->
-        <label for="code">Код подтверждения:</label>
-        <div class="code-inputs">
-          <input type="text" maxlength="1" class="code-box" />
-          <input type="text" maxlength="1" class="code-box" />
-          <input type="text" maxlength="1" class="code-box" />
-          <input type="text" maxlength="1" class="code-box" />
+          <div class="patronomyc">
+            <label for="patronymic">Отчество:</label>
+            <input type="text" id="patronymic" name="patronymic" placeholder="Прим. Иванович" />
+          </div>
+          <div class="phone">
+            <label for="phone">Телефон:</label>
+            <input type="text" id="phone" name="phone" />
+          </div>
+          <div class="SendCodeButton">
+            <!-- Кнопка "Отправить код" -->
+            <button id="sendCodeBtn">Отправить код</button>
+          </div>
+          <!-- Поле ввода кода подтверждения -->
+          <div class="label-for__code">
+            <label for="code">Код подтверждения:</label>
+            <div class="code-inputs">
+              <input type="text" maxlength="1" class="code-box" />
+              <input type="text" maxlength="1" class="code-box" />
+              <input type="text" maxlength="1" class="code-box" />
+              <input type="text" maxlength="1" class="code-box" />
+            </div>
+          </div>
         </div>
-      </div>
-
-      <!-- Кнопка подтверждения -->
-      <div class="confirm_button">
-        <button class="confirmCodeBtn" id="confirmCodeBtn" disabled>Подтвердить</button>
-      </div>
+        <!-- Кнопка подтверждения -->
+        <div class="confirm_button">
+          <button class="confirmCodeBtn" id="confirmCodeBtn" disabled>Подтвердить</button>
+        </div>
 
       </div>
 
@@ -64,9 +68,12 @@
         <textarea id="text" name="text"></textarea>
 
         <label for="photos">Фото:</label>
+        
         <input type="file" id="photos" name="photos" multiple />
+        
 
         <button id="saveBtn">Отправить обращение</button>
+      
       </div>
     </div>
   </div>
