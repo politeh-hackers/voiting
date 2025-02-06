@@ -19,6 +19,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
 from PIL import Image
 from io import BytesIO
+from django.core.exceptions import ValidationError
 
 class AppealDetailView(DetailView):
     model = Appeal
@@ -56,17 +57,67 @@ class AppealView(View):
 
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
-    
+        
     def post(self, request: HttpRequest):
-        data = json.loads(request.body)
-        category_name = data.get('category')
-        if (category := Category.objects.filter(name=category_name).first()) is not None:
-            data["category"] = category.name 
-        validated_data: dict = AppealCreateSchema.model_validate(data).model_dump()
-        if not data.get("h1") or not data.get("title") or not data.get("description") or not data.get("slug") :
+        json_data = None
+        if request.body:
+            try:
+                json_data = json.loads(request.body.decode('utf-8'))
+            except (json.JSONDecodeError, UnicodeDecodeError):
+                pass
+        data = request.POST.dict()  
+
+        # Получаем все файлы
+        image_files = request.FILES.getlist("photos")  # Получаем все изображения
+        file_urls = []  # Список для хранения URL изображений
+
+        if image_files:
+            image_dir = "static/image"
+            os.makedirs(image_dir, exist_ok=True)
+
+            # Обрабатываем каждый файл
+            for image_data in image_files:
+                file_name = image_data.name
+                base_name, extension = os.path.splitext(file_name)
+                image_path = os.path.join(image_dir, file_name)
+                counter = 1
+                # Если файл с таким именем уже существует, добавляем номер
+                while os.path.exists(image_path):
+                    file_name = f"{base_name}_{counter}{extension}"
+                    image_path = os.path.join(image_dir, file_name)
+                    counter += 1
+
+                # Сохраняем файл на диск
+                with open(image_path, "wb") as image_file:
+                    for chunk in image_data.chunks():
+                        image_file.write(chunk)
+                
+                # Формируем URL для файла
+                file_url = f"http://localhost:8000/static/image/{file_name}"
+                file_urls.append(file_url)  # Добавляем URL в список
+
+        if json_data:
+            data.update(json_data)
+
+        if "category" in data:
+            category_name = data.get("category")
+            if category_name:
+                category = Category.objects.filter(name=category_name).first()
+                if category:
+                    data["category"] = category.name
+
+        validated_data = AppealCreateSchema.model_validate(data).model_dump()
+
+        if not data.get("h1") or not data.get("title") or not data.get("description") or not data.get("slug"):
             main_data = generations_for_appeals(validated_data)
         else:
             main_data = data
+
+        # Добавляем список URL изображений в данные
+        if file_urls:
+            main_data["photos"] = file_urls
+
+        # Генерация уникального slug
         slug = main_data.get("slug")
         if slug:
             counter = 1
@@ -75,8 +126,18 @@ class AppealView(View):
                 slug = f"{original_slug}-{counter}" 
                 counter += 1
             main_data["slug"] = slug
+
+        # Создаем запись Appeal и сохраняем данные
         self.test_service.create(main_data)
-        return JsonResponse(None, safe=False)
+
+        return JsonResponse(
+            {
+                "message": "Appeal created successfully",
+                "image_urls": file_urls,  # Возвращаем список URL изображений
+                "data": main_data 
+            },
+            safe=False
+        )
 
     def delete(self, request: HttpRequest, model_id: uuid.UUID):
         self.test_service.delete(model_id=model_id)
@@ -106,30 +167,44 @@ class ImageView(View):
     def get(self, request: HttpRequest):
         return JsonResponse(self.test_service.get_all(), safe=False)
         
-    def post(self, request:WSGIRequest):
-        if "photos" in request.FILES:
-            images = request.FILES.getlist("photos") 
-            print(request.FILES)
-        else:
-            return JsonResponse({"error": "No images provided"}, status=400)
-        image_dir = os.path.join('static/image')
-        os.makedirs(image_dir, exist_ok=True)
-        saved_photos = []  
-        for data in images:
-            file_name = str(data)
-            image_path = os.path.join(image_dir, file_name)
-            base_name, extension = os.path.splitext(file_name)
-            counter = 1
-            while os.path.exists(image_path):  
-                file_name = f"{base_name}_{counter}{extension}"
-                image_path = os.path.join(image_dir, file_name)
-                counter += 1
-            with open(image_path, 'wb') as image_file:
-                for chunk in data.chunks():
-                    image_file.write(chunk)
-            saved_photos.append(f"http://localhost:8000/static/image/{file_name}")
+    # def post(self, request: HttpRequest):
+    #     print("dsffdsfdfsdsf")
+    #     data = request.FILES.get("photos") 
+    #     if not data:
+    #         return JsonResponse({"error": "No image provided"}, status=400)
 
-        return JsonResponse({"photos": saved_photos, "message": "Photos uploaded successfully"}, safe=False)
+    #     # Директория сохранения
+    #     image_dir = "static/image"
+    #     os.makedirs(image_dir, exist_ok=True)
+
+    #     # Генерируем безопасное имя файла
+    #     file_name = data.name
+    #     base_name, extension = os.path.splitext(file_name)
+    #     image_path = os.path.join(image_dir, file_name)
+
+    #     counter = 1
+    #     while os.path.exists(image_path):
+    #         file_name = f"{base_name}_{counter}{extension}"
+    #         image_path = os.path.join(image_dir, file_name)
+    #         counter += 1
+    #     # Сохраняем файл
+    #     with open(image_path, "wb") as image_file:
+    #         for chunk in data.chunks():
+    #             image_file.write(chunk)
+
+    #     # Формируем URL к загруженному файлу
+    #     file_url = f"http://localhost:8000/static/image/{file_name}"
+
+    #     return JsonResponse(
+    #         {
+    #             "url": file_url,
+    #             "name": file_name,
+    #             "size": data.size,
+    #             "type": data.content_type
+    #         }, 
+    #         safe=False
+    # )
+
 
     def delete(self, request: HttpRequest, file_name: str):
         image_path = os.path.join('static/image', file_name)
