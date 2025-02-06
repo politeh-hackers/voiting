@@ -47,11 +47,12 @@
               <input type="text" maxlength="1" class="code-box" />
               <input type="text" maxlength="1" class="code-box" />
             </div>
+              <button class="confirmCodeBtn" id="confirmCodeBtn" disabled>Подтвердить</button>
           </div>
         </div>
         <!-- Кнопка подтверждения -->
         <div class="confirm_button">
-          <button class="confirmCodeBtn" id="confirmCodeBtn" disabled>Подтвердить</button>
+          <button class="confirmBtn" id="confirmBtn" disabled>Подтвердить</button>
         </div>
 
       </div>
@@ -67,13 +68,15 @@
         <label for="text">Текст обращения:</label>
         <textarea id="text" name="text"></textarea>
 
-        <label for="photos">Фото:</label>
-        
-        <input type="file" id="photos" name="photos" multiple />
-        
+        <input type="file" id="fileInput" accept="image/*">
+        <button id="uploadButton" disabled>Загрузить</button>
+        <div class="preview hidden" id="previewContainer">
+          <img class="previewImage" id="previewImage" src="" alt="Превью">
+          <button id="deleteButton">Удалить</button>
+        </div>
 
-        <button id="saveBtn">Отправить обращение</button>
-      
+        <button id="saveBtn">Отправить обращение</button></form>
+        </form>
       </div>
     </div>
   </div>

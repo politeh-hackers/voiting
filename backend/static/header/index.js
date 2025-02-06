@@ -34,6 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var _this = this;
 document.addEventListener("DOMContentLoaded", function () {
     var searchButton = document.getElementById("searchButton");
     var searchPopup = document.getElementById("searchPopup");
@@ -64,7 +65,7 @@ function resetForm() {
     document.getElementById('phone').value = "";
     document.getElementById('text').value = "";
     document.getElementById('category').selectedIndex = 0;
-    document.getElementById('photos').value = "";
+    document.getElementById('fileInput').value = "";
     document.querySelectorAll(".code-box").forEach(function (input) { return input.value = ""; });
     // Переключаемся обратно на первую часть формы
     var step1 = document.getElementById("step1");
@@ -114,16 +115,13 @@ function initMap() {
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, fetch('http://127.0.0.1:8000/appeals/', {
                                 method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(data)
+                                body: data, // FormData автоматически устанавливает корректные заголовки
                             })];
                     case 1:
                         response = _a.sent();
                         if (response.ok) {
                             console.log('Данные успешно отправлены');
-                            resetForm(); // Очистка формы после отправки
+                            resetForm();
                             modal.style.display = "none";
                         }
                         else {
@@ -154,30 +152,24 @@ function initMap() {
             if (isMarkerInPolygon()) {
                 console.log("Кнопка нажата");
                 var position = marker.geometry.getCoordinates();
-                var positionString = position.toString();
-                var photosInput = document.getElementById('photos');
-                var fileNames = photosInput.files
-                    ? Array.from(photosInput.files).map(function (file) { return file.name; }).join(', ')
-                    : ''; // Пустая строка, если файлов нет
+                var photosInput = document.getElementById('fileInput');
                 var categorySelect = document.getElementById('category');
-                var selectedCategoryText = categorySelect.options[categorySelect.selectedIndex].text;
-                var lastName = document.getElementById('lastName').value;
-                var firstName = document.getElementById('firstName').value;
-                var patronymic = document.getElementById('patronymic').value;
-                var phone = document.getElementById('phone').value;
-                var text = document.getElementById('text').value;
-                var appealData = {
-                    location: positionString,
-                    last_name: lastName,
-                    first_name: firstName,
-                    patronymic: patronymic,
-                    phone: phone,
-                    text: text,
-                    photos: fileNames,
-                    category: selectedCategoryText,
-                };
-                console.log('Отправляемые данные:', appealData);
-                sendDataToServer(appealData);
+                var formData_1 = new FormData();
+                formData_1.append("location", position.toString());
+                formData_1.append("last_name", document.getElementById('lastName').value);
+                formData_1.append("first_name", document.getElementById('firstName').value);
+                formData_1.append("patronymic", document.getElementById('patronymic').value);
+                formData_1.append("phone", document.getElementById('phone').value);
+                formData_1.append("text", document.getElementById('text').value);
+                formData_1.append("category", categorySelect.options[categorySelect.selectedIndex].text);
+                // Добавляем файлы в FormData
+                if (photosInput.files) {
+                    Array.from(photosInput.files).forEach(function (file) {
+                        formData_1.append("photos", file);
+                    });
+                }
+                console.log('Отправляемые данные:', formData_1);
+                sendDataToServer(formData_1);
             }
             else {
                 alert('Маркер находится вне полигона. Переместите его внутрь полигона перед сохранением.');
@@ -191,6 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var closeModal = document.querySelector(".close-modal");
     var sendCodeBtn = document.getElementById("sendCodeBtn");
     var confirmCodeBtn = document.getElementById("confirmCodeBtn");
+    var confirmBtn = document.getElementById("confirmBtn");
     var codeInputs = document.querySelectorAll(".code-box");
     var countdownTimer = null;
     function startCountdown(duration) {
@@ -244,9 +237,124 @@ document.addEventListener("DOMContentLoaded", function () {
     // Подтверждение кода
     confirmCodeBtn === null || confirmCodeBtn === void 0 ? void 0 : confirmCodeBtn.addEventListener("click", function () {
         alert("Телефон подтвержден!");
+        confirmBtn.disabled = false;
+    });
+    confirmBtn === null || confirmBtn === void 0 ? void 0 : confirmBtn.addEventListener("click", function () {
+        alert("Телефон подтвержден!");
         document.getElementById("step1").style.display = "none";
         sendCodeBtn.disabled = false;
         document.getElementById("step2").style.display = "block";
     });
 });
+var fileInput = document.getElementById("fileInput");
+var uploadButton = document.getElementById("uploadButton");
+var previewContainer = document.getElementById("previewContainer");
+var previewImage = document.getElementById("previewImage");
+var deleteButton = document.getElementById("deleteButton");
+var selectedFile = null;
+var uploadedFileUrl = null; // Переменная для хранения URL загруженного файла
+// Обработчик выбора файла
+fileInput.addEventListener("change", function (event) {
+    var target = event.target;
+    if (target.files && target.files[0]) {
+        selectedFile = target.files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var _a;
+            previewImage.src = (_a = e.target) === null || _a === void 0 ? void 0 : _a.result;
+            previewContainer.classList.remove("hidden");
+        };
+        reader.readAsDataURL(selectedFile);
+        uploadButton.disabled = false;
+    }
+});
+// Обработчик загрузки файла
+uploadButton.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
+    var formData, response, data, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!selectedFile)
+                    return [2 /*return*/];
+                formData = new FormData();
+                formData.append("image", selectedFile);
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, fetch("http://localhost:8000/admin/image", {
+                        method: "POST",
+                        body: formData
+                    })];
+            case 2:
+                response = _a.sent();
+                if (!response.ok)
+                    throw new Error("Ошибка загрузки");
+                return [4 /*yield*/, response.json()];
+            case 3:
+                data = _a.sent();
+                console.log(data); // Получаем ответ от сервера (например, URL файла)
+                uploadedFileUrl = data.url; // Предполагаем, что сервер возвращает URL загруженного файла
+                console.log(uploadedFileUrl);
+                alert("Файл загружен успешно!");
+                uploadButton.disabled = true;
+                return [3 /*break*/, 5];
+            case 4:
+                error_2 = _a.sent();
+                alert(error_2);
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); });
+// Обработчик удаления файла с сервера
+deleteButton.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
+    var response, error_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.log(uploadedFileUrl);
+                if (!uploadedFileUrl) return [3 /*break*/, 5];
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, fetch(uploadedFileUrl, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        }
+                    })];
+            case 2:
+                response = _a.sent();
+                if (response.ok) {
+                    alert("Файл удалён успешно!");
+                    // Скрываем превью и очищаем форму
+                    previewContainer.classList.add("hidden");
+                    previewImage.src = "";
+                    fileInput.value = "";
+                    uploadButton.disabled = true;
+                    selectedFile = null;
+                    uploadedFileUrl = null; // Очищаем URL
+                }
+                else {
+                    throw new Error("Ошибка при удалении файла");
+                }
+                return [3 /*break*/, 4];
+            case 3:
+                error_3 = _a.sent();
+                alert(error_3);
+                return [3 /*break*/, 4];
+            case 4: return [3 /*break*/, 6];
+            case 5:
+                // Если файл не был загружен, просто очищаем форму
+                previewContainer.classList.add("hidden");
+                previewImage.src = "";
+                fileInput.value = "";
+                uploadButton.disabled = true;
+                selectedFile = null;
+                _a.label = 6;
+            case 6: return [2 /*return*/];
+        }
+    });
+}); });
 ymaps.ready(initMap);
