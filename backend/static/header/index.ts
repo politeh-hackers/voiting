@@ -93,6 +93,7 @@ function initMap(): void {
         try {
             const response = await fetch('http://127.0.0.1:8000/appeals/', {
                 method: 'POST',
+                
                 body: data, // FormData автоматически устанавливает корректные заголовки
             });
     
@@ -227,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Телефон подтвержден!");
         document.getElementById("step1")!.style.display = "none";
         sendCodeBtn.disabled = false;
-        
+
         document.getElementById("step2")!.style.display = "block";
     });
 });
