@@ -18,10 +18,12 @@
           <div class="name-field">
             <label for="lastName">Фамилия:</label>
             <input type="text" id="lastName" name="last_name" placeholder="Прим. Иванов" />
+            <span class="error-message" id="lastNameError"></span>
           </div>
           <div class="surname-field">
             <label for="firstName">Имя:</label>
             <input type="text" id="firstName" name="first_name" placeholder="Прим. Иван" />
+            <span class="error-message" id="firstNameError"></span>
           </div>
         </div>
 
@@ -29,10 +31,13 @@
           <div class="patronomyc">
             <label for="patronymic">Отчество:</label>
             <input type="text" id="patronymic" name="patronymic" placeholder="Прим. Иванович" />
+            <span class="error-message" id="patronymicError"></span>
+
           </div>
           <div class="phone">
             <label for="phone">Телефон:</label>
             <input type="text" id="phone" name="phone" />
+            <span class="error-message" id="phoneError"></span>
           </div>
           <div class="SendCodeButton">
             <!-- Кнопка "Отправить код" -->
@@ -47,35 +52,48 @@
               <input type="text" maxlength="1" class="code-box" />
               <input type="text" maxlength="1" class="code-box" />
             </div>
-              <button class="confirmCodeBtn" id="confirmCodeBtn" disabled>Подтвердить</button>
+            <button class="confirmCodeBtn" id="confirmCodeBtn" disabled>Подтвердить</button>
           </div>
         </div>
         <!-- Кнопка подтверждения -->
         <div class="confirm_button">
-          <button class="confirmBtn" id="confirmBtn" disabled>Подтвердить</button>
+          <button class="confirmBtn" id="confirmBtn" disabled>Перейти к обращению</button>
         </div>
 
       </div>
 
       <!-- Вторая часть: Появляется только после подтверждения номера -->
       <div id="step2" style="display: none;">
-        <select id="category" name="category">
-          <option value="" hidden selected>Выберите категорию</option>
-          {% for category in categories %}
-          <option value="{{ category.id }}">{{ category.name }}</option>
-          {% endfor %}
-        </select>
-        <label for="text">Текст обращения:</label>
-        <textarea id="text" name="text"></textarea>
-
-        <input type="file" id="fileInput" accept="image/*" multiple>
-        <button id="uploadButton" disabled>Загрузить</button>
-        <div class="preview hidden" id="previewContainer">
-          <img class="previewImage" id="previewImage" src="" alt="Превью">
-          <button id="deleteButton">Удалить</button>
+        <div class="category-text">
+          <div class="selectCategory">
+            <label for="category">Категория обращения</label>
+            <select class="category" id="category" name="category">
+              <option value="" hidden selected>Выберите категорию</option>
+              {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+            <span class="error-message" id="categoryError"></span>
+          </div>
+          <div class="text-appeal">
+            <label for="text">Текст обращения:</label>
+            <textarea class="text" id="text" name="text"></textarea>
+          </div>
+          <span class="error-message" id="textError"></span>
         </div>
 
-        <button id="saveBtn">Отправить обращение</button></form>
+        <div id="previewContainer" class="preview">
+          <div class="images_preview">
+            <label for="fileInput" class="add-photo">
+              <span>+</span>
+              <span>Добавить фото</span>
+            </label>
+          </div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+        <div class="post-Button">
+          <button class="postButton" id="saveBtn">Отправить обращение</button></form>
+        </div>
         </form>
       </div>
     </div>

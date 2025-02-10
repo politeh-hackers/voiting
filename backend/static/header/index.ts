@@ -1,5 +1,72 @@
 declare var Inputmask: any;
 declare var ymaps: any;
+function validateStep1() {
+    let isValid = true;
+
+    // Проверка полей "Фамилия", "Имя", "Отчество", "Телефон"
+    const lastName = document.getElementById('lastName') as HTMLInputElement;
+    const firstName = document.getElementById('firstName') as HTMLInputElement;
+    const patronymic = document.getElementById('patronymic') as HTMLInputElement;
+    const phone = document.getElementById('phone') as HTMLInputElement;
+
+    // Очистка сообщений об ошибках
+    document.querySelectorAll('.error-message').forEach((el) => el.textContent = '');
+    document.querySelectorAll('input').forEach((input) => input.style.border = '');
+
+    // Фамилия
+    if (lastName.value.trim() === '') {
+        document.getElementById('lastNameError')!.textContent = 'Это поле обязательно для заполнения';
+        lastName.style.border = '1px solid red';
+        isValid = false;
+    }
+
+    // Имя
+    if (firstName.value.trim() === '') {
+        document.getElementById('firstNameError')!.textContent = 'Это поле обязательно для заполнения';
+        firstName.style.border = '1px solid red';
+        isValid = false;
+    }
+
+    // Отчество
+    if (patronymic.value.trim() === '') {
+        document.getElementById('patronymicError')!.textContent = 'Это поле обязательно для заполнения';
+        patronymic.style.border = '1px solid red';
+        isValid = false;
+    }
+
+    // Телефон
+    if (phone.value.trim() === '') {
+        document.getElementById('phoneError')!.textContent = 'Это поле обязательно для заполнения';
+        phone.style.border = '1px solid red';
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function validateStep2() {
+    let isValid = true;
+
+    // Проверка категории
+    const category = document.getElementById('category') as HTMLSelectElement;
+    if (category.value === '') {
+        document.getElementById('categoryError')!.textContent = 'Выберите категорию';
+        category.style.border = '1px solid red';
+        isValid = false;
+    }
+
+    // Проверка текста обращения
+    const text = document.getElementById('text') as HTMLTextAreaElement;
+    if (text.value.trim().length < 500 || text.value.trim().length > 2000) {
+        document.getElementById('textError')!.textContent = 'Текст должен быть от 500 до 2000 символов';
+        text.style.border = '1px solid red';
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const searchButton = document.getElementById("searchButton") as HTMLElement;
@@ -31,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function resetForm() {
+    // Очистка значений полей формы
     (document.getElementById('lastName') as HTMLInputElement).value = "";
     (document.getElementById('firstName') as HTMLInputElement).value = "";
     (document.getElementById('patronymic') as HTMLInputElement).value = "";
@@ -40,6 +108,16 @@ function resetForm() {
     (document.getElementById('fileInput') as HTMLInputElement).value = "";
     document.querySelectorAll(".code-box").forEach(input => (input as HTMLInputElement).value = "");
 
+    // Очистка массива файлов
+    allFiles = [];
+
+    // Очистка контейнера превью
+    // Очистка контейнера с превью (фотографий), но оставляем инпут для файлов
+    const previewContainer = document.getElementById("previewContainer") as HTMLDivElement;
+    
+    // Удаляем только изображения из контейнера, инпут остается
+    const images = previewContainer.querySelectorAll("img");
+    images.forEach(img => img.remove());
     // Переключаемся обратно на первую часть формы
     const step1 = document.getElementById("step1") as HTMLElement;
     const step2 = document.getElementById("step2") as HTMLElement;
@@ -47,7 +125,8 @@ function resetForm() {
     step2.style.display = "none";
 
     // Отключаем кнопку подтверждения кода
-    (document.getElementById("confirmCodeBtn") as HTMLButtonElement).disabled = true;
+    const confirmCodeBtn = document.getElementById("confirmCodeBtn") as HTMLButtonElement;
+    confirmCodeBtn.disabled = true;
 }
 
 function initMap(): void {
@@ -124,6 +203,7 @@ function initMap(): void {
     if (saveButton) {
         saveButton.addEventListener('click', function () {
             if (isMarkerInPolygon()) {
+                if(validateStep2()){
                 console.log("Кнопка нажата");
     
                 const position = marker.geometry.getCoordinates();
@@ -139,24 +219,23 @@ function initMap(): void {
                 formData.append("text", (document.getElementById('text') as HTMLTextAreaElement).value);
                 formData.append("category", categorySelect.options[categorySelect.selectedIndex].text);
     
-                // Добавляем файлы в FormData
-                if (photosInput.files) {
-                    Array.from(photosInput.files).forEach(file => {
-                        formData.append("photos", file);
-                    });
-                }
+                allFiles.forEach(file => {
+                    formData.append("photos", file);  // Используем photos[] для массива файлов
+                });
     
                 console.log('Отправляемые данные:', formData);
                 sendDataToServer(formData);
             } else {
                 alert('Маркер находится вне полигона. Переместите его внутрь полигона перед сохранением.');
             }
+        }
         });
     }
     
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    
     const modal = document.getElementById("appealForm") as HTMLElement;
     const closeModal = document.querySelector(".close-modal") as HTMLElement;
     const sendCodeBtn = document.getElementById("sendCodeBtn") as HTMLButtonElement;
@@ -225,102 +304,83 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmBtn.disabled = false;
     });
     confirmBtn?.addEventListener("click", () => {
+        if (validateStep1()) {
         alert("Телефон подтвержден!");
         document.getElementById("step1")!.style.display = "none";
         sendCodeBtn.disabled = false;
-
-        document.getElementById("step2")!.style.display = "block";
+        const step2 = document.getElementById("step2") as HTMLElement;
+        step2.style.removeProperty("display"); // Убираем инлайн-стиль display
+        step2.classList.add("step2"); // Добавляем класс с нужными стилями
+        }
+        else{
+            throw new Error("dsdsd");;
+            
+        }
     });
 });
+let allFiles: File[] = [];
+
 const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-const uploadButton = document.getElementById("uploadButton") as HTMLButtonElement;
 const previewContainer = document.getElementById("previewContainer") as HTMLDivElement;
-const previewImage = document.getElementById("previewImage") as HTMLImageElement;
-const deleteButton = document.getElementById("deleteButton") as HTMLButtonElement;
 
-let selectedFile: File | null = null;
-let uploadedFileUrl: string | null = null;  // Переменная для хранения URL загруженного файла
-
-// Обработчик выбора файла
 fileInput.addEventListener("change", (event: Event) => {
     const target = event.target as HTMLInputElement;
-    if (target.files && target.files[0]) {
-        selectedFile = target.files[0];
-        const reader = new FileReader();
+    if (!target.files) return;
 
+    // Добавляем новые файлы в глобальный массив
+    Array.from(target.files).forEach((file) => {
+        allFiles.push(file);
+
+        // Предварительный просмотр изображений
+        const reader = new FileReader();
         reader.onload = (e) => {
-            previewImage.src = e.target?.result as string;
-            previewContainer.classList.remove("hidden");
+            const img = document.createElement("img");
+            img.src = e.target?.result as string;
+            img.classList.add("images_preview");
+
+            previewContainer.insertBefore(img, previewContainer.lastElementChild);
         };
 
-        reader.readAsDataURL(selectedFile);
-        uploadButton.disabled = false;
-    }
+        reader.readAsDataURL(file);
+    });
 });
-
-// Обработчик загрузки файла
-uploadButton.addEventListener("click", async () => {
-    if (!selectedFile) return;
-
-    const formData = new FormData();
-    formData.append("image", selectedFile);
-
-    try {
-        const response = await fetch("http://localhost:8000/admin/image", {
-            method: "POST",
-            body: formData
-        });
-
-        if (!response.ok) throw new Error("Ошибка загрузки");
-
-        const data = await response.json();
-        console.log(data)  // Получаем ответ от сервера (например, URL файла)
-        uploadedFileUrl = data.url;  // Предполагаем, что сервер возвращает URL загруженного файла
-        console.log(uploadedFileUrl)
-        alert("Файл загружен успешно!");
-        uploadButton.disabled = true;
-    } catch (error) {
-        alert(error);
-    }
-});
-
 // Обработчик удаления файла с сервера
-deleteButton.addEventListener("click", async () => {
-    console.log(uploadedFileUrl)
-    if (uploadedFileUrl) {
-        try {
-            const response = await fetch(uploadedFileUrl, {
-                method: "DELETE",
-                headers: {
-                     "Content-Type": "application/json",
-                     "Accept": "application/json"
-                }
-            });
+// deleteButton.addEventListener("click", async () => {
+//     console.log(uploadedFileUrl)
+//     if (uploadedFileUrl) {
+//         try {
+//             const response = await fetch(uploadedFileUrl, {
+//                 method: "DELETE",
+//                 headers: {
+//                      "Content-Type": "application/json",
+//                      "Accept": "application/json"
+//                 }
+//             });
 
-            if (response.ok) {
-                alert("Файл удалён успешно!");
-                // Скрываем превью и очищаем форму
-                previewContainer.classList.add("hidden");
-                previewImage.src = "";
-                fileInput.value = "";
-                uploadButton.disabled = true;
-                selectedFile = null;
-                uploadedFileUrl = null;  // Очищаем URL
-            } else {
-                throw new Error("Ошибка при удалении файла");
-            }
-        } catch (error) {
-            alert(error);
-        }
-    } else {
-        // Если файл не был загружен, просто очищаем форму
-        previewContainer.classList.add("hidden");
-        previewImage.src = "";
-        fileInput.value = "";
-        uploadButton.disabled = true;
-        selectedFile = null;
-    }
-});
+//             if (response.ok) {
+//                 alert("Файл удалён успешно!");
+//                 // Скрываем превью и очищаем форму
+//                 previewContainer.classList.add("hidden");
+//                 previewImage.src = "";
+//                 fileInput.value = "";
+//                 uploadButton.disabled = true;
+//                 selectedFile = null;
+//                 uploadedFileUrl = null;  // Очищаем URL
+//             } else {
+//                 throw new Error("Ошибка при удалении файла");
+//             }
+//         } catch (error) {
+//             alert(error);
+//         }
+//     } else {
+//         // Если файл не был загружен, просто очищаем форму
+//         previewContainer.classList.add("hidden");
+//         previewImage.src = "";
+//         fileInput.value = "";
+//         uploadButton.disabled = true;
+//         selectedFile = null;
+//     }
+// });
 
 
 ymaps.ready(initMap);

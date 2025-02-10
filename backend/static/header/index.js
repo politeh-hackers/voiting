@@ -34,7 +34,60 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _this = this;
+function validateStep1() {
+    var isValid = true;
+    // Проверка полей "Фамилия", "Имя", "Отчество", "Телефон"
+    var lastName = document.getElementById('lastName');
+    var firstName = document.getElementById('firstName');
+    var patronymic = document.getElementById('patronymic');
+    var phone = document.getElementById('phone');
+    // Очистка сообщений об ошибках
+    document.querySelectorAll('.error-message').forEach(function (el) { return el.textContent = ''; });
+    document.querySelectorAll('input').forEach(function (input) { return input.style.border = ''; });
+    // Фамилия
+    if (lastName.value.trim() === '') {
+        document.getElementById('lastNameError').textContent = 'Это поле обязательно для заполнения';
+        lastName.style.border = '1px solid red';
+        isValid = false;
+    }
+    // Имя
+    if (firstName.value.trim() === '') {
+        document.getElementById('firstNameError').textContent = 'Это поле обязательно для заполнения';
+        firstName.style.border = '1px solid red';
+        isValid = false;
+    }
+    // Отчество
+    if (patronymic.value.trim() === '') {
+        document.getElementById('patronymicError').textContent = 'Это поле обязательно для заполнения';
+        patronymic.style.border = '1px solid red';
+        isValid = false;
+    }
+    // Телефон
+    if (phone.value.trim() === '') {
+        document.getElementById('phoneError').textContent = 'Это поле обязательно для заполнения';
+        phone.style.border = '1px solid red';
+        isValid = false;
+    }
+    return isValid;
+}
+function validateStep2() {
+    var isValid = true;
+    // Проверка категории
+    var category = document.getElementById('category');
+    if (category.value === '') {
+        document.getElementById('categoryError').textContent = 'Выберите категорию';
+        category.style.border = '1px solid red';
+        isValid = false;
+    }
+    // Проверка текста обращения
+    var text = document.getElementById('text');
+    if (text.value.trim().length < 500 || text.value.trim().length > 2000) {
+        document.getElementById('textError').textContent = 'Текст должен быть от 500 до 2000 символов';
+        text.style.border = '1px solid red';
+        isValid = false;
+    }
+    return isValid;
+}
 document.addEventListener("DOMContentLoaded", function () {
     var searchButton = document.getElementById("searchButton");
     var searchPopup = document.getElementById("searchPopup");
@@ -59,6 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 function resetForm() {
+    // Очистка значений полей формы
     document.getElementById('lastName').value = "";
     document.getElementById('firstName').value = "";
     document.getElementById('patronymic').value = "";
@@ -67,13 +121,22 @@ function resetForm() {
     document.getElementById('category').selectedIndex = 0;
     document.getElementById('fileInput').value = "";
     document.querySelectorAll(".code-box").forEach(function (input) { return input.value = ""; });
+    // Очистка массива файлов
+    allFiles = [];
+    // Очистка контейнера превью
+    // Очистка контейнера с превью (фотографий), но оставляем инпут для файлов
+    var previewContainer = document.getElementById("previewContainer");
+    // Удаляем только изображения из контейнера, инпут остается
+    var images = previewContainer.querySelectorAll("img");
+    images.forEach(function (img) { return img.remove(); });
     // Переключаемся обратно на первую часть формы
     var step1 = document.getElementById("step1");
     var step2 = document.getElementById("step2");
     step1.style.display = "flex";
     step2.style.display = "none";
     // Отключаем кнопку подтверждения кода
-    document.getElementById("confirmCodeBtn").disabled = true;
+    var confirmCodeBtn = document.getElementById("confirmCodeBtn");
+    confirmCodeBtn.disabled = true;
 }
 function initMap() {
     console.log("Map initialized");
@@ -150,29 +213,28 @@ function initMap() {
     if (saveButton) {
         saveButton.addEventListener('click', function () {
             if (isMarkerInPolygon()) {
-                console.log("Кнопка нажата");
-                var position = marker.geometry.getCoordinates();
-                var photosInput = document.getElementById('fileInput');
-                var categorySelect = document.getElementById('category');
-                var formData_1 = new FormData();
-                formData_1.append("location", position.toString());
-                formData_1.append("last_name", document.getElementById('lastName').value);
-                formData_1.append("first_name", document.getElementById('firstName').value);
-                formData_1.append("patronymic", document.getElementById('patronymic').value);
-                formData_1.append("phone", document.getElementById('phone').value);
-                formData_1.append("text", document.getElementById('text').value);
-                formData_1.append("category", categorySelect.options[categorySelect.selectedIndex].text);
-                // Добавляем файлы в FormData
-                if (photosInput.files) {
-                    Array.from(photosInput.files).forEach(function (file) {
-                        formData_1.append("photos", file);
+                if (validateStep2()) {
+                    console.log("Кнопка нажата");
+                    var position = marker.geometry.getCoordinates();
+                    var photosInput = document.getElementById('fileInput');
+                    var categorySelect = document.getElementById('category');
+                    var formData_1 = new FormData();
+                    formData_1.append("location", position.toString());
+                    formData_1.append("last_name", document.getElementById('lastName').value);
+                    formData_1.append("first_name", document.getElementById('firstName').value);
+                    formData_1.append("patronymic", document.getElementById('patronymic').value);
+                    formData_1.append("phone", document.getElementById('phone').value);
+                    formData_1.append("text", document.getElementById('text').value);
+                    formData_1.append("category", categorySelect.options[categorySelect.selectedIndex].text);
+                    allFiles.forEach(function (file) {
+                        formData_1.append("photos", file); // Используем photos[] для массива файлов
                     });
+                    console.log('Отправляемые данные:', formData_1);
+                    sendDataToServer(formData_1);
                 }
-                console.log('Отправляемые данные:', formData_1);
-                sendDataToServer(formData_1);
-            }
-            else {
-                alert('Маркер находится вне полигона. Переместите его внутрь полигона перед сохранением.');
+                else {
+                    alert('Маркер находится вне полигона. Переместите его внутрь полигона перед сохранением.');
+                }
             }
         });
     }
@@ -240,121 +302,76 @@ document.addEventListener("DOMContentLoaded", function () {
         confirmBtn.disabled = false;
     });
     confirmBtn === null || confirmBtn === void 0 ? void 0 : confirmBtn.addEventListener("click", function () {
-        alert("Телефон подтвержден!");
-        document.getElementById("step1").style.display = "none";
-        sendCodeBtn.disabled = false;
-        document.getElementById("step2").style.display = "block";
+        if (validateStep1()) {
+            alert("Телефон подтвержден!");
+            document.getElementById("step1").style.display = "none";
+            sendCodeBtn.disabled = false;
+            var step2 = document.getElementById("step2");
+            step2.style.removeProperty("display"); // Убираем инлайн-стиль display
+            step2.classList.add("step2"); // Добавляем класс с нужными стилями
+        }
+        else {
+            throw new Error("dsdsd");
+            ;
+        }
     });
 });
+var allFiles = [];
 var fileInput = document.getElementById("fileInput");
-var uploadButton = document.getElementById("uploadButton");
 var previewContainer = document.getElementById("previewContainer");
-var previewImage = document.getElementById("previewImage");
-var deleteButton = document.getElementById("deleteButton");
-var selectedFile = null;
-var uploadedFileUrl = null; // Переменная для хранения URL загруженного файла
-// Обработчик выбора файла
 fileInput.addEventListener("change", function (event) {
     var target = event.target;
-    if (target.files && target.files[0]) {
-        selectedFile = target.files[0];
+    if (!target.files)
+        return;
+    // Добавляем новые файлы в глобальный массив
+    Array.from(target.files).forEach(function (file) {
+        allFiles.push(file);
+        // Предварительный просмотр изображений
         var reader = new FileReader();
         reader.onload = function (e) {
             var _a;
-            previewImage.src = (_a = e.target) === null || _a === void 0 ? void 0 : _a.result;
-            previewContainer.classList.remove("hidden");
+            var img = document.createElement("img");
+            img.src = (_a = e.target) === null || _a === void 0 ? void 0 : _a.result;
+            img.classList.add("images_preview");
+            previewContainer.insertBefore(img, previewContainer.lastElementChild);
         };
-        reader.readAsDataURL(selectedFile);
-        uploadButton.disabled = false;
-    }
+        reader.readAsDataURL(file);
+    });
 });
-// Обработчик загрузки файла
-uploadButton.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
-    var formData, response, data, error_2;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                if (!selectedFile)
-                    return [2 /*return*/];
-                formData = new FormData();
-                formData.append("image", selectedFile);
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 4, , 5]);
-                return [4 /*yield*/, fetch("http://localhost:8000/admin/image", {
-                        method: "POST",
-                        body: formData
-                    })];
-            case 2:
-                response = _a.sent();
-                if (!response.ok)
-                    throw new Error("Ошибка загрузки");
-                return [4 /*yield*/, response.json()];
-            case 3:
-                data = _a.sent();
-                console.log(data); // Получаем ответ от сервера (например, URL файла)
-                uploadedFileUrl = data.url; // Предполагаем, что сервер возвращает URL загруженного файла
-                console.log(uploadedFileUrl);
-                alert("Файл загружен успешно!");
-                uploadButton.disabled = true;
-                return [3 /*break*/, 5];
-            case 4:
-                error_2 = _a.sent();
-                alert(error_2);
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
-        }
-    });
-}); });
 // Обработчик удаления файла с сервера
-deleteButton.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
-    var response, error_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                console.log(uploadedFileUrl);
-                if (!uploadedFileUrl) return [3 /*break*/, 5];
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, fetch(uploadedFileUrl, {
-                        method: "DELETE",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json"
-                        }
-                    })];
-            case 2:
-                response = _a.sent();
-                if (response.ok) {
-                    alert("Файл удалён успешно!");
-                    // Скрываем превью и очищаем форму
-                    previewContainer.classList.add("hidden");
-                    previewImage.src = "";
-                    fileInput.value = "";
-                    uploadButton.disabled = true;
-                    selectedFile = null;
-                    uploadedFileUrl = null; // Очищаем URL
-                }
-                else {
-                    throw new Error("Ошибка при удалении файла");
-                }
-                return [3 /*break*/, 4];
-            case 3:
-                error_3 = _a.sent();
-                alert(error_3);
-                return [3 /*break*/, 4];
-            case 4: return [3 /*break*/, 6];
-            case 5:
-                // Если файл не был загружен, просто очищаем форму
-                previewContainer.classList.add("hidden");
-                previewImage.src = "";
-                fileInput.value = "";
-                uploadButton.disabled = true;
-                selectedFile = null;
-                _a.label = 6;
-            case 6: return [2 /*return*/];
-        }
-    });
-}); });
+// deleteButton.addEventListener("click", async () => {
+//     console.log(uploadedFileUrl)
+//     if (uploadedFileUrl) {
+//         try {
+//             const response = await fetch(uploadedFileUrl, {
+//                 method: "DELETE",
+//                 headers: {
+//                      "Content-Type": "application/json",
+//                      "Accept": "application/json"
+//                 }
+//             });
+//             if (response.ok) {
+//                 alert("Файл удалён успешно!");
+//                 // Скрываем превью и очищаем форму
+//                 previewContainer.classList.add("hidden");
+//                 previewImage.src = "";
+//                 fileInput.value = "";
+//                 uploadButton.disabled = true;
+//                 selectedFile = null;
+//                 uploadedFileUrl = null;  // Очищаем URL
+//             } else {
+//                 throw new Error("Ошибка при удалении файла");
+//             }
+//         } catch (error) {
+//             alert(error);
+//         }
+//     } else {
+//         // Если файл не был загружен, просто очищаем форму
+//         previewContainer.classList.add("hidden");
+//         previewImage.src = "";
+//         fileInput.value = "";
+//         uploadButton.disabled = true;
+//         selectedFile = null;
+//     }
+// });
 ymaps.ready(initMap);
