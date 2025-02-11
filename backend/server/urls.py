@@ -5,6 +5,7 @@ from base.sitemaps import sitemaps
 from django.views.generic import TemplateView
 from django.contrib.sitemaps.views import index, sitemap
 
+
 urlpatterns = [
     path('', include('mainpage.urls')),
     path('media/', include('media.urls')),
