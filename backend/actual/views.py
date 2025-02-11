@@ -13,6 +13,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from telegram_bot.bot import send_news_to_telegram
 from django.views.generic import DetailView
+from category.views import Category
 class ActualDetailView(DetailView):
     model = Actual
     template_name = "actual/actual_detail.html"  # Укажи свой шаблон
@@ -20,7 +21,7 @@ class ActualDetailView(DetailView):
 
 def ActualClientView(request: HttpRequest):
     popular_actuals = Actual.objects.order_by('-count')[:4]
-    
+    categories = Category.objects.all()
     page = request.GET.get('page', 1)  
     per_page = int(request.GET.get('per_page', 9))
     actuals = Actual.objects.all()  
@@ -38,6 +39,7 @@ def ActualClientView(request: HttpRequest):
         "total_pages": paginator.num_pages,
         "total_items": paginator.count,
         "all_pages": all_pages,
+        "categories": categories
     }
 
     return render(request, "actual.html", context)

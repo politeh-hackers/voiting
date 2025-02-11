@@ -4,17 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+  rel="stylesheet"
+  href="https://unpkg.com/swiper/swiper-bundle.min.css"
+/>
     {% load static %}
     <title>Мартынов Павел - Актуальное</title>
-    
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=5325d15d-232d-4c0f-880e-faa5da31699b&lang=ru_RU"
+    type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.7/dist/inputmask.min.js"></script>
+    <script src="{% static 'header/index.js' %}" type="module"></script>
+    <link rel="stylesheet" href="{% static 'styles/modal.css' %}">
     <link rel="stylesheet" href="{% static 'styles/actual.css' %}">
     <link rel="stylesheet" href="{% static 'styles/header.css' %}">
     <link rel="stylesheet" href="{% static 'styles/footer.css' %}">
-    
+    <script src="{% static 'header/index.js' %}" type="module"></script>
     <meta name = "description" content="Актуальные новости Павла Николаевича Мартынова">
     <meta property = "og:title" content="Мартынов Павел - Актуальное">
     <meta property = "og:description" content="Актуальные новости Павла Николаевича Мартынова">
 </head>
+{% include 'ModalAppeals.html' %}
 <body>
     {% include 'header.html' %}
     <main class="content">
@@ -38,6 +47,7 @@
         </div>
     </main>
     {% include 'footer.html' %}
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 </body>
 
 </html>

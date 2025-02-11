@@ -17,7 +17,22 @@ class BiographyDetailView(DetailView):
     context_object_name = "biography"  # Имя объекта в контексте
 
 def BiographyClientView(request):
-    return render(request, "biography.html")
+    contents = Biography.objects.all()  # Получаем все записи
+
+    # Создаем список с декодированными JSON-данными
+    biography_list = [
+        {
+            "content": content,
+            "content_data": json.loads(content.content)
+        }
+        for content in contents
+    ]
+
+    context = {
+        "biographies": biography_list  # Передаем список всех объектов с JSON-данными
+    }
+
+    return render(request, "biography.html", context)
 
 class BiographyView(View):
 

@@ -1,58 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<div id="appealForm" class="modal" style="display: none;">
+  <div class="modal-content">
+    <!-- Карта -->
+    <div class="map" id="map"></div>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quick start with Yandex Maps (TypeScript)</title>
-  <script src="https://api-maps.yandex.ru/2.1/?apikey=5325d15d-232d-4c0f-880e-faa5da31699b&lang=ru_RU"
-    type="text/javascript"></script>
-  
-    <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.7/dist/inputmask.min.js"></script>
-  {% load static %}
-  <script src="{% static 'appeals/index.js' %}" type="module"></script>
-</head>
+    <!-- Форма -->
+    <div class="form-container">
+      <!-- Заголовок и крестик -->
+      <div class="dialog-header">
+        <div class="header-modal">Форма обращения</div>
+        <span class="close-modal">&times;</span>
+      </div>
 
-<body>
-  <div id="map" style="width: 600px; height: 400px;"></div>
+      <!-- Первая часть: Ввод номера и подтверждение -->
+      <div class="step1" id="step1">
+        <div class="name_surname">
+          <div class="name-field">
+            <label for="lastName">Фамилия:</label>
+            <input type="text" id="lastName" name="last_name" placeholder="Прим. Иванов" />
+            <span class="error-message" id="lastNameError"></span>
+          </div>
+          <div class="surname-field">
+            <label for="firstName">Имя:</label>
+            <input type="text" id="firstName" name="first_name" placeholder="Прим. Иван" />
+            <span class="error-message" id="firstNameError"></span>
+          </div>
+        </div>
 
+        <div class="data">
+          <div class="patronomyc">
+            <label for="patronymic">Отчество:</label>
+            <input type="text" id="patronymic" name="patronymic" placeholder="Прим. Иванович" />
+            <span class="error-message" id="patronymicError"></span>
 
-  <!-- Форма для ввода данных -->
-  <form id="appealForm">
-    <label for="category">Категория:</label>
-    <select id="category" name="category">
-      <option value="" hidden selected>Выберите категорию</option>
-      {% for category in categories %}
-        <option value="{{ category.id }}">{{ category.name }}</option>
-      {% endfor %}
-    </select>
-    
-    <div>
-      <label for="lastName">Фамилия:</label>
-      <input type="text" id="lastName" name="last_name" />
-    </div>
-    <div>
-      <label for="firstName">Имя:</label>
-      <input type="text" id="firstName" name="first_name" />
-    </div>
-    <div>
-      <label for="patronymic">Отчество:</label>
-      <input type="text" id="patronymic" name="patronymic" />
-    </div>
-    <div>
-      <label for="phone">Телефон:</label>
-      <input type="text" id="phone" name="phone" />
-    </div>
-    <div>
-      <label for="text">Текст обращения:</label>
-      <textarea id="text" name="text"></textarea>
-    </div>
-    <div>
-      <label for="photos">Фото:</label>
-      <input type="file" id="photos" name="photos" multiple />
-    </div>
-  </form>
-  <button id="saveBtn">Отправить обращение</button>
-</body>
+          </div>
+          <div class="phone">
+            <label for="phone">Телефон:</label>
+            <input type="text" id="phone" name="phone" />
+            <span class="error-message" id="phoneError"></span>
+          </div>
+          <div class="SendCodeButton">
+            <!-- Кнопка "Отправить код" -->
+            <button id="sendCodeBtn" class="send-code-btn">Отправить код</button>
+          </div>
+          <!-- Поле ввода кода подтверждения -->
+          <div class="label-for__code">
+            <label for="code">Код подтверждения:</label>
+            <div class="code-inputs">
+              <input type="text" maxlength="1" class="code-box" />
+              <input type="text" maxlength="1" class="code-box" />
+              <input type="text" maxlength="1" class="code-box" />
+              <input type="text" maxlength="1" class="code-box" />
+            </div>
+            <button class="confirmCodeBtn" id="confirmCodeBtn" disabled>Подтвердить</button>
+          </div>
+        </div>
+        <!-- Кнопка подтверждения -->
+        <div class="confirm_button">
+          <button class="confirmBtn" id="confirmBtn" disabled>Перейти к обращению</button>
+        </div>
 
-</html>
+      </div>
+
+      <!-- Вторая часть: Появляется только после подтверждения номера -->
+      <div id="step2" style="display: none;">
+        <div class="category-text">
+          <div class="selectCategory">
+            <label for="category">Категория обращения</label>
+            <select class="category" id="category" name="category">
+              <option value="" hidden selected>Выберите категорию</option>
+              {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+            <span class="error-message" id="categoryError"></span>
+          </div>
+          <div class="text-appeal">
+            <label for="text">Текст обращения:</label>
+            <textarea class="text" id="text" name="text"></textarea>
+          </div>
+          <span class="error-message" id="textError"></span>
+        </div>
+
+        <div id="previewContainer" class="preview">
+          <div class="images_preview">
+            <label for="fileInput" class="add-photo">
+              <span>+</span>
+              <span>Добавить фото</span>
+            </label>
+          </div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+        <div class="post-Button">
+          <button class="postButton" id="saveBtn">Отправить обращение</button></form>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

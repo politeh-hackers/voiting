@@ -8,9 +8,9 @@
   >
     <div class="content__main">
       <div class="components">
+        
         <div class="category">
           <Select
-            
             v-model="selectedCategory"
             :options="items"
             optionLabel="name"

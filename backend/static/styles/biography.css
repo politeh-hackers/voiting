@@ -98,6 +98,9 @@
 .left__side {
     margin-top: 59px;
     width: 525px;
+    display: flex;
+        flex-direction: column;
+        gap: 30px;
 }
 
 .content__header {
@@ -129,9 +132,7 @@ main.content {
 }
 
 .content {
-    width: 1259px;
-    margin-left: auto;
-    margin-right: 0;
+    
 }
 
 .container {

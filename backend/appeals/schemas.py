@@ -5,27 +5,27 @@ from base.constants import Constants
 class AppealCreateSchema(BaseModel):
     first_name: str = Field(
         ..., 
-        min_length=4, 
+        min_length=1, 
         max_length=Constants.MAX_LEN_NAME_FIELD, 
-        description=f"Поле должно содержать от 4 до {Constants.MAX_LEN_NAME_FIELD}"
+        description=f"Поле должно содержать от 1 до {Constants.MAX_LEN_NAME_FIELD}"
     )
     last_name: str = Field(
         ..., 
-        min_length=4, 
+        min_length=1, 
         max_length=Constants.MAX_LEN_NAME_FIELD, 
-        description=f"Поле должно содержать от 4 до {Constants.MAX_LEN_NAME_FIELD}"
+        description=f"Поле должно содержать от 1 до {Constants.MAX_LEN_NAME_FIELD}"
     )
     patronymic: str = Field(
         ..., 
-        min_length=4, 
+        min_length=1, 
         max_length=Constants.MAX_LEN_NAME_FIELD, 
-        description=f"Поле должно содержать от 4 до {Constants.MAX_LEN_NAME_FIELD}"
+        description=f"Поле должно содержать от 1 до {Constants.MAX_LEN_NAME_FIELD}"
     )
     phone: str = Field(
         ..., 
-        min_length=4, 
+        min_length=12, 
         max_length=Constants.MAX_LEN_NAME_FIELD, 
-        description=f"Поле должно содержать от 4 до {Constants.MAX_LEN_NAME_FIELD}"
+        description=f"Поле должно содержать от 12 до {Constants.MAX_LEN_NAME_FIELD}"
     )
     location: str = Field(
         ..., 
@@ -42,7 +42,7 @@ class AppealCreateSchema(BaseModel):
     category: str = Field(
         ...
     )
-    photos: Optional[str] = Field(None)
+    photos: Optional[List[str]] = Field(None)
 
 class AppealUpdateSchema(BaseModel):
     official_response: Optional[str] = Field(
