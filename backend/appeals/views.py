@@ -49,7 +49,7 @@ class AppealsClientView(View):
             "all_pages": all_pages,
             "categories": categories
         }
-        return render(request, "appeals.html", context)
+        return render(request, "ModalAppeals.html", context)
 
 
 class AppealView(View):

@@ -7,6 +7,7 @@ from django.contrib.sitemaps.views import index, sitemap
 from django.conf.urls.static import static
 from django.conf import settings
 
+
 urlpatterns = [
     path('', include('mainpage.urls')),
     path('media/', include('media.urls')),
