@@ -16,7 +16,7 @@ html{
 header {
     position: sticky;
     top: 0;
-    z-index: 200000; /* Задайте значение больше, чем у других элементов */
+    z-index: 2; /* Задайте значение больше, чем у других элементов */
     background-color: white;
     box-shadow: 0px 16px 32px -4px #6161671A;
 }

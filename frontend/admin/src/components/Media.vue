@@ -1,4 +1,5 @@
 <template>
+  <h1>Медиа</h1>
   <div class="card flex flex-column">
     <Dialog
       v-model:visible="visible"

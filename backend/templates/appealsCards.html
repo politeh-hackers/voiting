@@ -5,34 +5,51 @@
     {% if appeal.on_website %}
     <div class="card__appeal">
         <div class="card-content">
-        <div class="card__statustime">
-            <div class="card__status 
+            <div class="card__statustime">
+                <div class="card__status 
                 {% if appeal.status == 'Исполнено' %}status--completed
                 {% elif appeal.status == 'Отклонено' %}status--rejected
                 {% endif %}">
-                {{ appeal.status }}
+                    {{ appeal.status }}
+                </div>
+                <div class="card__time">
+                    <img src="{% static 'appeals/clock.svg' %}" alt="" class="time__image">
+                    {{ appeal.date }}
+                </div>
             </div>
-            <div class="card__time">
-                <img src="{% static 'appeals/clock.svg' %}" alt="" class="time__image">
-                {{ appeal.date }}
+            <div class="card__header">
+                {{ appeal.category }}
+            </div>
+            <div class="card__content">
+                {% if appeal.photos %}
+                <div class="appeals_photos-container">
+                    <button class="scroll-btn left-btn">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                
+                    <div class="appeals_photos">
+                        {% for item in appeal.photos %}
+                        <div class="appeal_photo">
+                            <img src="{{ item }}" alt="Фото">
+                        </div>
+                        {% endfor %}
+                    </div>
+                
+                    <button class="scroll-btn right-btn">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                {% else %}
+                <div class="card__text">{{ appeal.text|slice:":100" }}{% if appeal.text|length > 100 %}...{% endif %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="card__button">
+                <a href="#">Подробнее ⟶</a>
             </div>
         </div>
-        <div class="card__header">
-            {{ appeal.category }}
-        </div>
-        <div class="card__content">
-            {% if appeal.photos %}
-                <img src="{{ appeal.photos }}" alt="" class="card__photo">
-            {% else %}
-                <div class="card__text">{{ appeal.text|slice:":100" }}{% if appeal.text|length > 100 %}...{% endif %}</div>
-            {% endif %}
-        </div>
-        <div class="card__button">
-            <a href="#">Подробнее ⟶</a>
-        </div>
-    </div>
     </div>
     {% endif %}
     {% endfor %}
 </div>
-
