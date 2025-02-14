@@ -9,6 +9,8 @@
     <script src="https://api-maps.yandex.ru/2.1/?apikey=5325d15d-232d-4c0f-880e-faa5da31699b&lang=ru_RU"
     type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.7/dist/inputmask.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <script src="{% static 'map/index.js' %}"></script>
     <script src="{% static 'appeals/index.js' %}"></script>
     <link rel="stylesheet" href="{% static 'styles/header.css' %}">
@@ -20,9 +22,9 @@
     <meta property = "og:title" content="Мартынов Павел - Обращения">
     <meta property = "og:description" content="Обращения по г.Витебск Чапаевского района">
 </head>
-{% include 'ModalAppeals.html' %}
-<body>
 
+<body>
+    {% include 'ModalAppeals.html' %}
     {% include 'header.html' %}
     <main class="main">
         <div class="main__container">

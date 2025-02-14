@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".appeals_photos-container").forEach((container) => {
-        const photoContainer = container.querySelector(".appeals_photos") as HTMLElement | null;
-        const leftBtn = container.querySelector(".left-btn") as HTMLButtonElement | null;
-        const rightBtn = container.querySelector(".right-btn") as HTMLButtonElement | null;
+    document.querySelectorAll(".appealPage_photos-container").forEach((container) => {
+        const photoContainer = container.querySelector(".appealPage_photos") as HTMLElement | null;
+        const leftBtn = container.querySelector(".leftPage-btn") as HTMLButtonElement | null;
+        const rightBtn = container.querySelector(".rightPage-btn") as HTMLButtonElement | null;
 
         if (!photoContainer || !leftBtn || !rightBtn) return;
 
-        const photos = photoContainer.querySelectorAll(".appeal_photo");
+        const photos = photoContainer.querySelectorAll(".appealPage_photo");
 
         // Если фото 2 или меньше, скрываем кнопки и градиент
         if (photos.length <= 2) {
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 rightBtn.style.display = "block"; // Если есть пространство для прокрутки вправо
             } else {
                 rightBtn.style.display = "none"; // Если достигнут конец
-                
+                photoContainer.style.maskImage = "none"; // Градиент справа
             }
 
             // Добавляем градиенты с обеих сторон, если прокручиваем, но не достигли конца

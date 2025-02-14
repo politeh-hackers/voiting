@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Card</title>
+    {% load static %}
+    <script src="{% static 'media/index.js' %}" type="module"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="{% static 'media_page/index.js' %}" type="module"></script>
+    <script src="{% static 'appeals/index.js' %}" type="module"></script>
+    <script src="{% static 'appealPage/index.js' %}" type="module"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=634d8a52-4b1e-4392-a9d2-b5890ef84bd8&lang=ru_RU"
+        type="text/javascript"></script>
+    <link rel="stylesheet" href="{% static 'styles/header.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/footer.css' %}">
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <main class="media__page-content">
+        <div class="media__page-container">
+            <div class="media__page-top">
+                <a href="http://127.0.0.1:8000/appeals/appeals" class="chevron-down">
+                    <i class="fa-solid fa-chevron-down"></i>
+                    Вернуться
+                </a>
+                <div class="media__page-date">
+                    <i class="fa-solid fa-calendar"></i>
+                    {{ content.date }}
+                </div>
+            </div>
+
+            <div class="media__page-header">{{ content.category }}</div>
+            <div class="media__page-data">
+                {% if content.photos %}
+                <div class="appealPage_photos-container">
+                    <button class="scroll-btn leftPage-btn">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+
+                    <div class="appealPage_photos">
+                        {% for item in content.photos %}
+                        <div class="appealPage_photo">
+                            <img src="{{ item }}" alt="Фото">
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <button class="scroll-btn rightPage-btn">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+                {% endif %}
+                <div class="appealPage_text">
+                    <span class="appealText">{{content.text}}</span>
+                </div>
+                <div class="appealCommentary">Комментарии</div>
+                <div class="card__status 
+                {% if content.status == 'Исполнено' %}status--completed
+                {% elif content.status == 'Отклонено' %}status--rejected
+                {% endif %}">
+                    {{ content.status }}
+                </div>
+                <div class="commentaryBlock">
+                    <div class="logoContainer">
+                        <img src="{% static 'appealPage/Ellipse 1.svg' %}" alt="">
+                    </div>
+                    <div class="responceContainer">
+                        <span class="name">Павел Мартынов</span>
+                        <div class="responce">
+                            {{content.official_response}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    {% include 'footer.html' %}
+</body>
+<style>
+    .commentaryBlock {
+        display: flex;
+        justify-content: space-between;
+}
+.logoContainer {
+}
+.responceContainer {
+    width: 886px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.name {
+}
+.responce {
+    word-break: break-all;
+}
+    .card__status {
+        font-size: 20px;
+        border: 1px solid black;
+        padding: 8px 16px;
+        border-radius: 30px;
+        width: fit-content;
+    }
+
+    .status--completed {
+        color: #ffffff;
+        background-color: #009739;
+        border-color: #009739;
+    }
+
+    .status--rejected {
+        color: #ffffff;
+        background-color: #EA424C;
+        border-color: #EA424C;
+    }
+
+    .appealCommentary {
+        font-size: 36px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 36px;
+        letter-spacing: -0.02em;
+
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .appealCommentary::after {
+        content: "";
+        flex-grow: 1;
+        height: 1px;
+        background-color: #868693;
+        margin-left: 44px;
+    }
+
+    .appealText {
+        word-break: break-all;
+    }
+
+    .appealPage_photos {
+        display: flex;
+        gap: 44px;
+        overflow-x: auto;
+        /* Добавляет горизонтальную прокрутку */
+        max-width: min-content;
+        position: relative;
+        scroll-behavior: smooth;
+        /* Плавный скролл */
+
+    }
+
+    .appealPage_photos-container {
+        display: flex;
+        align-items: center;
+        position: relative;
+        max-width: 966px
+            /* Ограничение ширины */
+    }
+
+
+    /* Скрываем стандартный скролл */
+    .appealPage_photos::-webkit-scrollbar {
+        display: none;
+    }
+
+    .appealPage_photo {
+        width: 461px;
+        height: 439px;
+        border-radius: 6px;
+    }
+
+    .appealPage_photo img {
+        width: 461px;
+        height: 439px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    /* Кнопки прокрутки */
+    .scroll-btn {
+        border: none;
+        color: black;
+        font-size: 18px;
+        background: none;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .scroll-btn:hover {}
+
+    /* Размещаем кнопки по краям */
+    .leftPage-btn {
+        position: absolute;
+        left: 0;
+        z-index: 1;
+    }
+
+    .rightPage-btn {
+        position: absolute;
+        right: 0;
+        z-index: 1;
+    }
+
+    [class*="ground-pane"] {
+        filter: grayscale(1);
+    }
+
+    .quote {
+        display: flex;
+        justify-content: center;
+
+    }
+
+    .quote_content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 527px;
+    }
+
+    .quote .quote_text {
+        display: flex;
+        font-size: 20px;
+        font-weight: 550;
+        line-height: 24px;
+        letter-spacing: -0.02em;
+        text-align: center;
+    }
+
+    .quote .quote_name {
+        color: #868693;
+        font-size: 16px;
+        line-height: 16px;
+        letter-spacing: -0.02em;
+    }
+
+    .quote_content::before,
+    .quote_content::after {
+        content: '';
+        display: block;
+        width: 156px;
+        height: 1px;
+        background-color: #868693;
+        margin: 26px 0;
+    }
+
+    .paragraph {
+        font-size: 36px;
+        font-weight: 500px;
+        line-height: 36px;
+        letter-spacing: -0.02em;
+    }
+
+    .embed-block iframe {
+        width: 100%;
+        height: 100%;
+    }
+
+    .image {
+        margin: 0;
+        width: 967px;
+        height: 439px;
+        position: relative;
+    }
+
+    .embed-block {
+        margin: 0;
+        width: 967px;
+        height: 439px;
+        position: relative;
+    }
+
+    .media__page-data {
+        display: flex;
+        flex-direction: column;
+        gap: 44px;
+    }
+
+    .caption {
+        color: #868693;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        padding-top: 8px;
+    }
+
+    figcaption {
+        font-size: 16px;
+        letter-spacing: -0.02em;
+        line-height: 16px;
+        color: #868693;
+        padding-top: 8px;
+    }
+
+    .media__page-header {
+        font-size: 48px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        line-height: 48px;
+        border-bottom: 1px solid #868693;
+        padding-bottom: 44px;
+        margin-bottom: 44px;
+    }
+
+    .media__page-date {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #EA424C;
+    }
+
+    .media__page-top {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 24px;
+    }
+
+    .media__page-content {
+        padding-top: 58px;
+    }
+
+    main.media__page-content {
+        flex: 1;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    .chevron-down {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 16px;
+        letter-spacing: -0.02em;
+        color: #868693;
+        gap: 10px;
+    }
+
+    a i {
+        rotate: 90deg;
+        font-size: 15px;
+    }
+
+    .image img {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        object-fit: cover;
+
+
+    }
+
+    .media__page-container {
+        width: 967px;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+
+
+    .swiper-container {
+        width: 967px;
+        height: 425px;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+        border-radius: 6px;
+    }
+
+    .swiper-slide {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .swiper-pagination {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+</style>
+
+</html>
