@@ -49,8 +49,16 @@ class AppealsClientView(View):
             "all_pages": all_pages,
             "categories": categories
         }
-        return render(request, "ModalAppeals.html", context)
-
+        return render(request, "appeals.html", context)
+def AppealCard(request, model_id: uuid.UUID):
+    content = get_object_or_404(Appeal, id=model_id)
+    
+    
+    context = {
+        "content": content  # Если нужно передать и JSON данные тоже
+    }
+    
+    return render(request, "appealPage.html", context)
 
 class AppealView(View):
     test_service = AppealService(model=Appeal)

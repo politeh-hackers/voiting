@@ -23,17 +23,27 @@
     {% include 'header.html' %}
 
     <main class="content">
+        <div class="dates-carousel">
+            <div class="dates-wrapper">
+                {% for item in biographies %}
+                <a href="#section-{{ forloop.counter }}" class="date-link">{{ item.content.date_created|date:"Y" }}</a>
+                {% endfor %}
+            </div>
+        </div>
         <div class="biography__container">
             
             <div class="left__side">
+                <div class="content__header">
+                    БИОГРАФИЯ
+                </div>
                 {% for item in biographies %}
-                <div class="media__page-container">
+                <div class="media__page-container" id="section-{{ forloop.counter }}">
                     <div class="content-wrapper">
                         <div class="main-content">
                             <div class="media__page-top">
                                 <div class="media__page-date">
                                     <i class="fa-solid fa-calendar"></i>
-                                    {{ item.content.date_created }}
+                                    {{ item.content.date_created|date:"Y" }} год
                                 </div>
                             </div>
 
@@ -144,6 +154,77 @@
 </body>
 
 <style>
+ .dates-carousel {
+    display: flex;
+    flex-direction: column; /* Делаем вертикальный список */
+    align-items: center;
+    position: sticky;
+    top: 100px; /* Отступ от верхнего края */
+    height: calc(100vh - 150px); /* Высота области прокрутки */
+    overflow-y: auto; /* Вертикальная прокрутка */
+    padding: 20px 0;
+    
+    
+}
+
+.date-link {
+    display: block;
+    padding: 5px 0;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #aaa;
+    transition: font-size 0.3s ease, color 0.3s ease;
+    transform: scale(1);
+}
+
+.date-link:hover {
+    color: #c9303a;
+    transform: scale(1.1);
+}
+
+/* Стиль для активного года (например, красный) */
+.date-link.active {
+    
+    color: #EA424C;
+    font-size: 24px;
+    font-weight: 700;
+    transform: scale(1.2);
+}
+
+/* Стили для неактивных лет (серый) */
+.date-link.inactive {
+    color: #aaa;
+    font-size: 16px;
+    transform: scale(0.9);
+}
+
+.dates-carousel::-webkit-scrollbar {
+    height: 6px;
+}
+
+.dates-carousel::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.dates-carousel::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+.dates-wrapper {
+    display: inline-block; /* Изменено с inline-flex */
+    padding: 0 20px;
+    position: sticky;
+    flex: 1;
+    top: 0;
+    
+}
+
+
+.date-link:last-child {
+    margin-right: 0; /* Убираем отступ у последнего элемента */
+}
+
     .biography__container {
         margin-left: auto;
         display: flex;
@@ -158,7 +239,7 @@
     }
 
     .main-photo-container {
-        position: sticky    ;
+        position: sticky;
         top: 110px; /* Указываем, где элемент должен "прилипнуть" */
         width: 700px;
         height: 800px;
@@ -212,9 +293,9 @@
 
     .quote .quote_text {
         display: flex;
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 550;
-        line-height: 24px;
+        line-height: 16px;
         letter-spacing: -0.02em;
         text-align: center;
     }
@@ -237,7 +318,7 @@
     }
 
     .paragraph {
-        font-size: 36px;
+        font-size: 30px;
         font-weight: 500px;
         line-height: 36px;
         letter-spacing: -0.02em;

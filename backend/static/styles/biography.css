@@ -128,7 +128,7 @@ body {
 
 main.content {
     flex: 1;
-    /* Заставляет main занимать оставшееся пространство */
+    display: flex;
 }
 
 .content {

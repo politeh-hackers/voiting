@@ -47,10 +47,11 @@ def ActualClientView(request: HttpRequest):
 def ActualCard(request, model_id: uuid.UUID):
     content = get_object_or_404(Actual, id=model_id)
     content.count += 1
-    
+    popular_actuals = Actual.objects.order_by('-count')[:3]
     content.save()
     content_data = json.loads(content.content)
     context = {
+        "popular_actuals":popular_actuals,
         "content": content,
         "content_data": content_data  # Если нужно передать и JSON данные тоже
     }

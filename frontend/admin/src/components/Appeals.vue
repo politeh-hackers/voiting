@@ -1,138 +1,61 @@
 <template>
-  <Dialog
-    v-model:visible="visibledt"
-    modal
-    header="Обращение"
-    :style="{ width: '60rem' }"
-    class="dialog-edit"
-  >
+  <h1>Обращения</h1>
+  <Dialog v-model:visible="visibledt" modal header="Обращение" :style="{ width: '60rem' }" class="dialog-edit">
     <div class="content__main">
       <div class="components">
-        
+
         <div class="category">
-          <Select
-            v-model="selectedCategory"
-            :options="items"
-            optionLabel="name"
-            :placeholder= post.category
-          />
+          <Select v-model="selectedCategory" :options="items" optionLabel="name" :placeholder=post.category />
         </div>
         <div class="name">
-          <InputText
-            disabled
-            v-model="post.first_name"
-            placeholder="Имя"
-            class="header__input"
-          />
+          <InputText disabled v-model="post.first_name" placeholder="Имя" class="header__input" />
         </div>
         <div class="surname">
-          <InputText
-            disabled
-            v-model="post.last_name"
-            placeholder="Фамилия"
-            class="summary_input"
-          />
+          <InputText disabled v-model="post.last_name" placeholder="Фамилия" class="summary_input" />
         </div>
 
         <div class="second_name">
-          <InputText
-            disabled
-            v-model="post.patronymic"
-            placeholder="Отчество"
-            class="summary_input"
-          />
+          <InputText disabled v-model="post.patronymic" placeholder="Отчество" class="summary_input" />
         </div>
 
         <div class="flex-auto">
           <label for="phone" class="">Номер телефона</label>
-          <InputText
-            id="phone"
-            disabled
-            v-model="post.phone"
-            placeholder="Номер телефона"
-            fluid
-          />
+          <InputText id="phone" disabled v-model="post.phone" placeholder="Номер телефона" fluid />
         </div>
         <div class="date_picker">
           <DatePicker disabled v-model="post.date" dateFormat="" />
         </div>
         <FloatLabel variant="on">
-          <Textarea
-            id="over_label"
-            v-model="post.text"
-            rows="5"
-            cols="30"
-            style="resize: none"
-          />
+          <Textarea id="over_label" v-model="post.text" rows="5" cols="30" style="resize: none" />
           <label for="on_label">Текст обращения</label>
         </FloatLabel>
         <label for="image-upload">Просмотр изображений</label>
-        <Image
-          alt="main_photo"
-          src="'http://localhost:8000/appeals/image'"
-          width="250"
-          preview
-        />
+        <Image v-for="(photo, index) in post.photos" :key="index" :src="photo" width="250" preview />
         <div class="card flex flex-wrap justify-center gap-4">
-          <Select
-            v-model="post.status"
-            :options="status"
-            
-            optionLabel="name"
-            option-value="name"
-            placeholder="Select a Status"
-          />
+          <Select v-model="post.status" :options="status" optionLabel="name" option-value="name"
+            placeholder="Select a Status" />
         </div>
         <div class="card flex flex-wrap justify-center gap-4">
           <div class="flex items-center gap-2">
-            <Checkbox
-              v-model="post.on_website"
-              inputId="CheckWorked"
-              name="on_website"
-              binary
-            />
+            <Checkbox v-model="post.on_website" inputId="CheckWorked" name="on_website" binary />
             <label for="CheckWorked"> На сайте </label>
           </div>
         </div>
         <FloatLabel variant="on">
-          <Textarea
-            id="over_label"
-            v-model="post.official_response"
-            rows="5"
-            cols="30"
-            style="resize: none"
-          />
+          <Textarea id="over_label" v-model="post.official_response" rows="5" cols="30" style="resize: none" />
           <label for="on_label">Оффициальный ответ</label>
         </FloatLabel>
-        <Button
-              icon="pi pi-check"
-              
-              @click="SavePost()"
-            />
+        <Button icon="pi pi-check" @click="SavePost()" />
       </div>
     </div>
   </Dialog>
-  <DataView
-    :value="NewList"
-    paginator
-    :rows="5"
-    dataKey="'id'"
-    class="main-dataview"
-  >
+  <DataView :value="NewList" paginator :rows="5" dataKey="'id'" class="main-dataview">
     <template #list="slotProps">
       <div class="news-container">
-        <div
-          v-for="newsItem in slotProps.items"
-          :key="newsItem.id"
-          class="news-item"
-        >
+        <div v-for="newsItem in slotProps.items" :key="newsItem.id" class="news-item">
           <div class="image-block">
-            <img
-              v-if="newsItem.main_photo"
-              class="news-image"
-              :src="`http://localhost:8000/static/images/${newsItem.main_photo}`"
-              :alt="newsItem.header"
-            />
+            <img v-if="newsItem.main_photo" class="news-image"
+              :src="`http://localhost:8000/static/images/${newsItem.main_photo}`" :alt="newsItem.header" />
           </div>
           <div class="title-block">
             <div class="news-title">{{ newsItem.last_name }}</div>
@@ -143,18 +66,9 @@
             </span>
           </div>
           <div class="action-buttons">
-            <Button
-              icon="pi pi-pencil"
-              label="Редактировать"
-              class="p-button-warning p-mr-2"
-              @click="editPost(newsItem)"
-            />
-            <Button
-              icon="pi pi-trash"
-              label="Удалить"
-              class="p-button-danger"
-              @click="deletePost(newsItem.id)"
-            />
+            <Button icon="pi pi-pencil" label="Редактировать" class="p-button-warning p-mr-2"
+              @click="editPost(newsItem)" />
+            <Button icon="pi pi-trash" label="Удалить" class="p-button-danger" @click="deletePost(newsItem.id)" />
           </div>
         </div>
       </div>
@@ -186,9 +100,9 @@ const checked = ref(false);
 const phone_number = ref("");
 const selectedCategory = ref();
 const post = ref<Post>({
-  h1:"",
-  title:"",
-  description:"",
+  h1: "",
+  title: "",
+  description: "",
   category: "",
   map_point: "",
   first_name: "",
@@ -215,10 +129,10 @@ const NewList = ref<Post[]>([]);
 const items = ref();
 const loadAppeals = async () => {
   try {
-    const response = await fetch("http://localhost:8000/appeals/",{
+    const response = await fetch("http://localhost:8000/appeals/", {
       method: "GET",
-      headers:{
-         'Authorization': `${token}`
+      headers: {
+        'Authorization': `${token}`
       }
     });
     if (response.ok) {
@@ -233,16 +147,16 @@ const loadAppeals = async () => {
 };
 
 const loadCategories = async () => {
-  const response = await fetch("http://localhost:8000/category/",{
-    headers:{
-         'Authorization': `${token}`
+  const response = await fetch("http://localhost:8000/category/", {
+    headers: {
+      'Authorization': `${token}`
     }
   });
   items.value = await response.json();
 };
 const deletePost = async (postId: string) => {
   if (!isAuthenticated(token)) {
-    router.push({ name: 'Home' }); 
+    router.push({ name: 'Home' });
     return;
   }
   try {
@@ -250,12 +164,12 @@ const deletePost = async (postId: string) => {
       `http://localhost:8000/appeals/${postId}`,
       {
         method: "DELETE",
-        headers:{
+        headers: {
           'Authorization': `${token}`
         }
       }
     );
-    
+
 
     if (response.ok) {
       console.log("Post deleted successfully");
@@ -287,9 +201,9 @@ const editPost = (newsItem) => {
   visibledt.value = true;
 };
 
-const SavePost = async () =>{
+const SavePost = async () => {
   if (!isAuthenticated(token)) {
-    router.push({ name: 'Home' }); 
+    router.push({ name: 'Home' });
     return;
   }
   console.log(post.value);
@@ -301,7 +215,7 @@ const SavePost = async () =>{
     text: post.value.text,
     on_website: post.value.on_website,
     status: post.value.status,
-    official_response:post.value.official_response
+    official_response: post.value.official_response
   };
   try {
     console.log(postData)
@@ -321,9 +235,9 @@ const SavePost = async () =>{
       console.log("Пост успешно отредактирован");
       loadAppeals();
       post.value = {
-        h1:"",
-        title:"",
-        description:"",
+        h1: "",
+        title: "",
+        description: "",
         category: "",
         map_point: "",
         first_name: "",
@@ -357,25 +271,40 @@ onMounted(() => {
 .components {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; /* Добавляем гэпы между всеми компонентами */}
+  gap: 1.5rem;
+  /* Добавляем гэпы между всеми компонентами */
+}
+
 .card.flex {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem; /* Добавляем гэпы в карточках */}
+  gap: 1.5rem;
+  /* Добавляем гэпы в карточках */
+}
+
 .input {
-  margin-bottom: 1rem; /* Отступы между инпутами */}
-textarea, input {
-  width: 100%; /* Ширина инпутов и текстовых полей */}
+  margin-bottom: 1rem;
+  /* Отступы между инпутами */
+}
+
+textarea,
+input {
+  width: 100%;
+  /* Ширина инпутов и текстовых полей */
+}
+
 .action-buttons {
   display: flex;
   gap: 10px;
   justify-content: center;
 }
-.content__main{
+
+.content__main {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; 
+  gap: 1.5rem;
 }
+
 // .news-header {
 //   display: grid;
 //   grid-template-columns: 1fr 2fr 1fr 1fr;
@@ -392,6 +321,7 @@ textarea, input {
   border: 1px solid #ddd;
   border-radius: 4px;
 }
+
 .news-header .image-label,
 .news-header .title-label,
 .news-header .date-label,
@@ -476,13 +406,15 @@ textarea, input {
   font-weight: bold;
   margin-bottom: 5px;
 }
-.content-editor{ 
-}
-.search-input {
-}
-.p-dropdown{
+
+.content-editor {}
+
+.search-input {}
+
+.p-dropdown {
   align-items: center;
 }
+
 .header__content {
   display: flex;
   flex-direction: row;

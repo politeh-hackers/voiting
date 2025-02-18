@@ -10,12 +10,13 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="{% static 'media_page/index.js' %}" type="module"></script>
+    <script src="{% static 'appeals/index.js' %}" type="module"></script>
+    <script src="{% static 'appealPage/index.js' %}" type="module"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <script src="https://api-maps.yandex.ru/2.1/?apikey=634d8a52-4b1e-4392-a9d2-b5890ef84bd8&lang=ru_RU"
         type="text/javascript"></script>
-        <link rel="stylesheet" href="{% static 'styles/header.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/header.css' %}">
     <link rel="stylesheet" href="{% static 'styles/footer.css' %}">
-    <link rel="stylesheet" href="{% static 'styles/popularCards.css' %}">
 </head>
 
 <body>
@@ -23,109 +24,196 @@
     <main class="media__page-content">
         <div class="media__page-container">
             <div class="media__page-top">
-                <a href="http://127.0.0.1:8000/media/media" class="chevron-down">
+                <a href="http://127.0.0.1:8000/appeals/appeals" class="chevron-down">
                     <i class="fa-solid fa-chevron-down"></i>
                     Вернуться
                 </a>
                 <div class="media__page-date">
                     <i class="fa-solid fa-calendar"></i>
-                    {{ content.date_created }}
+                    {{ content.date }}
                 </div>
             </div>
 
-            <div class="media__page-header">{{ content.header }}</div>
+            <div class="media__page-header">{{ content.category }}</div>
             <div class="media__page-data">
-                {% for block in content_data.blocks %}
-                {% if block.type == "image" %}
-                <div class="image">
-                    <img src="{{ block.data.file.url }}" alt="{{ block.data.caption }}">
-                    <div class="caption">{{ block.data.caption }}</div>
-                </div>
+                {% if content.photos %}
+                <div class="appealPage_photos-container">
+                    <button class="scroll-btn leftPage-btn">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
 
-                {% elif block.type == "gallery" %}
-                <div class="swiper-container">
-                    <div class="swiper-wrapper">
-                        {% for file in block.data.files %}
-                        <div class="swiper-slide" style="background-image: url('{{ file.url }}');">
-                            <!-- Optional caption can go here if needed -->
+                    <div class="appealPage_photos">
+                        {% for item in content.photos %}
+                        <div class="appealPage_photo">
+                            <img src="{{ item }}" alt="Фото">
                         </div>
                         {% endfor %}
                     </div>
-                    <!-- Пагинация -->
-                    <div class="swiper-pagination"></div>
+
+                    <button class="scroll-btn rightPage-btn">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
                 </div>
-
-                {% elif block.type == "table" %}
-                <table border="1" style="border-collapse: collapse; width: 100%;">
-                    {% for row in block.data.content %}
-                    <tr>
-                        {% for cell in row %}
-                        <td>{{ cell }}</td>
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </table>
-
-                {% elif block.type == "quote" %}
-                <div class="quote">
-                    <div class="quote_content">
-                        <cite class="quote_text">{{ block.data.text }}</cite>
-                        <cite class="quote_name">{{ block.data.caption }}</cite>
+                {% endif %}
+                <div class="appealPage_text">
+                    <span class="appealText">{{content.text}}</span>
+                </div>
+                <div class="appealCommentary">Комментарии</div>
+                <div class="card__status 
+                {% if content.status == 'Исполнено' %}status--completed
+                {% elif content.status == 'Отклонено' %}status--rejected
+                {% endif %}">
+                    {{ content.status }}
+                </div>
+                <div class="commentaryBlock">
+                    <div class="logoContainer">
+                        <img src="{% static 'appealPage/Ellipse 1.svg' %}" alt="">
+                    </div>
+                    <div class="responceContainer">
+                        <span class="name">Павел Мартынов</span>
+                        <div class="responce">
+                            {{content.official_response}}
+                        </div>
                     </div>
                 </div>
-
-                {% elif block.type == "header" %}
-                <h{{ block.data.level }}>{{ block.data.text }}</h{{ block.data.level }}>
-
-                {% elif block.type == "paragraph" %}
-                <div class="paragraph">{{ block.data.text|safe }}</div>
-
-                {% elif block.type == "list" %}
-                {% if block.data.style == "ordered" %}
-                <ol>
-                    {% for item in block.data.items %}
-                    <li>{{ item|safe }}</li>
-                    {% endfor %}
-                </ol>
-                {% else %}
-                <ul>
-                    {% for item in block.data.items %}
-                    <li>{{ item|safe }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-
-                {% elif block.type == "embed" %}
-                <div class="embed-block">
-                    <iframe src="{{ block.data.embed }}"></iframe>
-                    {% if block.data.caption %}
-                    <div class="caption">{{ block.data.caption }}</div>
-                    {% endif %}
-                </div>
-
-                {% elif block.type == "map" %}
-                <div class="map-block" id="map-{{ block.id }}" style="width: 100%; height: 400px;"></div>
-                <script type="module">
-                    import { initializeMap } from '{% static "media_page/index.js" %}';
-                    document.addEventListener('DOMContentLoaded', function () {
-                        initializeMap('map-{{ block.id }}', [{{ block.data.points.0.coordinates.0 }}, {{ block.data.points.0.coordinates.1 }}],);
-                    });
-                </script>
-                <div class="caption">'{{ block.data.caption }}</div>
-
-                {% else %}
-                <p>Unknown block type: {{ block.type }}</p>
-                {% endif %}
-                {% endfor %}
             </div>
-        </div>
-        <div class="cardsContainer">
-            {% include 'popularCards.html' %}
         </div>
     </main>
     {% include 'footer.html' %}
 </body>
 <style>
+    .commentaryBlock {
+        display: flex;
+        justify-content: space-between;
+        font-size: 20px;
+}
+.logoContainer {
+}
+.responceContainer {
+    width: 886px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.name {
+    font-weight: 550;
+}
+.responce {
+    word-break: break-all;
+}
+    .card__status {
+        font-size: 20px;
+        border: 1px solid black;
+        padding: 8px 16px;
+        border-radius: 30px;
+        width: fit-content;
+    }
+
+    .status--completed {
+        color: #ffffff;
+        background-color: #009739;
+        border-color: #009739;
+    }
+
+    .status--rejected {
+        color: #ffffff;
+        background-color: #EA424C;
+        border-color: #EA424C;
+    }
+
+    .appealCommentary {
+        font-size: 36px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 36px;
+        letter-spacing: -0.02em;
+
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .appealCommentary::after {
+        content: "";
+        flex-grow: 1;
+        height: 1px;
+        background-color: #868693;
+        margin-left: 44px;
+    }
+
+    .appealText {
+        word-break: break-all;
+        font-size: 20px;
+    }
+
+    .appealPage_photos {
+        display: flex;
+        gap: 44px;
+        overflow-x: auto;
+        /* Добавляет горизонтальную прокрутку */
+        max-width: min-content;
+        position: relative;
+        scroll-behavior: smooth;
+        /* Плавный скролл */
+
+    }
+
+    .appealPage_photos-container {
+        display: flex;
+        align-items: center;
+        position: relative;
+        max-width: 966px
+            /* Ограничение ширины */
+    }
+
+
+    /* Скрываем стандартный скролл */
+    .appealPage_photos::-webkit-scrollbar {
+        display: none;
+    }
+
+    .appealPage_photo {
+        width: 461px;
+        height: 439px;
+        border-radius: 6px;
+    }
+
+    .appealPage_photo img {
+        width: 461px;
+        height: 439px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    /* Кнопки прокрутки */
+    .scroll-btn {
+        border: none;
+        color: black;
+        font-size: 18px;
+        background: none;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .scroll-btn:hover {}
+
+    /* Размещаем кнопки по краям */
+    .leftPage-btn {
+        position: absolute;
+        left: 0;
+        z-index: 1;
+    }
+
+    .rightPage-btn {
+        position: absolute;
+        right: 0;
+        z-index: 1;
+    }
+
     [class*="ground-pane"] {
         filter: grayscale(1);
     }
@@ -248,11 +336,16 @@
 
     .media__page-content {
         padding-top: 58px;
-        width: 1300px;
+    }
+
+    main.media__page-content {
+        flex: 1;
+    }
+
+    body {
         display: flex;
-        gap:30px;
-        margin-left: auto;
-        margin-right: auto;
+        flex-direction: column;
+
     }
 
     .chevron-down {

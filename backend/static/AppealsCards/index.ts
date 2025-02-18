@@ -29,3 +29,5 @@ document.addEventListener('DOMContentLoaded', () => {
         gradientContainer.style.display = 'none'; // Скрываем градиент, если кнопка скрыта
     }
 });
+
+ 
