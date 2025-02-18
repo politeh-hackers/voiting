@@ -3,7 +3,6 @@ from actual.models import Actual
 from appeals.models import Appeal
 from biography.models import Biography
 from media.models import Media
-from django.contrib.sites.models import Site
 
 class ActualSitemap(Sitemap):
     changefreq = "weekly"
@@ -16,7 +15,6 @@ class ActualSitemap(Sitemap):
         return obj.updated_at
 
     def location(self, obj):
-        domain = Site.objects.get_current().domain
         return f"/actual/{obj.slug}/"  # Протокол и домен
 
 class AppealsSitemap(Sitemap):
@@ -30,7 +28,6 @@ class AppealsSitemap(Sitemap):
         return obj.updated_at
 
     def location(self, obj):
-        domain = Site.objects.get_current().domain
         return f"/appeals/{obj.slug}/"  # Протокол и домен
 
 class BiographySitemap(Sitemap):
@@ -44,7 +41,6 @@ class BiographySitemap(Sitemap):
         return obj.updated_at
 
     def location(self, obj):
-        domain = Site.objects.get_current().domain
         return f"/biography/{obj.slug}/"  # Протокол и домен
 
 class MediaSitemap(Sitemap):
@@ -58,7 +54,6 @@ class MediaSitemap(Sitemap):
         return obj.updated_at
 
     def location(self, obj):
-        domain = Site.objects.get_current().domain
         return f"/media/{obj.slug}/"  # Протокол и домен
 
 sitemaps = {

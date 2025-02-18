@@ -73,37 +73,8 @@ class AppealView(View):
                 json_data = json.loads(request.body.decode('utf-8'))
             except (json.JSONDecodeError, UnicodeDecodeError):
                 pass
-        data = request.POST.dict()  
-
-        # Получаем все файлы
-        image_files = request.FILES.getlist("photos")  # Получаем все изображения
-        file_urls = []  # Список для хранения URL изображений
-
-        if image_files:
-            image_dir = "static/image"
-            os.makedirs(image_dir, exist_ok=True)
-
-            # Обрабатываем каждый файл
-            for image_data in image_files:
-                file_name = image_data.name
-                base_name, extension = os.path.splitext(file_name)
-                image_path = os.path.join(image_dir, file_name)
-                counter = 1
-                # Если файл с таким именем уже существует, добавляем номер
-                while os.path.exists(image_path):
-                    file_name = f"{base_name}_{counter}{extension}"
-                    image_path = os.path.join(image_dir, file_name)
-                    counter += 1
-
-                # Сохраняем файл на диск
-                with open(image_path, "wb") as image_file:
-                    for chunk in image_data.chunks():
-                        image_file.write(chunk)
-                
-                # Формируем URL для файла
-                file_url = f"http://localhost:8000/static/image/{file_name}"
-                file_urls.append(file_url)  # Добавляем URL в список
-
+        data = request.POST.dict()
+        
         if json_data:
             data.update(json_data)
 
@@ -121,28 +92,52 @@ class AppealView(View):
         else:
             main_data = data
 
-        # Добавляем список URL изображений в данные
-        if file_urls:
-            main_data["photos"] = file_urls
-
         # Генерация уникального slug
         slug = main_data.get("slug")
         if slug:
             counter = 1
             original_slug = slug
-            while Appeal.objects.filter(slug=slug).exists():  
-                slug = f"{original_slug}-{counter}" 
+            while Appeal.objects.filter(slug=slug).exists():
+                slug = f"{original_slug}-{counter}"
                 counter += 1
             main_data["slug"] = slug
 
         # Создаем запись Appeal и сохраняем данные
-        self.test_service.create(main_data)
+        appeal_instance = self.test_service.create(main_data)
+
+        # Если создание успешно, сохраняем изображения
+        image_files = request.FILES.getlist("photos")
+        file_urls = []
+        if image_files and appeal_instance:
+            image_dir = "static/image"
+            os.makedirs(image_dir, exist_ok=True)
+            
+            for image_data in image_files:
+                file_name = image_data.name
+                base_name, extension = os.path.splitext(file_name)
+                image_path = os.path.join(image_dir, file_name)
+                counter = 1
+                while os.path.exists(image_path):
+                    file_name = f"{base_name}_{counter}{extension}"
+                    image_path = os.path.join(image_dir, file_name)
+                    counter += 1
+                
+                with open(image_path, "wb") as image_file:
+                    for chunk in image_data.chunks():
+                        image_file.write(chunk)
+                
+                file_url = f"http://localhost:8000/static/image/{file_name}"
+                file_urls.append(file_url)
+            
+            # Добавляем список URL изображений в данные Appeal
+            appeal_instance.photos = file_urls
+            appeal_instance.save()
 
         return JsonResponse(
             {
                 "message": "Appeal created successfully",
-                "image_urls": file_urls,  # Возвращаем список URL изображений
-                "data": main_data 
+                "image_urls": file_urls,
+                "data": main_data
             },
             safe=False
         )

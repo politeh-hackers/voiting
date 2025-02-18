@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-16r6b2%e7f#j$fj+#&mm!tpda0m+b%sy^096xus&ou5#c441w2
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost:5173', '127.0.0.1', 'localhost']
-SITE_ID = 1
+
 SITE_URL = "127.0.0.1:8000"  
 
 
@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'mainpage',
     'telegram_bot'
 ]
+
+SITE_ID = 1
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': []

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <sitemap>
-        <loc>https://example.com/sitemap-actual.xml</loc>
+        <loc>http://127.0.0.1:8000/sitemap-actual.xml</loc>
     </sitemap>
     <sitemap>
-        <loc>https://example.com/sitemap-appeals.xml</loc>
+        <loc>http://127.0.0.1:8000/sitemap-appeals.xml</loc>
     </sitemap>
     <sitemap>
-        <loc>https://example.com/sitemap-biography.xml</loc>
+        <loc>http://127.0.0.1:8000/sitemap-biography.xml</loc>
     </sitemap>
     <sitemap>
-        <loc>https://example.com/sitemap-media.xml</loc>
+        <loc>http://127.0.0.1:8000/sitemap-media.xml</loc>
     </sitemap>
 </sitemapindex>
