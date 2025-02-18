@@ -37,14 +37,14 @@ body {
 
 main.content {
     flex: 1;
-    /* Заставляет main занимать оставшееся пространство */
+    
 }
 
 .container {
     width: 1300px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 60px;
+    padding-top: 60px;
 }
 
     
