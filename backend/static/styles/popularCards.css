@@ -15,8 +15,9 @@
     padding-bottom: 24px;
 }
 .card__popular__image {
-    width: 299px;
-    height: 125px;
+    max-width: 299px;
+    width: 100%;
+
 }
 .card__photo__popular {
     width: 100%;

@@ -19,9 +19,9 @@
 
 .top__content {
     display: flex;
-    justify-content: space-between;
-    height: 480px;
+    gap:30px;
     padding-bottom: 44px;
+    flex-wrap: wrap;
 }
 body {
     margin: 0;
@@ -41,7 +41,8 @@ main.content {
 }
 
 .container {
-    width: 1300px;
+    max-width: 1300px;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
     padding-top: 60px;
@@ -56,8 +57,10 @@ main.content {
     cursor: pointer;
 }
 .right__card-info {
-    width: 432px;
-    height: 141px;
+    width: 100%;
+    height: 100%;
+    
+    padding: 42px 44px;
     display: flex;
     justify-content: space-between;
 }
@@ -112,6 +115,7 @@ main.content {
     letter-spacing: 0,02em;
 }
 .right__cards {
+    max-height: 480px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -123,8 +127,11 @@ main.content {
 .right__card {
     color: white;
     border-radius: 6px;
-    width: 525px;
-    height: 225px;
+    max-width: 525px;
+    width: 100%;
+    max-height: 225px;
+    
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -132,11 +139,135 @@ main.content {
     background-position: center !important;
 }
 .left_main-content {
-    width: 745px;
-    height: 480px;
+    
+    max-width: 745px;
+    width: 100%;
+    max-height: 480px;
+    height: 100%;
 }
 
 .right_main-content {
-    width: 525px;
+    max-width: 525px;
+    width: 100%;
     height: 480px;
+    
+}
+
+.gallery__content {
+    flex-direction: column;
+    width: 513px;
+    word-break: break-word;
+    
+}
+
+.card-container {
+    border-radius: 6px;
+    height: 480px;
+    overflow: hidden;
+}
+
+
+.gallery {
+    max-width: 745px;
+    height: 480px;
+    display: flex;
+    color: white;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+.gallery__block {
+    width: 100%;
+    height: 100%;
+    padding-top: 42px;
+    padding-bottom: 52px;
+    padding-left: 42px;
+    padding-right: 42px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+.gallery__date {
+    width: 74px;
+    height: 111px;
+    background-image: url("/static/media/Vector 7 (1).svg");
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.date-flag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding-bottom: 20px;
+}
+
+
+.date-flag__day {
+    font-size: 36px;
+    font-weight: 500;
+}
+
+.date-flag__month {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.gallery_card-summary {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    padding-top: 16px;
+    padding-bottom: 24px;
+}
+
+.gallery_card-button {
+    border: 1px solid white;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 12px;
+    letter-spacing: -0.02em;
+    padding: 12px 16px;
+    display: inline-block;
+}
+
+.gallery_card-date {}
+
+.gallery a {
+    color: white;
+}
+
+.gallery_card-header {
+    font-weight: 500;
+    font-size: 48px;
+    border-bottom: 1px solid white;
+    padding-bottom: 16px;
+    display: inline-block;
+}
+@media (max-width: 1300px) {
+ 
+
+    /* Левые и правые карточки растягиваем по ширине */
+    .left_main-content,
+    .right_main-content {
+        max-width: none;
+        width: 100%;
+        height: 480px;
+    }
+    .right__card{
+        max-width:none
+    }
+    .gallery{
+        max-width: none;
+    }
+    
+    /* Добавляем немного отступа между карточками */
+    .top__content {
+        width: 100%;
+    }
 }

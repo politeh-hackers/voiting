@@ -142,7 +142,7 @@ function initMap() {
     console.log("Map initialized");
     var map = new ymaps.Map('map', {
         center: [55.200000, 30.250000],
-        zoom: 10,
+        zoom: 14,
     });
     var coordinates = [
         [55.199440, 30.225416],

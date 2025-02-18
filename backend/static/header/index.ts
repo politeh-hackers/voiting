@@ -134,7 +134,7 @@ function initMap(): void {
 
     const map = new ymaps.Map('map', {
         center: [55.200000, 30.250000],
-        zoom: 10,
+        zoom: 14,
     });
 
     const coordinates = [
