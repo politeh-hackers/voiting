@@ -50,14 +50,12 @@ class AppealsClientView(View):
             "categories": categories
         }
         return render(request, "appeals.html", context)
-def AppealCard(request, model_id: uuid.UUID):
-    content = get_object_or_404(Appeal, id=model_id)
-    
-    
+
+def AppealCard(request, slug: str):
+    content = get_object_or_404(Appeal, slug=slug)
     context = {
-        "content": content  # Если нужно передать и JSON данные тоже
+        "content": content,
     }
-    
     return render(request, "appealPage.html", context)
 
 class AppealView(View):

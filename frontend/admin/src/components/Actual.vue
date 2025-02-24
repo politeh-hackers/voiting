@@ -435,7 +435,7 @@ const loadNews = async () => {
   }
   try {
     console.log(uploadHeaders)
-    const response = await fetch("http://localhost:8000/actual/",{
+    const response = await fetch("http://localhost:8000/actual/actual",{
       headers:{
         'Authorization': `${token}`
       }
@@ -477,7 +477,7 @@ const addPost = async () => {
   }
 
   try {
-    const response = await fetch("http://localhost:8000/actual/", {
+    const response = await fetch("http://localhost:8000/actual/actual", {
       method: "POST",
       body: content,
       headers:{
@@ -554,7 +554,7 @@ const deletePost = async (postId: string) => {
   }
   try {
     const response = await fetch(
-      `http://localhost:8000/actual/${postId}`,
+      `http://localhost:8000/actual/actual/${postId}`,
       {
         method: "DELETE",
         headers:{
@@ -562,7 +562,7 @@ const deletePost = async (postId: string) => {
         }
       }
     );
-    deleteImage("http://localhost:8000/actual");
+    deleteImage("http://localhost:8000/actual/actual");
 
     if (response.ok) {
       console.log("Post deleted successfully");

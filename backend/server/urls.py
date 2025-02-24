@@ -11,7 +11,6 @@ from django.conf import settings
 urlpatterns = [
     path('', include('mainpage.urls')),
     path('media/', include('media.urls')),
-    path('biography/', include('biography.urls')),
     path('actual/', include('actual.urls')),
     path('appeals/', include('appeals.urls')),
     path('category/', include('category.urls')),

@@ -5,10 +5,10 @@ from django.conf.urls.static import static
 
 # Ваши URL-обработчики
 urlpatterns = [
-    path('', MediaView.as_view()),  # Обработчик для MediaView
+    path('media', MediaView.as_view()),  # Обработчик для MediaView
     path('<uuid:model_id>', MediaView.as_view()),  # Обработчик для MediaView с параметром model_id
-    path('media', MediaClientView),  # Обработчик для MediaClientView
-    path('media/<uuid:model_id>', MediaCard)
+    path('', MediaClientView),  # Обработчик для MediaClientView
+    path('<slug:slug>', MediaCard)
 ]
 
 # Настройка обслуживания медиафайлов в режиме DEBUG
