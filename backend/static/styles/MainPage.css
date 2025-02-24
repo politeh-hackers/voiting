@@ -164,19 +164,22 @@ main.mainPage-content {
     flex-grow: 1;
     height: 1px;
     background-color: #868693;
-    margin-left: 44px;
+    margin-left: 24px;
 }
 
 .main__cards-header {
+    padding-left: 24px;
     font-weight: 500;
     font-size: 36px;
-    letter-spacing: -0, 02em;
+    letter-spacing: -0.02em;
     line-height: 36px;
     display: flex;
     position: relative;
     align-items: center;
 }
-
+.media-cards{
+    padding: 0 24px;
+}
 .gradient-container {
     position: absolute;
     bottom: 0;
@@ -200,20 +203,113 @@ main.mainPage-content {
     font-size: 16px;
     cursor: pointer;
 }
+/* media */
+.main__card-photo {
+    width: 100%;
+height: 100%;
+border-radius: 6px;
+object-fit: cover;
+
+}
+.main__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    grid-auto-flow: dense; /* Оптимизация заполнения */
+    padding: 0;
+
+    
+}
+.main__card {
+    max-width: auto;
+    height: 281px;
+    word-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.main__card-date {
+    position: absolute; /* Размещаем поверх изображения */
+    right: 29px;
+    color: white; /* Белый текст */
+
+
+}
+.main__cards-content{
+    padding-bottom: 72px;
+    align-items: center;
+    justify-content: center;
+}
+.main__date-flag {
+    padding-bottom: 10px;
+    display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+width: 39px;
+height: 56px;
+background-color: green;
+position: relative;
+clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 75%, 0% 100%);
+}
+.main__date-flag__day {
+    font-weight: 400;
+    font-size: 20px;
+    letter-spacing: -0,02em;
+    line-height: 20px;
+}
+.main__date-flag__month {
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: -0,02em;
+    line-height: 12px;
+}
+.main__card-image {
+    max-width: auto;
+    max-height: 128px;
+
+}
+.main__card-header {
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0,02em;
+    line-height: 20px;
+    padding-top: 24px;
+    padding-bottom: 16px;
+}
+.main__card-summary {
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: -0,02em;
+    line-height: 12px;
+}
+.main__card-button {
+    font-size: 12px;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: auto;
+    cursor: pointer;
+
+}
 
 @media(max-width:768px){
     .gallery-block{
         height: 250px;
     }
+    .main__card-header {
+
+        padding-top: 12px;
+        padding-bottom: 16px;
+    }
     .cards-block {
-        padding: 0 20px;
+        padding: 0 24px;
     }
     .right-card__actual{
         height: 160px;
     }
     .card__actual__header{
-        font-size: var(--font-size-16);
-        line-height: var(--font-size-16);
+        font-size: var(--font-size-18);
+        line-height: var(--font-size-18);
     }
     .card__actual__summary{
         font-size: var(--font-size-11);
@@ -225,6 +321,7 @@ main.mainPage-content {
         text-overflow: ellipsis;
         word-wrap: break-word;
     }
+    
     .card__info{
         gap: 8px;
     }

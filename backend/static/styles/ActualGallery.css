@@ -103,9 +103,9 @@
 .gallery_card-header {
     font-weight: 500;
     font-size: var(--font-size-gallery-header);
-    border-bottom: 1px solid var(--color-white);
-
+    position: relative;
 }
+
 
 @media(max-width:768px){
     .gallery__block{

@@ -116,10 +116,14 @@
 
 .gallery_card-header {
     font-weight: 500;
-    font-size: 40px;
-    border-bottom: 1px solid white;
-    
+    font-size: var(--font-size-gallery-header);
+    position: relative;
+    border-bottom: 1px solid var(--color-white);
+    overflow: hidden; /* Убедитесь, что текст не выходит за пределы контейнера */
 }
+
+
+
 @media(max-width:768px){
     .media_swiper-container{
         height: 250px;
@@ -128,19 +132,18 @@
         height: 250px;
     }
     .gallery__content{
-        max-width: 190px;
+        max-width: 220px;
         gap: 16px;
     }
-    .gallery_card-header{
+    .gallery_card-header {
         font-size: var(--font-size-24);
         line-height: var(--font-size-24);
         display: -webkit-box;
-        -webkit-line-clamp: 2; /* Ограничение в 3 строки */
+        -webkit-line-clamp: 2; /* Ограничение в 2 строки */
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
         word-wrap: break-word;
-
     }
     .gallery_card-summary{
         font-size: var(--font-size-11);
