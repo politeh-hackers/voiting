@@ -4,8 +4,8 @@ from .views import AppealCard, AppealView, AppealsClientView
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
-    path('', AppealView.as_view()),
+    path('appeals', AppealView.as_view()),
     path('<uuid:model_id>', AppealView.as_view()),
-    path('appeals', AppealsClientView.as_view()),
-    path('appeals/<uuid:model_id>', AppealCard)
+    path('', AppealsClientView.as_view()),
+    path('<slug:slug>', AppealCard)
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

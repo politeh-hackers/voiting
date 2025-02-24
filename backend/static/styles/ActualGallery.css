@@ -121,5 +121,11 @@
     .gallery__content{
         gap: 16px;
     }
-
+    .swiper-pagination-bullet{
+        width: 5px;
+        height: 5px;
+    }
+    .gallery_card-button{
+        padding: 8px 11px;
+    }
 }

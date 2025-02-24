@@ -360,7 +360,7 @@
   
     try {
       const response = await fetch(
-        `http://localhost:8000/biography/${post.value.id}`,
+        `http://localhost:8000/biography/biography/${post.value.id}`,
         {
           method: "PATCH",
           headers: {
@@ -400,7 +400,7 @@
     }
     try {
       console.log(uploadHeaders)
-      const response = await fetch("http://localhost:8000/biography/",{
+      const response = await fetch("http://localhost:8000/biography/biography",{
         headers:{
           'Authorization': `${token}`
         }
@@ -441,7 +441,7 @@
     }
   
     try {
-      const response = await fetch("http://localhost:8000/biography/", {
+      const response = await fetch("http://localhost:8000/biography/biography", {
         method: "POST",
         body: content,
         headers:{
@@ -517,7 +517,7 @@
     }
     try {
       const response = await fetch(
-        `http://localhost:8000/biography/${postId}`,
+        `http://localhost:8000/biography/biography/${postId}`,
         {
           method: "DELETE",
           headers:{
@@ -525,7 +525,7 @@
           }
         }
       );
-      deleteImage("http://localhost:8000/biography");
+      deleteImage("http://localhost:8000/biography/biography");
   
       if (response.ok) {
         console.log("Post deleted successfully");

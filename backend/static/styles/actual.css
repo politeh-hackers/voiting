@@ -302,7 +302,7 @@ body {
         padding: 0 24px;
     }
     .card__actual__header{
-        font-size: var(--font-size-medium);
+        font-size: var(--font-size-16);
     }
     .card__actual__summary{
         font-size: var(--font-size-11);

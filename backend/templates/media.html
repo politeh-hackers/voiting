@@ -39,7 +39,9 @@
             <div class="main__cards-content">
                 {% include 'mediaCards.html' %}
             </div>
-            {% include 'paginationForMedia.html' %}
+            {% if total_items > 8 %}
+                {% include 'paginationForMedia.html' %}
+            {% endif %}
 
             
         </div>

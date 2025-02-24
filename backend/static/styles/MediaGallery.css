@@ -169,7 +169,7 @@
     }
     .date-flag__day {
         font-size: 16px;
-        font-weight: 550;
+        
     }
     
     .date-flag__month {
@@ -177,10 +177,15 @@
         font-weight: 400;
     }
     .gallery_card-button {
-        padding: 9px 12px;
+        padding: 8px 11px;
         font-size: var(--font-size-11);
         
         line-height: var(--font-size-11);
         
     }
+    .swiper-pagination-bullet{
+        width: 5px;
+        height: 5px;
+    }
+   
 }

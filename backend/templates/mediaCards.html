@@ -16,10 +16,10 @@
             {{item.header|slice:43}}{% if item.header|length > 43 %}...{% endif %}
         </div>
         <div class="main__card-summary">
-            {{item.summary|slice:137}}{% if item.summary|length > 137 %}...{% endif %}
+            {{item.summary|slice:110}}{% if item.summary|length > 110  %}...{% endif %}
         </div>
         <div class="main__card-button">
-            <a href="http://127.0.0.1:8000/media/media/{{item.id}}">Подробнее ⟶</a>
+            <a href="http://127.0.0.1:8000/media/{{item.slug}}">Подробнее ⟶</a>
         </div>
     </div>
     {% endfor %}
@@ -44,7 +44,7 @@
     }
     .main__card {
         max-width: auto;
-        max-height: auto;
+        height: 281px;
         word-wrap: break-word;
         display: flex;
         flex-direction: column;

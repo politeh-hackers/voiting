@@ -65,17 +65,16 @@ def MediaClientView(request: HttpRequest):
     
     return render(request, "media.html", context)
 
-def MediaCard(request, model_id: uuid.UUID):
-    content = get_object_or_404(Media, id=model_id)
+def MediaCard(request, slug: str):
+    content = get_object_or_404(Media, slug=slug)
     content.count += 1
-    popular_actuals = Actual.objects.order_by('-count')[:3]
     content.save()
+    popular_actuals = Actual.objects.order_by('-count')[:3]
     content_data = json.loads(content.content)
-    
     context = {
-        "popular_actuals":popular_actuals,
+        "popular_actuals": popular_actuals,
         "content": content,
-        "content_data": content_data  # Если нужно передать и JSON данные тоже
+        "content_data": content_data,  
     }
     
     return render(request, "MediaPage.html", context)

@@ -254,3 +254,8 @@ main.content {
     padding-bottom: 16px;
     display: inline-block;
 }
+@media(max-width:768px){
+    .right_main-content{
+        display: none;
+    }
+}

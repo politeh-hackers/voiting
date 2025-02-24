@@ -129,7 +129,7 @@ const NewList = ref<Post[]>([]);
 const items = ref();
 const loadAppeals = async () => {
   try {
-    const response = await fetch("http://localhost:8000/appeals/", {
+    const response = await fetch("http://localhost:8000/appeals/appeals", {
       method: "GET",
       headers: {
         'Authorization': `${token}`
@@ -220,7 +220,7 @@ const SavePost = async () => {
   try {
     console.log(postData)
     const response = await fetch(
-      `http://localhost:8000/appeals/${post.value.id}`,
+      `http://localhost:8000/appeals/appeals/${post.value.id}`,
       {
         method: "PATCH",
         headers: {
