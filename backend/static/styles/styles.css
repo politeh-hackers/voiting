@@ -46,8 +46,10 @@
     --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;
     --font-size-11: 11px;
     --font-size-small: 12px;
+    --font-size-13: 13px;
     --font-size-medium: 15px;
-
+    --font-size-16: 16px;
+    --font-size-24:24px;
     --font-size-large: 30px;
     --font-size-header: 36px;
     --font-size-card-header: 20px;

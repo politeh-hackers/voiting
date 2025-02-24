@@ -4,7 +4,10 @@
     word-break: break-word;
     
 }
-
+.gallery__content{
+    display: flex;
+    gap: 16px;
+}
 .swiper-pagination-bullet {
     background-color: white;
     opacity: 1;
@@ -17,7 +20,7 @@
 
 .media_swiper-container {
     border-radius: 6px;
-    height: 420px;
+    max-height: 420px;
     overflow: hidden;
 }
 
@@ -37,7 +40,7 @@
 
 .gallery__block {
     width: 100%;
-    height: 100%;
+    height: 389px;
     padding-top: 42px;
     padding-bottom: 52px;
     padding-left: 42px;
@@ -88,8 +91,7 @@
     font-size: 14px;
     font-weight: 400;
     letter-spacing: -0.02em;
-    padding-top: 16px;
-    padding-bottom: 24px;
+
 }
 
 .gallery_card-button {
@@ -116,6 +118,69 @@
     font-weight: 500;
     font-size: 40px;
     border-bottom: 1px solid white;
-    padding-bottom: 16px;
-    display: inline-block;
+    
+}
+@media(max-width:768px){
+    .media_swiper-container{
+        height: 250px;
+    }
+    .media__gallery-block{
+        height: 250px;
+    }
+    .gallery__content{
+        max-width: 190px;
+        gap: 16px;
+    }
+    .gallery_card-header{
+        font-size: var(--font-size-24);
+        line-height: var(--font-size-24);
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Ограничение в 3 строки */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+
+    }
+    .gallery_card-summary{
+        font-size: var(--font-size-11);
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Ограничение в 3 строки */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+    }
+    .gallery__block{
+        padding: 20px;
+        height: 200px;
+    }
+    .swiper-container {
+        height:250px;
+        overflow: hidden;
+    }
+    .gallery__date{
+        background-image: url("/static/media/Vector 1.svg ");
+    width: 41px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+    .date-flag__day {
+        font-size: 16px;
+        font-weight: 550;
+    }
+    
+    .date-flag__month {
+        font-size: 11px;
+        font-weight: 400;
+    }
+    .gallery_card-button {
+        padding: 9px 12px;
+        font-size: var(--font-size-11);
+        
+        line-height: var(--font-size-11);
+        
+    }
 }

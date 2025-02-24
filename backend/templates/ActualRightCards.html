@@ -12,12 +12,14 @@
             <img src="{% static 'appeals/clock.svg' %}" alt="" class="time__image">
             {{ actual.date_created }}
         </div>
+        <div class="card__info">
         <div class="card__actual__header">
             {{ actual.header }}
         </div>
         <div class="card__actual__summary">
             {{actual.summary}}
         </div>
+    </div>
         <div class="card__actual__button">
             <a href="#">Подробнее ⟶</a>
         </div>

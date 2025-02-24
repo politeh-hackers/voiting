@@ -315,4 +315,19 @@ body {
         text-overflow: ellipsis;
         word-wrap: break-word;
     }
+    .card__actual__header{
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Ограничение в 3 строки */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+    }
+    .card__actual__imagecontainer{
+        max-width: 160px;
+        width: 100%;
+    }
+    .card__actual{
+        height: 160px;
+    }
 }
