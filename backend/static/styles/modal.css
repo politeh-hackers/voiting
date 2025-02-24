@@ -14,8 +14,10 @@
 .modal-content {
     position: relative;
     display: flex;
-    width: 1382px;
-    height: 680px;
+    max-width: 1382px;
+    width: 100%;
+    max-height: 680px;
+    height: 100%;
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     overflow: hidden;
@@ -255,3 +257,8 @@ button:disabled {
     
 }
 
+@media(max-width:768px){
+    .modal-content{
+        display: block;
+    }
+}

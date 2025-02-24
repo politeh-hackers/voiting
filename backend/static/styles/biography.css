@@ -1,106 +1,15 @@
-.marko__text {
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 20px;
-    color: white;
-    display: flex;
-    position: absolute;
-    z-index: 100;
-    top:20%;
-    right: 1%;
-    letter-spacing: -0.02em;
-    text-align: right; 
-}
-.right__side span {
-    font-size: 20px;
-    color: white;
-    display: flex;
-    position: absolute;
-}
-.image__container {
-    display: flex;
-    justify-content: space-between;
-}
-.martynov__img {
-    margin-bottom: 12px;
-}
-
-.quote__image {
-    font-size: 12px;
-    color: #868693;
-}
-
-.quote__text {
-    font-size: 16px;
-    line-height: 16px;
-    letter-spacing: -0.02em;
-    font-weight: 400;
-}
-
-.notation {
-    font-size: 16px;
-    margin-bottom: 30px;
-    line-height: 16px;
-}
-
-.h2 {
-    padding-bottom: 24px;
-}
-
-.date__biography {
-    margin-bottom: 30px;
-    padding: 16px 8px;
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #868693;
-    border-top: 1px solid #868693;
-    gap: 10px;
-    width: fit-content;
-}
-
-.quote__container {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-
-}
-
-.quote {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    border-bottom: 1px solid #868693;
-    padding-bottom: 38px;
-    margin-bottom: 44px;
-}
-
-.calendar {}
-
-.date__text {
-    font-weight: 500;
-    font-size: 20px;
-    letter-spacing: -0.02em;
-    color: #EA424C;
-}
 
 .content__main {
     padding-top: 44px;
 }
 
-.h2__text {
-    font-weight: 500;
-    font-size: 48px;
-    line-height: 48px;
-    letter-spacing: -0.02em;
-    padding-bottom: 24px;
-}
 
 .left__side {
     margin-top: 59px;
     width: 525px;
     display: flex;
-        flex-direction: column;
-        gap: 30px;
+    flex-direction: column;
+    gap: 30px;
 }
 
 .content__header {
@@ -138,4 +47,306 @@ main.content {
 .container {
     display: flex;
     justify-content: space-between;
+}
+
+.dates-carousel {
+    display: flex;
+    flex-direction: column; /* Делаем вертикальный список */
+    align-items: center;
+    position: sticky;
+    top: var(--sticky-top); /* Отступ от верхнего края */
+    height: calc(100vh - 150px); /* Высота области прокрутки */
+    overflow-y: auto; /* Вертикальная прокрутка */
+    padding: 20px 0;
+}
+
+.date-link {
+    display: block;
+    padding: 5px 0;
+    font-size: var(--font-size-medium);
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--color-gray);
+    transition: font-size 0.3s ease, color 0.3s ease;
+    transform: scale(1);
+}
+
+.date-link:hover {
+    color: var(--color-hover);
+    transform: scale(1.1);
+}
+
+/* Стиль для активного года (например, красный) */
+.date-link.active {
+    color: var(--color-primary);
+    font-size: 24px;
+    font-weight: 700;
+    transform: scale(1.2);
+}
+
+/* Стили для неактивных лет (серый) */
+.date-link.inactive {
+    color: var(--color-gray);
+    font-size: var(--font-size-medium);
+    transform: scale(0.9);
+}
+
+.dates-carousel::-webkit-scrollbar {
+    height: var(--scrollbar-height);
+}
+
+.dates-carousel::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+}
+
+.dates-carousel::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 4px;
+}
+
+.dates-wrapper {
+    display: inline-block; /* Изменено с inline-flex */
+    padding: 0 20px;
+    position: sticky;
+    flex: 1;
+    top: 0;
+}
+
+.date-link:last-child {
+    margin-right: 0; /* Убираем отступ у последнего элемента */
+}
+
+.biography__container {
+    margin-left: auto;
+    display: flex;
+    width: 1259px;
+    gap: 30px;
+}
+
+.right__side {
+    position: relative; /* Сделать фото фиксированным при прокрутке */
+    max-width: 700px;
+    width: 100%;
+    flex: 1;
+}
+
+.main-photo-container {
+    position: sticky;
+    top: var(--sticky-top); /* Указываем, где элемент должен "прилипнуть" */
+    max-width: 700px;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.main-photo-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 0;
+}
+
+.main-photo-slide.active {
+    opacity: 1;
+    z-index: 10;
+}
+
+.main-photo-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Чтобы контент не перекрывался фото */
+.media__page-container {}
+
+[class*="ground-pane"] {
+    filter: grayscale(1);
+}
+
+.quote {
+    display: flex;
+    justify-content: center;
+}
+
+.quote_content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--quote-gap);
+    max-width: 527px;
+}
+
+.quote .quote_text {
+    display: flex;
+    font-size: var(--quote-font-size);
+    font-weight: 550;
+    line-height: var(--quote-line-height);
+    letter-spacing: -0.02em;
+    text-align: center;
+}
+
+.quote .quote_name {
+    color: var(--color-gray);
+    font-size: var(--quote-font-size);
+    line-height: var(--quote-line-height);
+    letter-spacing: -0.02em;
+}
+
+.quote_content::before,
+.quote_content::after {
+    content: '';
+    display: block;
+    width: var(--quote-line-width);
+    height: 1px;
+    background-color: var(--color-gray);
+    margin: 26px 0;
+}
+
+.paragraph {
+    font-size: var(--font-size-large);
+    font-weight: 500;
+    line-height: 36px;
+    letter-spacing: -0.02em;
+}
+
+.embed-block iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.image {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.embed-block {
+    margin: 0;
+    width: 100%;
+    height: 439px;
+    position: relative;
+}
+
+.media__page-data {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+}
+
+.caption {
+    color: var(--color-gray);
+    font-size: var(--quote-font-size);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    padding-top: 8px;
+}
+
+figcaption {
+    font-size: var(--quote-font-size);
+    letter-spacing: -0.02em;
+    line-height: var(--quote-line-height);
+    color: var(--color-gray);
+    padding-top: 8px;
+}
+
+.media__page-header {
+    font-size: var(--font-size-gallery-header);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 48px;
+    border-bottom: 1px solid var(--color-gray);
+    padding-bottom: 44px;
+    margin-bottom: 44px;
+}
+
+.media__page-date {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-primary);
+}
+
+.media__page-top {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 24px;
+}
+
+.media__page-content {
+    padding-top: 58px;
+    position: relative;
+}
+
+.chevron-down {
+    display: flex;
+    align-items: center;
+    font-size: var(--quote-font-size);
+    font-weight: 400;
+    line-height: var(--quote-line-height);
+    letter-spacing: -0.02em;
+    color: var(--color-gray);
+    gap: 10px;
+}
+
+a i {
+    rotate: 90deg;
+    font-size: 15px;
+}
+
+.image img {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    object-fit: cover;
+}
+
+.media__page-container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.swiper-container {
+    width: 100%;
+    height: 425px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.swiper-slide {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.swiper-pagination {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
 }

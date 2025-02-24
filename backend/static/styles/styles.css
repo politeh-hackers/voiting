@@ -1,0 +1,72 @@
+:root {
+    /* Основные цвета */
+    --color-black: #000;
+    --color-white: #fff;
+    --color-gray: #868693;
+    --color-light-gray: #F7F7F7;
+    --color-header-shadow: rgba(97, 97, 103, 0.1);
+    --color-error: #f44336;
+    --color-time: #555555;
+    --color-tg: #27A7E7;
+    --color-active-bullet: #28a745;
+    --color-primary: #EA424C; /* Цвет для активных элементов */
+    --color-hover: #c9303a;  /* Цвет при наведении */
+    --color-border: #ddd; /* Цвет границы */
+    --color-background: #f9f9f9; /* Фоновый цвет */
+
+    /* Размеры */
+    --max-width-container: 1384px;
+    --max-width-content: 1330px;
+    --header-logo-width: 92px;
+    --header-logo-height: 96px;
+    --card-max-width: 968px;
+    --card-image-max-width: 275px;
+    --card-image-max-height: 180px;
+    --popular-card-max-width: 299px;
+    --popular-card-height: 289px;
+    --gallery-width: 745px;
+    --gallery-height: 480px;
+    --gallery-content-width: 513px;
+
+    /* Отступы и паддинги */
+    --padding-small: 8px;
+    --padding-medium: 16px;
+    --padding-large: 24px;
+    --padding-xl: 44px;
+    --margin-small: 8px;
+    --margin-medium: 16px;
+    --margin-large: 24px;
+    --margin-xl: 44px;
+
+    /* Тени */
+    --box-shadow-default: 0px 16px 32px -4px var(--color-header-shadow);
+    --box-shadow-inset: inset 0px 0px 10px rgba(0, 0, 0, 0.2);
+
+    /* Шрифты */
+    --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-size-11: 11px;
+    --font-size-small: 12px;
+    --font-size-medium: 15px;
+
+    --font-size-large: 30px;
+    --font-size-header: 36px;
+    --font-size-card-header: 20px;
+    --font-size-card-time: 10px;
+    --font-size-gallery-header: 48px;
+    --font-size-date-day: 36px;
+    --font-size-date-month: 20px;
+
+    /* Прочие переменные */
+    --sticky-top: 100px; /* Стандартная позиция для sticky */
+    --scrollbar-height: 6px;
+    --scrollbar-track-color: #f1f1f1;
+    --scrollbar-thumb-color: #888;
+    --quote-gap: 12px;
+    --quote-line-width: 156px;
+    --quote-font-size: 16px;
+    --quote-line-height: 16px;
+
+    /* Переменные для swiper */
+    --swiper-pagination-bullet-size: 8px;
+    --swiper-pagination-bottom-offset: 30px;
+}

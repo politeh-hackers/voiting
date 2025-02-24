@@ -16,6 +16,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
 from django.views.generic import DetailView
 from actual.models import Actual
+from category.models import Category
 class MediaDetailView(DetailView):
     model = Media
     template_name = "media/media_detail.html"  # Укажи свой шаблон
@@ -36,6 +37,7 @@ def MediaClientView(request: HttpRequest):
 # pagination for left cards
     page1 = request.GET.get('page1', 1)
     medias1 = Media.objects.all() 
+    categories = Category.objects.all()
     per_page1 = int(request.GET.get('per_page1', 3))
     paginator1 = Paginator(medias1, per_page1)
     try:
@@ -46,6 +48,7 @@ def MediaClientView(request: HttpRequest):
         media_page1 = paginator1.page(paginator1.num_pages)
 
     context = {
+        "categories": categories,
         "medias1": media_page1,
         "total_items2": paginator1.count,
         "medias": media_page,  # Передаем объекты, а не список значений

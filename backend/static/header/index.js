@@ -36,33 +36,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 function validateStep1() {
     var isValid = true;
-    // Проверка полей "Фамилия", "Имя", "Отчество", "Телефон"
     var lastName = document.getElementById('lastName');
     var firstName = document.getElementById('firstName');
     var patronymic = document.getElementById('patronymic');
     var phone = document.getElementById('phone');
-    // Очистка сообщений об ошибках
     document.querySelectorAll('.error-message').forEach(function (el) { return el.textContent = ''; });
     document.querySelectorAll('input').forEach(function (input) { return input.style.border = ''; });
-    // Фамилия
     if (lastName.value.trim() === '') {
         document.getElementById('lastNameError').textContent = 'Это поле обязательно для заполнения';
         lastName.style.border = '1px solid red';
         isValid = false;
     }
-    // Имя
     if (firstName.value.trim() === '') {
         document.getElementById('firstNameError').textContent = 'Это поле обязательно для заполнения';
         firstName.style.border = '1px solid red';
         isValid = false;
     }
-    // Отчество
     if (patronymic.value.trim() === '') {
         document.getElementById('patronymicError').textContent = 'Это поле обязательно для заполнения';
         patronymic.style.border = '1px solid red';
         isValid = false;
     }
-    // Телефон
     if (phone.value.trim() === '') {
         document.getElementById('phoneError').textContent = 'Это поле обязательно для заполнения';
         phone.style.border = '1px solid red';
@@ -72,14 +66,12 @@ function validateStep1() {
 }
 function validateStep2() {
     var isValid = true;
-    // Проверка категории
     var category = document.getElementById('category');
     if (category.value === '') {
         document.getElementById('categoryError').textContent = 'Выберите категорию';
         category.style.border = '1px solid red';
         isValid = false;
     }
-    // Проверка текста обращения
     var text = document.getElementById('text');
     if (text.value.trim().length < 500 || text.value.trim().length > 2000) {
         document.getElementById('textError').textContent = 'Текст должен быть от 500 до 2000 символов';
@@ -94,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var clearButton = document.getElementById("clearButton");
     if (searchButton && searchPopup) {
         searchButton.addEventListener("click", function () {
-            searchPopup.style.display = searchPopup.style.display === "block" ? "none" : "block";
+            searchPopup.style.display = searchPopup.style.display === "flex" ? "none" : "flex";
         });
     }
     if (clearButton) {
@@ -102,7 +94,6 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelector(".input__search").value = "";
         });
     }
-    // Закрытие попапа при клике вне его
     document.addEventListener("click", function (event) {
         if (searchPopup.style.display === "block" &&
             !searchPopup.contains(event.target) &&
@@ -112,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 function resetForm() {
-    // Очистка значений полей формы
     document.getElementById('lastName').value = "";
     document.getElementById('firstName').value = "";
     document.getElementById('patronymic').value = "";
@@ -121,20 +111,14 @@ function resetForm() {
     document.getElementById('category').selectedIndex = 0;
     document.getElementById('fileInput').value = "";
     document.querySelectorAll(".code-box").forEach(function (input) { return input.value = ""; });
-    // Очистка массива файлов
     allFiles = [];
-    // Очистка контейнера превью
-    // Очистка контейнера с превью (фотографий), но оставляем инпут для файлов
     var previewContainer = document.getElementById("previewContainer");
-    // Удаляем только изображения из контейнера, инпут остается
     var images = previewContainer.querySelectorAll("img");
     images.forEach(function (img) { return img.remove(); });
-    // Переключаемся обратно на первую часть формы
     var step1 = document.getElementById("step1");
     var step2 = document.getElementById("step2");
     step1.style.display = "flex";
     step2.style.display = "none";
-    // Отключаем кнопку подтверждения кода
     var confirmCodeBtn = document.getElementById("confirmCodeBtn");
     confirmCodeBtn.disabled = true;
 }
@@ -178,7 +162,7 @@ function initMap() {
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, fetch('http://127.0.0.1:8000/appeals/', {
                                 method: 'POST',
-                                body: data, // FormData автоматически устанавливает корректные заголовки
+                                body: data,
                             })];
                     case 1:
                         response = _a.sent();
@@ -227,7 +211,7 @@ function initMap() {
                     formData_1.append("text", document.getElementById('text').value);
                     formData_1.append("category", categorySelect.options[categorySelect.selectedIndex].text);
                     allFiles.forEach(function (file) {
-                        formData_1.append("photos", file); // Используем photos[] для массива файлов
+                        formData_1.append("photos", file);
                     });
                     console.log('Отправляемые данные:', formData_1);
                     sendDataToServer(formData_1);
@@ -239,6 +223,60 @@ function initMap() {
         });
     }
 }
+document.addEventListener("DOMContentLoaded", function () {
+    var burgerMenu = document.getElementById("burgerMenu");
+    var menu = document.querySelector(".header__center");
+    if (burgerMenu && menu) {
+        burgerMenu.addEventListener("click", function () {
+            menu.classList.toggle("active");
+        });
+        // Закрытие меню при клике вне его области
+        document.addEventListener("click", function (event) {
+            var target = event.target;
+            if (!menu.contains(target) && !burgerMenu.contains(target)) {
+                menu.classList.remove("active");
+            }
+        });
+    }
+});
+document.addEventListener("DOMContentLoaded", function () {
+    var phoneInput = document.getElementById("phone");
+    if (phoneInput) {
+        phoneInput.addEventListener("input", formatPhoneInput);
+        phoneInput.addEventListener("keydown", handlePhoneBackspace);
+    }
+    function formatPhoneInput(event) {
+        var input = event.target;
+        var value = input.value.replace(/\D/g, "");
+        if (value.startsWith("375")) {
+            value = value.slice(3);
+        }
+        if (value.length > 9) {
+            value = value.slice(0, 9);
+        }
+        var formattedValue = "+375 ";
+        if (value.length > 0) {
+            formattedValue += "(" + value.slice(0, 2);
+        }
+        if (value.length > 2) {
+            formattedValue += ") " + value.slice(2, 5);
+        }
+        if (value.length > 5) {
+            formattedValue += "-" + value.slice(5, 7);
+        }
+        if (value.length > 7) {
+            formattedValue += "-" + value.slice(7, 9);
+        }
+        input.value = formattedValue;
+    }
+    function handlePhoneBackspace(event) {
+        var input = event.target;
+        if (event.key === "Backspace" && input.value.length <= 7) {
+            event.preventDefault();
+            input.value = "+375 ";
+        }
+    }
+});
 document.addEventListener("DOMContentLoaded", function () {
     var _a;
     var modal = document.getElementById("appealForm");
@@ -263,17 +301,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }, 1000);
     }
-    // Маска для телефона
-    var phoneInput = document.getElementById("phone");
-    if (phoneInput) {
-        new Inputmask("+375 (99) 999-99-99").mask(phoneInput);
-    }
-    // Открытие формы
     (_a = document.querySelector(".appeals__button")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", function () {
         modal.style.display = "flex";
-        resetForm(); // Сбрасываем форму перед открытием
+        resetForm();
     });
-    // Закрытие формы
     closeModal === null || closeModal === void 0 ? void 0 : closeModal.addEventListener("click", function () {
         var isConfirmed = confirm("Вы действительно хотите закрыть форму? Введённые данные будут утеряны.");
         if (isConfirmed) {
@@ -281,18 +312,16 @@ document.addEventListener("DOMContentLoaded", function () {
             resetForm();
         }
     });
-    // Отправка кода подтверждения
     sendCodeBtn === null || sendCodeBtn === void 0 ? void 0 : sendCodeBtn.addEventListener("click", function () {
         alert("Код отправлен! Введите его ниже.");
-        startCountdown(60); // Запуск таймера на 60 секунд
+        startCountdown(60);
         confirmCodeBtn.disabled = false;
     });
-    // Автоматический переход между полями кода
     codeInputs.forEach(function (input, index) {
         input.addEventListener("input", function (e) {
             var target = e.target;
             if (target.value && index < codeInputs.length - 1) {
-                codeInputs[index + 1].focus(); // Переход к следующему полю
+                codeInputs[index + 1].focus();
             }
         });
     });
@@ -307,8 +336,8 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("step1").style.display = "none";
             sendCodeBtn.disabled = false;
             var step2 = document.getElementById("step2");
-            step2.style.removeProperty("display"); // Убираем инлайн-стиль display
-            step2.classList.add("step2"); // Добавляем класс с нужными стилями
+            step2.style.removeProperty("display");
+            step2.classList.add("step2");
         }
         else {
             throw new Error("dsdsd");
@@ -323,10 +352,8 @@ fileInput.addEventListener("change", function (event) {
     var target = event.target;
     if (!target.files)
         return;
-    // Добавляем новые файлы в глобальный массив
     Array.from(target.files).forEach(function (file) {
         allFiles.push(file);
-        // Предварительный просмотр изображений
         var reader = new FileReader();
         reader.onload = function (e) {
             var _a;

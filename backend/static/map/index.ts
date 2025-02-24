@@ -9,6 +9,9 @@ function initMap(): void {
         zoom: 14, 
         controls: [] 
     });
+    window.addEventListener("resize", () => {
+        map.container.fitToViewport();
+    });
     // Отключаем возможность перемещения карты
     map.behaviors.disable('drag');
 

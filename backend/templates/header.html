@@ -2,15 +2,17 @@
 <script src="{% static 'header/index.js' %}" type="module"></script>
 <header class="header">
     <div class="header__container">
+        <a href="http://127.0.0.1:8000/" class="header__left">
         <div class="header__left">
             <div class="header__img">
                 <img src="{% static 'header/0462e569-918b-4bf6-9792-934e47581cb3 1.svg' %}" alt="" class="header__logo">
             </div>
-            <div class="header__text">
+            <div class="header__text" >
                 МАРТЫНОВ ПАВЕЛ<br>
                 <span>ЛИЧНЫЙ БЛОГ</span>
             </div>
         </div>
+    </a>
         <div class="header__center">
             <ul class="header__list">
                 <li><a href="http://127.0.0.1:8000/actual/actual">Актуальное</a></li>
@@ -25,16 +27,17 @@
                 <a>Оставить обращение</a>
             </button>
             <img src="{% static 'header/Frame 85.svg' %}" alt="" class="search__button" id="searchButton">
-            <!-- <div class="burger-menu" id="burgerMenu">☰</div> -->
+            <div class="burger-menu" id="burgerMenu">☰</div>
         </div>
+    </div>
+    <div id="searchPopup" class="search-popup">
+        <div class="container">
+            <input class = "input__search" type="text" placeholder="Поиск...">
+            <button class="clear-btn" id="clearButton">⨯</button>
+        </div>
+    
     </div>
 </header>
 
-<div id="searchPopup" class="search-popup">
-    <div class="container">
-        <input class = "input__search" type="text" placeholder="Поиск...">
-        <button class="clear-btn" id="clearButton">⨯</button>
-    </div>
 
-</div>
 

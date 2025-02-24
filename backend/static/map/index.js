@@ -5,6 +5,9 @@ function initMap() {
         zoom: 14,
         controls: []
     });
+    window.addEventListener("resize", function () {
+        map.container.fitToViewport();
+    });
     // Отключаем возможность перемещения карты
     map.behaviors.disable('drag');
     // Отключаем возможность масштабирования колесом мыши

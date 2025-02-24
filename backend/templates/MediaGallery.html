@@ -10,13 +10,13 @@
                 <div class="gallery__block">
                     <div class="gallery__content">
                         <div class="gallery_card-header">
-                            {{ media.header }}
+                            {{ media.header}}
                         </div>
                         <div class="gallery_card-summary">
-                            {{ media.summary }}
+                            {{media.summary|slice:90}}{% if media.summary|length > 90 %}...{% endif %}
                         </div>
                         <div class="gallery_card-button">
-                            <a href="#">Подробнее ⟶</a>
+                            <a href="http://127.0.0.1:8000/media/media/{{media.id}}">Подробнее ⟶</a>
                         </div>
                     </div>
 

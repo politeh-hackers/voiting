@@ -8,6 +8,7 @@
     {% load static %}
     <script src="{% static 'media/index.js' %}" type="module"></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="{% static 'media_page/index.js' %}" type="module"></script>
     <script src="{% static 'appeals/index.js' %}" type="module"></script>
@@ -84,13 +85,13 @@
 <style>
     .commentaryBlock {
         display: flex;
-        justify-content: space-between;
+        gap: 20px;
         font-size: 20px;
 }
 .logoContainer {
 }
 .responceContainer {
-    width: 886px;
+    max-width: 886px;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -173,14 +174,15 @@
     }
 
     .appealPage_photo {
-        width: 461px;
-        height: 439px;
+        max-width: 461px;
+        max-height: 439px;
         border-radius: 6px;
     }
 
     .appealPage_photo img {
-        width: 461px;
-        height: 439px;
+        max-width: 461px;
+        max-height: 439px;
+        height: 100%;
         object-fit: cover;
         border-radius: 6px;
     }
@@ -253,7 +255,7 @@
     .quote_content::after {
         content: '';
         display: block;
-        width: 156px;
+        max-width: 156px;
         height: 1px;
         background-color: #868693;
         margin: 26px 0;
@@ -273,15 +275,15 @@
 
     .image {
         margin: 0;
-        width: 967px;
-        height: 439px;
+        max-width: 967px;
+        max-height: 439px;
         position: relative;
     }
 
     .embed-block {
         margin: 0;
-        width: 967px;
-        height: 439px;
+        max-width: 967px;
+        max-height: 439px;
         position: relative;
     }
 
@@ -340,6 +342,8 @@
 
     main.media__page-content {
         flex: 1;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     body {
@@ -374,7 +378,7 @@
     }
 
     .media__page-container {
-        width: 967px;
+        max-width: 967px;
         margin-left: auto;
         margin-right: auto;
         display: flex;
@@ -384,8 +388,8 @@
 
 
     .swiper-container {
-        width: 967px;
-        height: 425px;
+        max-width: 967px;
+        max-height: 425px;
         margin: 0 auto;
         position: relative;
         overflow: hidden;

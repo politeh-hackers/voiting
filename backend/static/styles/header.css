@@ -1,73 +1,45 @@
-.header__list li:hover{
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: auto;
+    font-family: var(--font-main);
+    background-color: var(--color-light-gray);
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-black);
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--font-size-small);
+    display: flex;
+    gap: 24px;
+}
+
+.header__list li:hover {
     opacity: 0.3;
     transition: opacity 0.3s;
 }
 
-/* Header styles */
-html{
-    height: 100%;
-    margin: 0;
-    overflow: auto; /* Убедитесь, что прокрутка работает для всей страницы */
-}
-.search-popup input::placeholder {
-    color: black;  /* Устанавливаем черный цвет для текста плейсхолдера */
-    
-}
 header {
     position: sticky;
     top: 0;
-    z-index: 2; /* Задайте значение больше, чем у других элементов */
-    background-color: white;
-    box-shadow: 0px 16px 32px -4px #6161671A;
-}
-.search-popup .container {
-   width: 100%;
-   padding: 42px 28px;
-
-}
-.search__button{
-    cursor: pointer;
-}
-
-.header__right{
-    display: flex;
-    gap: 16px;
-}
-.input__search{
-    font-size: 30px;
-    color: #000;
-}
-.clear-btn {
-    position: absolute;
-    right: 28px;
-    top: 50%;  /* Центрируем по вертикали */
-    transform: translateY(-50%);  /* Точно выравниваем по центру */
-    font-size: 22px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-.appeals__button{
-    background: white;
-    font-size: 12px;
-    font-weight: 400;
-    border-width: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-    gap: 10px;
-    cursor: pointer;
+    z-index: 10000;
+    background-color: var(--color-white);
+    box-shadow: var(--box-shadow-default);
 }
 
 .header__container {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   max-width: 1384px; 
-   margin-left: auto;
-   margin-right: auto;
-   padding-top: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: var(--max-width-container);
+    margin: 0 auto;
+    padding-top: 13px;
 }
 
 .header__left {
@@ -76,120 +48,138 @@ header {
     align-items: center;
 }
 
-a {
-    text-decoration: none;
-    color: black;
-}
-
-ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    font-size: 12px;
+.header__right {
     display: flex;
-    gap: 24px;
+    gap: 16px;
 }
 
 .header__img {
-    width: 92px;
-    height: 96px;
-}
-
-.header__logo {
+    width: var(--header-logo-width);
+    height: var(--header-logo-height);
 }
 
 .header__text {
     font-weight: 500;
-    font-size: 15px;
+    font-size: var(--font-size-medium);
 }
 
 .header__text span {
     font-weight: 700;
 }
 
-body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    height: 100%;
-    margin: 0;
-    overflow: auto; /* Убедитесь, что прокрутка работает для всей страницы */
-    background-color: #F7F7F7;
-    
-}
-
 .search-popup {
+    justify-content: center;
     z-index: 15;
     display: none;
-    position: fixed;
-    left: 68px;
-    background-color: rgba(255, 255, 255, 1);  
-    width: 1384px;
-    box-shadow: 0px 16px 32px -4px #6161671A;
-    
+    position: relative;
+    box-shadow: var(--box-shadow-default);
 }
 
 .search-popup.active {
-    transform: translateY(0); 
+    transform: translateY(0);
+}
+
+.search-popup .container {
+    max-width: var(--max-width-content);
+    width: 100%;
+    padding: 42px 28px;
+    position: relative;
 }
 
 .search-popup__container {
     display: flex;
-   max-width: 1384px; 
-   align-items: center;
-   justify-content: center;
-   position: relative;
-   margin: 42px 28px;
-   
+    max-width: var(--max-width-container);
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: auto;
 }
 
 .search-popup input {
-    border: none;  
-    border-bottom: 2px solid #000;  
-    outline: none;  
-    font-size: 12px;  
-    padding: 8px 0;  
-    width: 1330px; 
-    box-sizing: border-box;  
-    position: relative; 
+    border: none;
+    border-bottom: 2px solid var(--color-black);
+    outline: none;
+    font-size: var(--font-size-small);
+    padding: 8px 0;
+    max-width: var(--max-width-content);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.search-popup input::placeholder {
+    color: var(--color-black);
+}
+
+.search__button,
+.clear-btn,
+.appeals__button {
+    cursor: pointer;
+    background: var(--color-white);
+    border: none;
+}
+
+.clear-btn {
+    position: absolute;
+    right: 28px;
+    font-size: 22px;
+}
+
+.appeals__button {
+    font-size: var(--font-size-small);
+    font-weight: 400;
+    
+    border: 1px solid var(--color-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    gap: 10px;
 }
 
 .close-search {
-    background-color: #f44336;
-    color: white;
+    background-color: var(--color-error);
+    color: var(--color-white);
     border: none;
     padding: 10px;
     cursor: pointer;
     border-radius: 5px;
 }
-/* .burger-menu {
-    display: none; 
+
+.burger-menu {
+    display: none;
     font-size: 24px;
     cursor: pointer;
-} */
-/* Скрываем меню на мобильных устройствах */
-/* @media (max-width: 768px) {
-    .header__center {
+}
+
+@media (max-width: 768px) {
+    .header__center{
         display: none;
     }
-    .appeals__button{
-        display: none;
+    .appeals__button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        border: none;
+        border-radius: 30px;
+        box-shadow: 16px 0px 32px -4px #6161671A;
+
     }
 
     .burger-menu {
         display: block;
         font-size: 18px;
-        cursor: pointer;
     }
-} */
+}
 
-/* Показываем меню при активации бургера */
-/* .header__center.active {
+.header__center.active {
     display: block;
     position: absolute;
-    top: 100px; 
+    top: 100px;
     left: 0;
     width: 100%;
-    background-color: white;
-    box-shadow: 0px 16px 32px -4px #6161671A;
+    background-color: var(--color-white);
+    box-shadow: var(--box-shadow-default);
     z-index: 1000;
 }
 
@@ -197,5 +187,5 @@ body {
     flex-direction: column;
     gap: 10px;
     padding: 20px;
-    font-size: 15px;
-} */
+    font-size: var(--font-size-medium);
+}
