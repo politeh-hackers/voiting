@@ -73,7 +73,6 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding-bottom: 20px;
 }
 
 
@@ -136,8 +135,8 @@
         gap: 16px;
     }
     .gallery_card-header {
-        font-size: var(--font-size-24);
-        line-height: var(--font-size-24);
+        font-size: var(--font-size-26);
+        line-height: var(--font-size-26);
         display: -webkit-box;
         -webkit-line-clamp: 2; /* Ограничение в 2 строки */
         -webkit-box-orient: vertical;
@@ -146,7 +145,8 @@
         word-wrap: break-word;
     }
     .gallery_card-summary{
-        font-size: var(--font-size-11);
+        font-size: var(--font-size-small);
+        line-height: var(--font-size-small);
         display: -webkit-box;
         -webkit-line-clamp: 3; /* Ограничение в 3 строки */
         -webkit-box-orient: vertical;
@@ -190,5 +190,7 @@
         width: 5px;
         height: 5px;
     }
-   
+   .date-flag{
+    padding-top: 5px;
+   }
 }

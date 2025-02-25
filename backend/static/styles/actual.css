@@ -301,13 +301,11 @@ body {
     .left__side{
         padding: 0 24px;
     }
-    .card__actual__header{
-        font-size: var(--font-size-16);
-    }
+    
+    
     .card__actual__summary{
-        font-size: var(--font-size-11);
-    }
-    .card__actual__summary{
+        font-size: var(--font-size-small);
+        line-height: var(--font-size-small);
         display: -webkit-box;
         -webkit-line-clamp: 3; /* Ограничение в 3 строки */
         -webkit-box-orient: vertical;
@@ -316,6 +314,8 @@ body {
         word-wrap: break-word;
     }
     .card__actual__header{
+        font-size: var(--font-size-18);
+        line-height: var(--font-size-18);
         display: -webkit-box;
         -webkit-line-clamp: 2; /* Ограничение в 3 строки */
         -webkit-box-orient: vertical;
