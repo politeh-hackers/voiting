@@ -266,13 +266,14 @@ import { title } from "process";
 const router = useRouter()
 const post = ref<Post>({
   h1:"",
+  slug:"",
   title:"",
   description:"",
   summary: "",
   main_photo: "",
   header: "",
   content: "",
-  date_created: new Date(),
+  date_created: new Date()
 });
 const token = getToken()
 const sortOrder = ref("asc");

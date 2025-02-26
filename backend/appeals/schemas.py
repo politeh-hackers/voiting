@@ -51,3 +51,4 @@ class AppealUpdateSchema(BaseModel):
     )
     status: Optional[str] = Field(None)
     on_website: Optional[bool] = Field(None)
+    date_responce: Optional[str] = Field(None)
