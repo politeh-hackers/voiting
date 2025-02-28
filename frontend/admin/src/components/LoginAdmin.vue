@@ -41,6 +41,21 @@ const login = async () => {
     console.error('Ошибка:', error);
   }
 };
+
+const logout = async () => {
+  try {
+    await axios.post('http://127.0.0.1:8000/admin/logout');
+    localStorage.removeItem('authToken');
+    formState.value.successMessage = 'Выход выполнен успешно!';
+    formState.value.errorMessage = '';
+    setTimeout(() => {
+      router.push({ name: 'Login' });
+    }, 1000);
+  } catch (error) {
+    formState.value.errorMessage = 'Ошибка при выходе из системы';
+    console.error('Ошибка:', error);
+  }
+};
 </script>
 
 <template>
@@ -70,7 +85,10 @@ const login = async () => {
           {{ formState.successMessage }}
         </Message>
       </div>
-      <Button type="submit" label="Войти" />
+      <div class="buttons-container">
+        <Button type="submit" label="Войти" class="login-button" />
+        <Button type="button" label="Выйти" severity="danger" @click="logout" class="logout-button" />
+      </div>
     </form>
   </div>
 </template>
@@ -104,5 +122,15 @@ const login = async () => {
 
 .message-container {
   min-height: 20px;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.login-button, .logout-button {
+  flex: 1;
 }
 </style>
