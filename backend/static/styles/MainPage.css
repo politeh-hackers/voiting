@@ -15,6 +15,8 @@ main.mainPage-content {
 }
 .appeals-cards_container{
     padding: 0 24px;
+    position: relative;
+    width: calc(100% - 48px); /* Учитываем padding */
 }
 .container {
     max-width: 1300px;
@@ -55,7 +57,7 @@ main.mainPage-content {
     flex: 1;
     /* Занимает равное пространство */
     min-width: 525px;
-    padding: 0 24px;
+    
 }
 
 .right-card__actual {
@@ -342,6 +344,9 @@ clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 75%, 0% 100%);
     }
     .cards-block{
         min-width: 100px;
+    }
+    .cards-block{
+        padding: 0 24px;
     }
    
 }

@@ -160,7 +160,7 @@ function initMap() {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, fetch('http://127.0.0.1:8000/appeals/', {
+                        return [4 /*yield*/, fetch('http://127.0.0.1:8000/appeals/appeals', {
                                 method: 'POST',
                                 body: data,
                             })];
@@ -308,8 +308,14 @@ document.addEventListener("DOMContentLoaded", function () {
     closeModal === null || closeModal === void 0 ? void 0 : closeModal.addEventListener("click", function () {
         var isConfirmed = confirm("Вы действительно хотите закрыть форму? Введённые данные будут утеряны.");
         if (isConfirmed) {
-            modal.style.display = "none";
-            resetForm();
+            var modalElement_1 = modal;
+            modalElement_1.classList.add('closing');
+            // Ждем окончания анимации перед скрытием модального окна
+            setTimeout(function () {
+                modalElement_1.style.display = "none";
+                modalElement_1.classList.remove('closing');
+                resetForm();
+            }, 500); // Время должно совпадать с длительностью анимации
         }
     });
     sendCodeBtn === null || sendCodeBtn === void 0 ? void 0 : sendCodeBtn.addEventListener("click", function () {

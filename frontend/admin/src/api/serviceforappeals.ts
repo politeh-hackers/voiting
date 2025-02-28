@@ -66,6 +66,7 @@ export interface Post extends BaseUUIDSchema {
     on_website:boolean
     photos:string
     official_response:string
+    date_responce:Date
 }
 
 export class PostService extends ApiService<Post> {}

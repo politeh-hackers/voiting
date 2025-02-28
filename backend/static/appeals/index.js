@@ -43,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             else {
                 rightBtn.style.display = "none"; // Если достигнут конец
-                photoContainer.style.maskImage = "none";
             }
             // Добавляем градиенты с обеих сторон, если прокручиваем, но не достигли конца
             if (scrollLeft > 0 && scrollLeft + clientWidth < scrollWidth) {
@@ -63,5 +62,20 @@ document.addEventListener("DOMContentLoaded", function () {
         updateButtonsVisibility();
         // Добавляем слушатель события для обновления состояния кнопок при прокрутке
         photoContainer.addEventListener("scroll", updateButtonsVisibility);
+    });
+    document.querySelectorAll(".cards").forEach(function (container) {
+        var mapToggleBtn = document.getElementById('map-toggle-btn');
+        var mapContainer = document.querySelector('.map__container');
+        var chevronIcon = document.getElementById('chevron-icon');
+        // Проверяем, существует ли контейнер карты
+        if (!mapContainer || !chevronIcon)
+            return;
+        // Добавляем обработчик события для кнопки
+        mapToggleBtn.addEventListener('click', function () {
+            // Переключаем класс 'open' у контейнера карты
+            mapContainer.classList.toggle('open');
+            // Переключаем класс 'rotate' у иконки
+            chevronIcon.classList.toggle('rotate');
+        });
     });
 });

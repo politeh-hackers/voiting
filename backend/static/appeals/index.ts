@@ -71,4 +71,19 @@ document.addEventListener("DOMContentLoaded", () => {
         // Добавляем слушатель события для обновления состояния кнопок при прокрутке
         photoContainer.addEventListener("scroll", updateButtonsVisibility);
     });
+    document.querySelectorAll(".cards").forEach((container) => {
+        const mapToggleBtn = document.getElementById('map-toggle-btn') as HTMLButtonElement;
+        const mapContainer = document.querySelector('.map__container') as HTMLDivElement;
+        const chevronIcon = document.getElementById('chevron-icon') as HTMLElement;
+        // Проверяем, существует ли контейнер карты
+        if (!mapContainer || !chevronIcon)
+            return;
+        // Добавляем обработчик события для кнопки
+        mapToggleBtn.addEventListener('click', function () {
+            // Переключаем класс 'open' у контейнера карты
+            mapContainer.classList.toggle('open');
+            // Переключаем класс 'rotate' у иконки
+            chevronIcon.classList.toggle('rotate');
+        });
+    });
 });

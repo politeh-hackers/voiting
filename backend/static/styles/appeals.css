@@ -4,11 +4,13 @@
     max-width: 635px;
     width: 100%;
     position: relative; /* Важно для масштабирования */
+    transition: height 0.5s ease-in-out; /* Плавное изменение высоты */
 }
 
 #map1 {
     width: 100%;
     height: 100%;
+    top:0;
     position: absolute; /* Помогает занять всю область */
 }
 
@@ -27,4 +29,72 @@ body {
     font-family: var(--font-main);
     margin: 0;
     background-color: var(--color-light-gray);
+}
+.map__mobile_container{
+    display: none;
+}
+.yandex-map .ya-map-control__item a,
+.ymaps-2-1-79-copyright__wrap {
+    display: none !important;
+}
+
+/* Скрытие элементов условий использования и логотипов */
+.ymaps-2-1-79-map-copyrights-promo {
+    display: none !important;
+}
+.map-toggle-btn {
+    position: absolute;
+    display: none;
+    top: 10px; /* Местоположение кнопки внутри контейнера карты */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    background-color:transparent;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10; /* Обеспечивает, что кнопка будет выше карты */
+}
+
+@media(max-width:768px){
+    .map__container.open {
+
+        height: 400px;
+
+    }
+    .map-toggle-btn{
+        display: block;
+    }
+    .main__container{
+        flex-direction: column;
+        order: 1;  /* Меняем порядок элементов, чтобы карта была сверху */
+        gap: 0;
+        margin-top: 0;
+    }
+    .cards__container {
+        order: 2;  /* Оставляем карточки после карты */
+        max-width: 1300px;
+        width: 100%;
+        padding: 24px 24px;
+        box-sizing: border-box;
+    }
+    .cards{
+        padding: 24px 24px;
+    }
+    .map__container {
+        order: 0;  /* Карта будет первой */
+       
+        height: 100px;
+        max-width: 1300px;
+        width: 100%;
+    }
+    #chevron-icon {
+        transition: transform 0.3s ease; /* Плавный переход для переворота */
+        color: black;
+    }
+    #chevron-icon.rotate {
+        transform: rotate(180deg); /* Переворачивает стрелку */
+        transition: transform 0.3s ease;
+    }
 }
