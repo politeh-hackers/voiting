@@ -1,0 +1,323 @@
+$main-color: #019DFF;
+
+.datepicker-block {
+  position: relative;
+
+  .datepicker {
+    display: none;
+    position: absolute;
+    width: max-content;
+    height: 0;
+    top: 44px;
+    z-index: 10;
+    background: white;
+
+    &.show {
+      display: block;
+    }
+  }
+}
+
+
+.datedreamer__calendar {
+  border-radius: 8px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Roboto', sans-serif;
+  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  padding: 14px;
+  background: #F3F3F2;
+  z-index: 0;
+  position: relative;
+  box-sizing: border-box;
+  cursor: default;
+
+  .datedreamer__calendar_days-wrap {
+    cursor: default;
+  }
+
+  .datedreamer__calendar_prev, .datedreamer__calendar_next {
+    background: #FFFFFF;
+    border: none;
+    width: 28px;
+    min-width: 28px;
+    height: 28px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2d3436;
+    border-radius: 50%;
+
+    &:hover {
+      background: #CECECE;
+    }
+
+    svg {
+      width: 9px;
+      height: 14px;
+    }
+  }
+
+  .datedreamer__calendar_header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .datedreamer__calendar_title {
+    width: 100%;
+    display: block;
+    flex-grow: 1;
+    text-align: center;
+    color: #2d3436;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: default;
+  }
+
+  .datedreamer__calendar_inputs {
+    margin-top: 12px;
+
+    input, button {
+      font-weight: 500;
+      border-radius: 4px;
+      border: 1px solid #e9e8ec;
+      font-size: 12px;
+      background: white;
+    }
+
+    input {
+      flex-grow: 1;
+      width: calc(100% - 8px);
+      display: block;
+      padding: 4px 4px 4px 8px;
+      margin-right: 8px;
+    }
+
+    button {
+      padding: 6px 12px;
+      display: inline-block;
+      cursor: pointer;
+      color: black;
+    }
+
+    label {
+      font-size: 12px;
+      width: 100%;
+    }
+  }
+
+  .datedreamer__calendar_inputs input.error {
+    border: 2px solid var(--primary-color);
+  }
+
+  .datedreamer__calendar__inputs-wrap {
+    display: flex;
+  }
+
+  .datedreamer__calendar_errors {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 8px 0;
+    color: var(--primary-color);
+  }
+
+  .datedreamer__calendar_days, .datedreamer__calendar_days-header {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(7, 30px);
+    grid-template-rows: 30px;
+    text-align: center;
+    grid-gap: 4px;
+  }
+
+  .datedreamer__calendar_days {
+    margin-top: 8px;
+  }
+
+  .datedreamer__calendar_days-header {
+    color: #2d3436;
+    font-size: 1rem;
+    cursor: default;
+  }
+
+  .datedreamer__calendar_day {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #FFFFFF;
+    border-radius: 5px;
+  }
+
+  .datedreamer__calendar_days {
+    .datedreamer__calendar_day {
+      &:hover {
+        &:not(.disabled, .active) {
+          background: #CECECE;
+        }
+      }
+
+      &:not(.disabled) {
+        box-shadow: 0 0 5px -2px rgba(0, 0, 0, 0.25);
+      }
+
+      button {
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        padding: 8px 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        font-weight: bold;
+        color: black;
+      }
+
+      &.disabled {
+        background: unset;
+
+        button {
+          color: #CECECE;
+          cursor: default;
+          font-weight: normal;
+        }
+      }
+
+      &.now button {
+        color: var(--primary-color);
+      }
+
+      &.highlight {
+        position: relative;
+        background: var(--primary-color);
+
+        button {
+          color: white;
+        }
+      }
+
+      &.active {
+        position: relative;
+        background: var(--primary-color);
+
+        button {
+          color: #fff;
+
+        }
+      }
+    }
+  }
+
+  .datedreamer__calendar_day-header.datedreamer__calendar_day {
+    font-size: 12px;
+    background: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+
+    &:nth-child(6), &:nth-child(7) {
+      color: #ff0303;
+    }
+  }
+
+
+  &.default {
+
+  }
+}
+
+.datedreamer-range {
+  display: inline-flex;
+  box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  background: #F3F3F2;
+
+  .datedreamer__calendar {
+    border-radius: unset;
+    width: 100%;
+    padding: 14px;
+    background: #F3F3F2;
+    z-index: 0;
+    position: relative;
+    box-sizing: border-box;
+    box-shadow: unset;
+  }
+
+  > div:first-child {
+    border-radius: 8px 0 0 8px;
+
+    .datedreamer__calendar {
+      border-radius: 8px 0 0 8px;
+    }
+  }
+
+  > div:last-child {
+    border-radius: 0 8px 8px 0;
+
+    .datedreamer__calendar {
+      border-radius: 0 8px 8px 0;
+    }
+  }
+}
+
+//
+//.flatpickr-calendar {
+//  background: #F3F3F2;
+//}
+//
+//.flatpickr-day {
+//  background: #FFFFFF !important;
+//  box-shadow: 0 0 5px -2px rgba(0, 0, 0, 0.25);
+//  border-radius: 5px !important;
+//  font-weight: 500 !important;
+//  font-size: 12px !important;
+//  color: #141414;
+//  // line-height: inherit;
+//  // max-width: 32.33px;
+//  // height: 28px;
+//}
+//
+//.startRange,
+//.endRange,
+//.inRange {
+//  background: var(--primary-color) !important;
+//  box-shadow: 0 0 5px -2px rgba(0, 0, 0, 0.25) !important;
+//  border-radius: 5px !important;
+//  color: white !important;
+//  border-color: var(--primary-color) !important;
+//}
+//
+//.flatpickr-weekday {
+//  font-weight: 500;
+//  font-size: 12px;
+//  line-height: 100%;
+//  color: black !important;
+//}
+//
+//.flatpickr-disabled,
+//.nextMonthDay {
+//  box-shadow: none;
+//}
+//
+//.dayContainer {
+//  column-gap: 3.92px;
+//  row-gap: 6px;
+//}
+//
+//.flatpickr-calendar {
+//  padding: 15px;
+//  width: inherit;
+//}
+//
+//.flatpickr-day.today {
+//  &:hover {
+//    color: black;
+//  }
+//}
