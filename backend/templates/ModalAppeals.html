@@ -1,4 +1,6 @@
 {% load static %}
+<!-- Добавляем Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <div id="appealForm" class="modal" style="display: none;">
   <div class="modal-content">
     <!-- Карта -->
@@ -6,10 +8,15 @@
 
     <!-- Форма -->
     <div class="form-container">
+      <span class="close-modal mobile-close">
+        <i class="fa-solid fa-chevron-down mobile-icon"></i>
+      </span>
       <!-- Заголовок и крестик -->
       <div class="dialog-header">
         <div class="header-modal">Форма обращения</div>
-        <span class="close-modal">&times;</span>
+        <span class="close-modal desktop-close">
+          <i class="fa-solid fa-xmark desktop-icon"></i>
+        </span>
       </div>
 
       <!-- Первая часть: Ввод номера и подтверждение -->

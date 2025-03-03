@@ -6,7 +6,7 @@
 
 .left__side {
     margin-top: 59px;
-    width: 525px;
+    max-width: 525px;
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -119,7 +119,8 @@ main.content {
 .biography__container {
     margin-left: auto;
     display: flex;
-    width: 1259px;
+    max-width: 1259px;
+    width: 100%;
     gap: 30px;
 }
 
@@ -200,7 +201,8 @@ main.content {
 .quote_content::after {
     content: '';
     display: block;
-    width: var(--quote-line-width);
+    max-width: var(--quote-line-width);
+    width: 100%;
     height: 1px;
     background-color: var(--color-gray);
     margin: 26px 0;
@@ -236,6 +238,7 @@ main.content {
     display: flex;
     flex-direction: column;
     gap: 44px;
+    padding: 0 24px;
 }
 
 .caption {
@@ -349,4 +352,78 @@ a i {
     left: 0;
     right: 0;
     text-align: center;
+}
+
+@media (max-width: 768px) {
+    .content__header{
+        font-size: var(--font-size-header);
+        line-height: var(--font-size-header);
+        font-weight: 550;
+    }
+    .right__side {
+        display: none; /* Скрываем правую сторону на мобильных устройствах */
+    }
+
+    .media__page-header {
+        position: relative;
+        color: white; /* Чтобы текст был читаемым */
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        font-size: var(--font-size-26);
+        line-height:  var(--font-size-26);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 250px;
+        padding: 24px 24px;
+        justify-content: flex-end;
+
+    }
+    .media__page-date.mobile {
+        display: none; /* Показываем только на мобильных */
+        font-size: var(--font-size-16);
+        font-weight: 500;
+        color: #ffffff;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        z-index: 2;
+    }
+    .media__page-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Затемнение */
+        z-index: 1;
+    }
+    .media__page-header span{
+        z-index: 2;
+        position: relative;
+        border-bottom: 1px solid white;
+        padding-bottom: 12px;
+    }
+    .media__page-date{
+        display: none;
+    }
+    .left__side{
+        max-width: 100%;
+    }
+    .media__page-container {
+        position: relative;
+    }
+    .media__page-header[data-bg] {
+        background-image: var(--mobile-bg);
+        position: relative;
+        z-index: 2;
+    }
+    .media__page-date.mobile{
+        display: flex;
+    }
+    .dates-carousel{
+        display: none;
+    }
 }

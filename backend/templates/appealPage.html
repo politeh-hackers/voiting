@@ -75,6 +75,9 @@
                         <div class="responce">
                             {{content.official_response}}
                         </div>
+                        <div class="date_responce">
+                            {{content.date_responce}}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -83,6 +86,10 @@
     {% include 'footer.html' %}
 </body>
 <style>
+    .date_responce{
+        font-size: var(--font-size-16);
+        color: #868693;
+    }
     .commentaryBlock {
         display: flex;
         gap: 20px;

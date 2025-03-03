@@ -115,6 +115,7 @@ const post = ref<Post>({
   on_website: false,
   date: new Date(),
   official_response: "",
+  date_responce: new Date()
 });
 const token = getToken()
 const router = useRouter()
@@ -215,12 +216,13 @@ const SavePost = async () => {
     text: post.value.text,
     on_website: post.value.on_website,
     status: post.value.status,
-    official_response: post.value.official_response
+    official_response: post.value.official_response,
+    date_responce: post.value.date_responce ? new Date(post.value.date_responce).toISOString().split('T')[0] : null
   };
   try {
     console.log(postData)
     const response = await fetch(
-      `http://localhost:8000/appeals/appeals/${post.value.id}`,
+      `http://localhost:8000/appeals/${post.value.id}`,
       {
         method: "PATCH",
         headers: {
@@ -250,6 +252,7 @@ const SavePost = async () => {
         on_website: false,
         date: new Date(),
         official_response: "",
+        date_responce: new Date()
       };
       visibledt.value = false;
     } else {

@@ -1,4 +1,3 @@
-
 declare var ymaps: any;
 function validateStep1() {
     let isValid = true;
@@ -154,7 +153,7 @@ function initMap(): void {
     
     async function sendDataToServer(data: FormData): Promise<void> {
         try {
-            const response = await fetch('http://127.0.0.1:8000/appeals/', {
+            const response = await fetch('http://127.0.0.1:8000/appeals/appeals', {
                 method: 'POST',
                 
                 body: data, 
@@ -316,10 +315,17 @@ document.addEventListener("DOMContentLoaded", () => {
     closeModal?.addEventListener("click", () => {
         const isConfirmed = confirm("Вы действительно хотите закрыть форму? Введённые данные будут утеряны.");
     
-    if (isConfirmed) {
-        modal.style.display = "none";
-        resetForm();
-    }
+        if (isConfirmed) {
+            const modalElement = modal as HTMLElement;
+            modalElement.classList.add('closing');
+            
+            // Ждем окончания анимации перед скрытием модального окна
+            setTimeout(() => {
+                modalElement.style.display = "none";
+                modalElement.classList.remove('closing');
+                resetForm();
+            }, 500); // Время должно совпадать с длительностью анимации
+        }
     });
 
     sendCodeBtn?.addEventListener("click", () => {
