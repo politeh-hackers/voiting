@@ -1,16 +1,18 @@
 <template>
+  <div class="actual-page">
     <h1>Актуальное</h1>
     <div class="card flex flex-column">
-      <Dialog
+      <Sidebar
         v-model:visible="visible"
         @show="initializeEditor"
         @hide="handleDialogClose"
-        
-        modal
-        header="Добавить новость"
+        position="right"
         :style="{ width: '60rem' }"
-        class="dialog-main"
+        class="sidebar-main"
       >
+        <template #header>
+          <h2>Добавить новость</h2>
+        </template>
         <div class="content__main">
           <div class="slug">
             
@@ -98,15 +100,17 @@
   
           <Button icon="pi pi-check" @click="addPost" />
         </div>
-      </Dialog>
-      <Dialog
+      </Sidebar>
+      <Sidebar
         v-model:visible="visibledt"
         @show="initializeEditor"
-        modal
-        header="Изменить новость"
+        position="right"
         :style="{ width: '60rem' }"
-        class="dialog-edit"
+        class="sidebar-edit"
       >
+        <template #header>
+          <h2>Изменить новость</h2>
+        </template>
         <div class="content__main">
           <div class="slug">
             
@@ -192,7 +196,7 @@
   
           <Button icon="pi pi-check" @click="SaveEditedPost" />
         </div>
-      </Dialog>
+      </Sidebar>
   
       <DataView
         :value="filteredNewsList"
@@ -263,7 +267,8 @@
         </template>
       </DataView>
     </div>
-  </template>
+  </div>
+</template>
     
     
     <script setup lang="ts">
@@ -272,7 +277,7 @@
   import InputText from "primevue/inputtext";
   import DatePicker from "primevue/datepicker";
   import Button from "primevue/button";
-  import Dialog from "primevue/dialog";
+  import Sidebar from "primevue/sidebar";
   import DataView from "primevue/dataview";
   import FileUpload from "primevue/fileupload";
   import { PostService, Post } from "../../api/serviceformedia";
@@ -728,6 +733,17 @@
     flex-direction: row;
     gap: 3px;
     height: 30px;
+  }
+  .sidebar-main,
+  .sidebar-edit {
+    .p-sidebar-content {
+      padding: 2rem;
+    }
+    
+    .content__main {
+      height: calc(100vh - 6rem);
+      overflow-y: auto;
+    }
   }
   </style>
     

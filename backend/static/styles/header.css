@@ -72,24 +72,30 @@ header {
 .search-popup {
     justify-content: center;
     z-index: 15;
+    flex-direction: column;
     display: none;
     position: relative;
     box-shadow: var(--box-shadow-default);
+    width: 100%;
 }
 
 .search-popup.active {
     transform: translateY(0);
+    display: flex;
 }
 
 .search-popup .container {
-    max-width: var(--max-width-content);
     width: 100%;
+    max-width: var(--max-width-content);
     padding: 42px 28px;
     position: relative;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .search-popup__container {
     display: flex;
+    width: 100%;
     max-width: var(--max-width-container);
     align-items: center;
     justify-content: center;
@@ -103,7 +109,6 @@ header {
     outline: none;
     font-size: var(--font-size-small);
     padding: 8px 0;
-    max-width: var(--max-width-content);
     width: 100%;
     box-sizing: border-box;
 }
@@ -189,6 +194,7 @@ header {
         display: block;
         font-size: 18px;
     }
+
 }
 
 .header__center.active {

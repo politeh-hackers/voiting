@@ -282,14 +282,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    
     const modal = document.getElementById("appealForm") as HTMLElement;
-    const closeModal = document.querySelector(".close-modal") as HTMLElement;
+    const mobileClose = document.querySelector(".mobile-close") as HTMLElement;
+    const desktopClose = document.querySelector(".desktop-close") as HTMLElement;
     const sendCodeBtn = document.getElementById("sendCodeBtn") as HTMLButtonElement;
     const confirmCodeBtn = document.getElementById("confirmCodeBtn") as HTMLButtonElement;
     const confirmBtn = document.getElementById("confirmBtn") as HTMLButtonElement;
     const codeInputs = document.querySelectorAll(".code-box") as NodeListOf<HTMLInputElement>;
     let countdownTimer: number | null = null;
+
     function startCountdown(duration: number) {
         let remainingTime = duration;
         sendCodeBtn.disabled = true;
@@ -306,25 +307,49 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 1000);
     }
 
-
     document.querySelector(".appeals__button")?.addEventListener("click", () => {
         modal.style.display = "flex";
         resetForm();
     });
 
-    closeModal?.addEventListener("click", () => {
+    // Обработчик для мобильной версии
+    mobileClose?.addEventListener("click", () => {
         const isConfirmed = confirm("Вы действительно хотите закрыть форму? Введённые данные будут утеряны.");
-    
         if (isConfirmed) {
-            const modalElement = modal as HTMLElement;
-            modalElement.classList.add('closing');
-            
-            // Ждем окончания анимации перед скрытием модального окна
+            modal.classList.add('closing');
             setTimeout(() => {
-                modalElement.style.display = "none";
-                modalElement.classList.remove('closing');
+                modal.style.display = "none";
+                modal.classList.remove('closing');
                 resetForm();
-            }, 500); // Время должно совпадать с длительностью анимации
+            }, 500);
+        }
+    });
+
+    // Обработчик для десктопной версии
+    desktopClose?.addEventListener("click", () => {
+        const isConfirmed = confirm("Вы действительно хотите закрыть форму? Введённые данные будут утеряны.");
+        if (isConfirmed) {
+            modal.classList.add('closing');
+            setTimeout(() => {
+                modal.style.display = "none";
+                modal.classList.remove('closing');
+                resetForm();
+            }, 500);
+        }
+    });
+
+    // Закрытие формы при клике вне её области
+    window.addEventListener("click", (event: MouseEvent) => {
+        if (event.target === modal) {
+            const isConfirmed = confirm("Вы действительно хотите закрыть форму? Введённые данные будут утеряны.");
+            if (isConfirmed) {
+                modal.classList.add('closing');
+                setTimeout(() => {
+                    modal.style.display = "none";
+                    modal.classList.remove('closing');
+                    resetForm();
+                }, 500);
+            }
         }
     });
 

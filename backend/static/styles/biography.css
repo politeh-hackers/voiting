@@ -161,7 +161,11 @@ main.content {
 }
 
 /* Чтобы контент не перекрывался фото */
-.media__page-container {}
+.media__page-container {
+    
+    padding-bottom: 44px;
+    border-bottom: 1px solid var(--color-gray);
+}
 
 [class*="ground-pane"] {
     filter: grayscale(1);
@@ -338,6 +342,9 @@ a i {
     background-size: cover;
     background-position: center;
 }
+.media__page-date.mobile{
+    display: none;
+}
 
 .swiper-slide img {
     display: block;
@@ -381,7 +388,7 @@ a i {
 
     }
     .media__page-date.mobile {
-        display: none; /* Показываем только на мобильных */
+        display: flex;
         font-size: var(--font-size-16);
         font-weight: 500;
         color: #ffffff;
@@ -420,9 +427,7 @@ a i {
         position: relative;
         z-index: 2;
     }
-    .media__page-date.mobile{
-        display: flex;
-    }
+   
     .dates-carousel{
         display: none;
     }

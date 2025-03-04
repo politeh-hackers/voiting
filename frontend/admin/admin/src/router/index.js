@@ -1,12 +1,16 @@
 import AppLayout from '@/layout/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
+import { getToken, isAuthenticated } from '@/utils/auth';
 
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
             path: '/',
-            redirect: '/auth'
+            redirect: (to) => {
+                const token = getToken();
+                return isAuthenticated(token) ? { name: 'dashboard' } : '/auth';
+            }
         },
         {
             path: '/auth',
@@ -67,5 +71,15 @@ const router = createRouter({
         }
     ]
 });
-
+router.beforeEach((to, from, next) => {
+    const token = getToken();
+    
+    if (to.path === '/auth' && isAuthenticated(token)) {
+        next({ name: 'dashboard' }); // Если авторизован и пытается зайти на страницу авторизации - на дашборд
+    } else if (!to.path.startsWith('/auth') && !isAuthenticated(token)) {
+        next('/auth'); // Если не авторизован и пытается зайти на защищенный путь - на авторизацию
+    } else {
+        next();
+    }
+});
 export default router;

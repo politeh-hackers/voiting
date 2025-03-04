@@ -1,5 +1,7 @@
 {% load static %}
 <script src="{% static 'header/index.js' %}" type="module"></script>
+<script src="{% static 'header/search.js' %}" type="module"></script>
+<link rel="stylesheet" href="{% static 'header/styles.css' %}">
 <header class="header">
     <div class="header__container">
         <a href="http://127.0.0.1:8000/" class="header__left">
@@ -32,10 +34,9 @@
     </div>
     <div id="searchPopup" class="search-popup">
         <div class="container">
-            <input class = "input__search" type="text" placeholder="Поиск...">
+            <input class="input__search" type="text" placeholder="Поиск по сайту...">
             <button class="clear-btn" id="clearButton">⨯</button>
         </div>
-    
     </div>
 </header>
 

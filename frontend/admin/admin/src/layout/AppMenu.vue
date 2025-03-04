@@ -1,7 +1,13 @@
 <script setup>
 import { ref } from 'vue';
-
+import { useRouter } from 'vue-router';
+import { logout } from '@/utils/auth';
 import AppMenuItem from './AppMenuItem.vue';
+
+const router = useRouter();
+const handleLogout = () => {
+    logout(router);
+};
 
 const model = ref([
     {
@@ -46,7 +52,7 @@ const model = ref([
                     {
                         label: 'Выйти',
                         icon: 'pi pi-fw pi-sign-out',
-                        to: '/auth/login'
+                        command: () => handleLogout()
                     },
                     {
                         label: 'Регистрация',
@@ -73,10 +79,10 @@ const model = ref([
 
 <template>
     <ul class="layout-menu">
-        <template v-for="(item, i) in model" :key="item">
+        <fragment v-for="(item, i) in model" :key="i">
             <app-menu-item v-if="!item.separator" :item="item" :index="i"></app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>
-        </template>
+        </fragment>
     </ul>
 </template>
 

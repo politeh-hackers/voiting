@@ -1,4 +1,3 @@
-
 import {jwtDecode} from 'jwt-decode'
 
 export const getToken = () => {
@@ -23,4 +22,19 @@ export const isAuthenticated = (token:string): boolean => {
     return true;
   }
   return false;
+};
+
+export const logout = async (router: any) => {
+  try {
+    await fetch('http://127.0.0.1:8000/admin/logout', {
+      method: 'POST',
+      headers: {
+        'Authorization': `${getToken()}`
+      }
+    });
+    localStorage.removeItem('authToken');
+    router.push('/auth');
+  } catch (error) {
+    console.error('Ошибка при выходе:', error);
+  }
 };

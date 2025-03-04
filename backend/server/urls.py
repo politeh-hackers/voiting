@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from django.contrib.sitemaps.views import index, sitemap
 from django.conf.urls.static import static
 from django.conf import settings
+from . import views
 
 
 urlpatterns = [
@@ -21,4 +22,5 @@ urlpatterns = [
     path('sitemap.xml', index, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.index'),
     path('sitemap-<section>.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
+    path('search/', views.search, name='search'),
 ]
