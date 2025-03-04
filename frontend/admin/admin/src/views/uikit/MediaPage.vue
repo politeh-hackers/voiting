@@ -107,7 +107,20 @@
             <DatePicker v-model="post.date_created" dateFormat="yy-mm-dd" />
           </div>
   
-          <Button icon="pi pi-check" @click="addPost" class="mt-4" />
+          <div class="flex flex-col sm:flex-row gap-4 mt-4">
+            <Button 
+              icon="pi pi-check" 
+              label="Сохранить"
+              @click="addPost" 
+              class="p-button-warning w-full sm:w-[200px]" 
+            />
+            <Button 
+              icon="pi pi-times" 
+              label="Отмена"
+              @click="visible = false" 
+              class="p-button-secondary w-full sm:w-[200px]" 
+            />
+          </div>
         
       </Sidebar>
 
@@ -215,7 +228,20 @@
             <DatePicker v-model="post.date_created" dateFormat="" />
           </div>
   
-          <Button icon="pi pi-check" @click="SaveEditedPost" class="mt-4" />
+          <div class="flex flex-col sm:flex-row gap-4 mt-4">
+            <Button 
+              icon="pi pi-check" 
+              label="Сохранить"
+              @click="SaveEditedPost" 
+              class="p-button-warning w-full sm:w-[200px]" 
+            />
+            <Button 
+              icon="pi pi-times" 
+              label="Отмена"
+              @click="visibledt = false" 
+              class="p-button-secondary w-full sm:w-[200px]" 
+            />
+          </div>
         </div>
         
       </Sidebar>
@@ -274,7 +300,7 @@
                   {{ new Date(newsItem.date_created).toLocaleDateString() }}
                 </span>
               </div>
-              <div class="flex flex-col w-full sm:w-auto gap-2.5">
+              <div class="flex flex-col w-full sm:w-auto gap-4">
                 <Button
                   icon="pi pi-pencil"
                   label="Редактировать"

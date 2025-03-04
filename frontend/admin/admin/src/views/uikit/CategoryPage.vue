@@ -129,7 +129,7 @@ const saveEditedPost = async () => {
           </div>
         </template>
         <template #body="slotProps">
-          <div class="flex flex-col gap-2.5">
+          <div class="flex flex-col gap-4">
             <Button
               icon="pi pi-pencil"
               label="Изменить"
@@ -159,9 +159,19 @@ const saveEditedPost = async () => {
               class="w-full"
             />
           </div>
-          <div class="flex flex-col sm:flex-row gap-2">
-            <Button label="Сохранить" class="p-button-warning w-full sm:w-auto" @click="saveEditedPost" />
-            <Button label="Отмена" class="p-button-secondary w-full sm:w-auto" @click="visibleEdit = false" />
+          <div class="flex flex-col sm:flex-row gap-4">
+            <Button 
+              icon="pi pi-check"
+              label="Сохранить" 
+              class="p-button-warning w-full sm:w-[200px]" 
+              @click="saveEditedPost" 
+            />
+            <Button 
+              icon="pi pi-times"
+              label="Отмена" 
+              class="p-button-secondary w-full sm:w-[200px]" 
+              @click="visibleEdit = false" 
+            />
           </div>
         </div>
       </div>
@@ -179,9 +189,19 @@ const saveEditedPost = async () => {
               class="w-full"
             />
           </div>
-          <div class="flex flex-col sm:flex-row gap-2">
-            <Button label="Сохранить" class="p-button-warning w-full sm:w-auto" @click="addPost" />
-            <Button label="Отмена" class="p-button-secondary w-full sm:w-auto" @click="visible = false" />
+          <div class="flex flex-col sm:flex-row gap-4">
+            <Button 
+              icon="pi pi-check"
+              label="Сохранить" 
+              class="p-button-warning w-full sm:w-[200px]" 
+              @click="addPost" 
+            />
+            <Button 
+              icon="pi pi-times"
+              label="Отмена" 
+              class="p-button-secondary w-full sm:w-[200px]" 
+              @click="visible = false" 
+            />
           </div>
         </div>
       </div>

@@ -62,17 +62,56 @@
             <label class="mb-2">Официальный ответ</label>
             <Textarea v-model="post.official_response" rows="5" cols="30" class="resize-none w-full" />
           </div>
-          <Button icon="pi pi-check" @click="SavePost()" class="mt-4" />
+          <div class="flex flex-col sm:flex-row gap-4 mt-4">
+            <Button 
+              icon="pi pi-check" 
+              label="Сохранить"
+              @click="SavePost()" 
+              class="p-button-warning w-full sm:w-[200px]" 
+            />
+            <Button 
+              icon="pi pi-times" 
+              label="Отмена"
+              @click="visibledt = false" 
+              class="p-button-secondary w-full sm:w-[200px]" 
+            />
+          </div>
         </div>
       </div>
     </Sidebar>
     <DataView
-      :value="NewList"
+      :value="filteredAppeals"
       paginator
       :rows="10"
       dataKey="'id'"
       class="w-full"
     >
+      <template #header>
+        <div class="flex flex-col sm:flex-row w-full gap-4">
+          <div class="flex flex-col sm:flex-row flex-1 gap-4">
+            <Dropdown
+              v-model="sortField"
+              :options="sortOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Сортировать по"
+              class="w-full sm:w-[200px]"
+            />
+            <Dropdown
+              v-model="selectedStatus"
+              :options="status"
+              optionLabel="name"
+              placeholder="Фильтр по статусу"
+              class="w-full sm:w-[200px]"
+            />
+            <InputText
+              v-model="searchQuery"
+              placeholder="Поиск по тексту или категории"
+              class="w-full"
+            />
+          </div>
+        </div>
+      </template>
       <template #list="slotProps">
         <div class="flex flex-col w-full">
           <div
@@ -169,6 +208,14 @@ const statusitems = ref();
 const visibledt = ref(false);
 const NewList = ref<Post[]>([]);
 const items = ref();
+const sortField = ref("date");
+const searchQuery = ref("");
+const selectedStatus = ref(null);
+const sortOptions = [
+  { label: "По дате (новые)", value: "date_desc" },
+  { label: "По дате (старые)", value: "date_asc" },
+];
+
 const loadAppeals = async () => {
   try {
     const response = await fetch("http://localhost:8000/appeals/appeals", {
@@ -302,6 +349,44 @@ const SavePost = async () => {
     console.error("Ошибка:", error);
   }
 };
+  
+// Вычисляемое свойство для фильтрации и сортировки
+const filteredAppeals = computed(() => {
+  let filtered = [...NewList.value];
+
+  // Фильтрация по поисковому запросу
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(
+      (appeal) =>
+        appeal.text?.toLowerCase().includes(query) ||
+        appeal.category?.toLowerCase().includes(query)
+    );
+  }
+
+  // Фильтрация по статусу
+  if (selectedStatus.value) {
+    filtered = filtered.filter(
+      (appeal) => appeal.status === selectedStatus.value.name
+    );
+  }
+
+  // Сортировка
+  filtered.sort((a, b) => {
+    switch (sortField.value) {
+      case "date_desc":
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      case "date_asc":
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      case "status":
+        return (a.status || "").localeCompare(b.status || "");
+      default:
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+    }
+  });
+
+  return filtered;
+});
   
 onMounted(() => {
   loadAppeals();
