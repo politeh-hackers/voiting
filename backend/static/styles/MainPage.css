@@ -15,6 +15,7 @@ main.mainPage-content {
 }
 .appeals-cards_container{
     padding: 0 24px;
+    padding-bottom: 24px;
     position: relative;
     width: calc(100% - 48px); /* Учитываем padding */
 }

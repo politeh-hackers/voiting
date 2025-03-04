@@ -40,10 +40,11 @@
             </div>
             <div class="main__cards-content">
                 {% include 'mediaCards.html' %}
-            </div>
-            {% if total_items > 8 %}
-                {% include 'paginationForMedia.html' %}
+                {% if total_items > 8 %}
+                {% include 'pagination.html' %}
             {% endif %}
+            </div>
+           
 
             
         </div>

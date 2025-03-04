@@ -31,7 +31,7 @@ class AppealsClientView(View):
     
     def get(self, request):
         page = request.GET.get('page', 1)  
-        per_page = int(request.GET.get('per_page', 3))
+        per_page = int(request.GET.get('per_page', 8))
         appeals = Appeal.objects.filter(on_website=True)  
         categories = Category.objects.all()
         paginator = Paginator(appeals, per_page)

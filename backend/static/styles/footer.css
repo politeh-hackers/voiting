@@ -1,4 +1,14 @@
-    
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
 .logos__container {
     display: flex;
     align-items: center;
@@ -16,8 +26,8 @@
     padding: auto;
 }
 .footer{
-    
-    margin-top: 70px;
+    flex-shrink: 0;
+    margin-top: 66px;
     background-color: white;
     box-shadow: 0px 16px 32px -4px #6161671A;
 }
@@ -103,5 +113,8 @@
     .logos__images{
         align-items: stretch;
         margin: 0;
+    }
+    .footer{
+        margin-top: 14px;
     }
 }
