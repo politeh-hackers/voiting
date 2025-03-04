@@ -1,6 +1,6 @@
 <template>
   <div class="appeals-page">
-    <h1>Обращения</h1>
+    <h1 class="text-4xl font-bold mb-4">Обращения</h1>
     <Sidebar
       v-model:visible="visibledt"
       position="right"
@@ -10,80 +10,105 @@
       <template #header>
         <h2>Обращение</h2>
       </template>
-      <div class="content__main">
-        <div class="components">
+      <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-6">
   
-          <div class="category">
-            <label>Категория обращения</label>
-            <Select v-model="selectedCategory" :options="items" optionLabel="name" :placeholder="post.category" />
+          <div class="flex flex-col">
+            <label class="mb-2">Категория обращения</label>
+            <Select v-model="selectedCategory" :options="items" optionLabel="name" :placeholder="post.category" class="w-full" />
           </div>
-          <div class="name">
-            <label>Имя</label>
-            <InputText disabled v-model="post.first_name" placeholder="Введите имя" class="header__input" />
+          <div class="flex flex-col">
+            <label class="mb-2">Имя</label>
+            <InputText disabled v-model="post.first_name" placeholder="Введите имя" class="w-full" />
           </div>
-          <div class="surname">
-            <label>Фамилия</label>
-            <InputText disabled v-model="post.last_name" placeholder="Введите фамилию" class="summary_input" />
-          </div>
-  
-          <div class="second_name">
-            <label>Отчество</label>
-            <InputText disabled v-model="post.patronymic" placeholder="Введите отчество" class="summary_input" />
+          <div class="flex flex-col">
+            <label class="mb-2">Фамилия</label>
+            <InputText disabled v-model="post.last_name" placeholder="Введите фамилию" class="w-full" />
           </div>
   
-          <div class="flex-auto">
-            <label>Номер телефона</label>
-            <InputText id="phone" disabled v-model="post.phone" placeholder="Введите номер телефона" fluid />
+          <div class="flex flex-col">
+            <label class="mb-2">Отчество</label>
+            <InputText disabled v-model="post.patronymic" placeholder="Введите отчество" class="w-full" />
           </div>
-          <div class="date_picker">
-            <label>Дата обращения</label>
-            <DatePicker disabled v-model="post.date" dateFormat="" />
+  
+          <div class="flex flex-col">
+            <label class="mb-2">Номер телефона</label>
+            <InputText id="phone" disabled v-model="post.phone" placeholder="Введите номер телефона" class="w-full" />
           </div>
-          <FloatLabel variant="on">
-            <label>Текст обращения</label>
-            <Textarea id="over_label" v-model="post.text" rows="5" cols="30" style="resize: none" />
-          </FloatLabel>
-          <label>Прикрепленные изображения</label>
-          <Image v-for="(photo, index) in post.photos" :key="index" :src="photo" width="250" preview />
-          <div class="card flex flex-wrap justify-center gap-4">
-            <label>Статус обращения</label>
-            <Select v-model="post.status" :options="status" optionLabel="name" option-value="name"
-              placeholder="Выберите статус" />
+          <div class="flex flex-col">
+            <label class="mb-2">Дата обращения</label>
+            <DatePicker disabled v-model="post.date" dateFormat="" class="w-full" />
           </div>
-          <div class="card flex flex-wrap justify-center gap-4">
-            <div class="flex items-center gap-2">
-              <Checkbox v-model="post.on_website" inputId="CheckWorked" name="on_website" binary />
-              <label for="CheckWorked">Отображать на сайте</label>
+          <div class="flex flex-col">
+            <label class="mb-2">Текст обращения</label>
+            <Textarea v-model="post.text" rows="5" cols="30" class="resize-none w-full" />
+          </div>
+          <div class="flex flex-col">
+            <label class="mb-2">Прикрепленные изображения</label>
+            <div class="flex flex-wrap gap-4">
+              <Image v-for="(photo, index) in post.photos" :key="index" :src="photo" width="250" preview />
             </div>
           </div>
-          <FloatLabel variant="on">
-            <label>Официальный ответ</label>
-            <Textarea id="over_label" v-model="post.official_response" rows="5" cols="30" style="resize: none" />
-          </FloatLabel>
-          <Button icon="pi pi-check" @click="SavePost()" />
+          <div class="flex flex-col">
+            <label class="mb-2">Статус обращения</label>
+            <Select v-model="post.status" :options="status" optionLabel="name" option-value="name"
+              placeholder="Выберите статус" class="w-full" />
+          </div>
+          <div class="flex items-center gap-2">
+            <Checkbox v-model="post.on_website" inputId="CheckWorked" name="on_website" binary />
+            <label for="CheckWorked">Отображать на сайте</label>
+          </div>
+          <div class="flex flex-col">
+            <label class="mb-2">Официальный ответ</label>
+            <Textarea v-model="post.official_response" rows="5" cols="30" class="resize-none w-full" />
+          </div>
+          <Button icon="pi pi-check" @click="SavePost()" class="mt-4" />
         </div>
       </div>
     </Sidebar>
-    <DataView :value="NewList" paginator :rows="5" dataKey="'id'" class="main-dataview">
+    <DataView
+      :value="NewList"
+      paginator
+      :rows="10"
+      dataKey="'id'"
+      class="w-full"
+    >
       <template #list="slotProps">
-        <div class="news-container">
-          <div v-for="newsItem in slotProps.items" :key="newsItem.id" class="news-item">
-            <div class="image-block">
-              <img v-if="newsItem.main_photo" class="news-image"
-                :src="`http://localhost:8000/static/images/${newsItem.main_photo}`" :alt="newsItem.header" />
+        <div class="flex flex-col w-full">
+          <div
+            v-for="newsItem in slotProps.items"
+            :key="newsItem.id"
+            class="flex flex-col sm:flex-row items-start sm:items-center p-4 sm:p-6 gap-4 border-b border-gray-200"
+          >
+            <div class="w-full sm:w-auto sm:flex-none sm:mr-4 sm:border-r sm:border-gray-200 sm:pr-4">
+              <img
+                v-if="newsItem.main_photo"
+                class="w-full sm:w-[100px] h-[100px] object-cover rounded-lg"
+                :src="`http://localhost:8000/static/images/${newsItem.main_photo}`"
+                :alt="newsItem.header"
+              />
             </div>
-            <div class="title-block">
-              <div class="news-title">{{ newsItem.last_name }}</div>
+            <div class="w-full sm:flex-1 sm:border-r sm:border-gray-200 sm:pr-4">
+              <div class="text-xl font-semibold">{{ newsItem.last_name }}</div>
             </div>
-            <div class="date-block">
-              <span class="news-date">
+            <div class="w-full sm:w-auto text-sm text-gray-500 sm:border-r sm:border-gray-200 sm:pr-4">
+              <span>
                 {{ new Date(newsItem.date).toLocaleDateString() }}
               </span>
             </div>
-            <div class="action-buttons">
-              <Button icon="pi pi-pencil" label="Редактировать" class="p-button-warning p-mr-2"
-                @click="editPost(newsItem)" />
-              <Button icon="pi pi-trash" label="Удалить" class="p-button-danger" @click="deletePost(newsItem.id)" />
+            <div class="flex flex-col w-full sm:w-auto gap-2.5">
+              <Button
+                icon="pi pi-pencil"
+                label="Редактировать"
+                class="p-button-warning w-full sm:w-[150px]"
+                @click="editPost(newsItem)"
+              />
+              <Button
+                icon="pi pi-trash"
+                label="Удалить"
+                class="p-button-danger w-full sm:w-[150px]"
+                @click="deletePost(newsItem.id)"
+              />
             </div>
           </div>
         </div>
@@ -284,169 +309,52 @@ onMounted(() => {
 });
 </script>
   
-<style scoped lang="scss">
-.components {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  /* Добавляем гэпы между всеми компонентами */
+<style scoped>
+.appeals-page {
+  @apply p-4;
 }
 
-.card.flex {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  /* Добавляем гэпы в карточках */
-}
-
-.input {
-  margin-bottom: 1rem;
-  /* Отступы между инпутами */
-}
-
-textarea,
-input {
-  width: 100%;
-  /* Ширина инпутов и текстовых полей */
-}
-
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-.content__main {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-// .news-header {
-//   display: grid;
-//   grid-template-columns: 1fr 2fr 1fr 1fr;
-//   gap: 20px;
-//   font-weight: bold;
-//   padding: 10px 0;
-//   border-bottom: 2px solid #e0e0e0;
-// }
-.image-preview {
-  max-width: 150px;
-  max-height: 150px;
-  object-fit: cover;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.news-header .image-label,
-.news-header .title-label,
-.news-header .date-label,
-.news-header .actions-label {
-  text-align: center;
-}
-
-.news-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.news-item {
-  display: flex;
-  align-items: center;
-  padding: 1.5rem;
-  gap: 1rem;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.image-block {
-  flex: 0 0 auto;
-  margin-right: 1rem;
-  border-right: 1px solid #e0e0e0;
-  padding-right: 1rem;
-}
-
-.title-block {
-  flex: 1;
-  border-right: 1px solid #e0e0e0;
-  padding-right: 1rem;
-}
-
-.date-block {
-  font-size: 0.875rem;
-  color: #888;
-  border-right: 1px solid #e0e0e0;
-  padding-right: 1rem;
-}
-
-.news-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-top: 0.5rem;
-}
-
-.news-date {
-  font-size: 0.875rem;
-  color: #888;
-}
-
-.action-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.news-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-}
-
-.image-upload {
-  margin-top: 10px;
-}
-
-.tag-overlay {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-}
-
-.image-label,
-.title-label,
-.date-label,
-.actions-label {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.content-editor {}
-
-.search-input {}
-
-.p-dropdown {
-  align-items: center;
-}
-
-.header__content {
-  display: flex;
-  flex-direction: row;
-  gap: 3px;
-  height: 30px;
-}
-
+.sidebar-main,
 .sidebar-edit {
-  .p-sidebar-content {
-    padding: 2rem;
+  @apply w-full;
+}
+
+@media (min-width: 640px) {
+  .sidebar-main,
+  .sidebar-edit {
+    width: 60rem !important;
   }
-  
-  .content__main {
-    height: calc(100vh - 6rem);
-    overflow-y: auto;
-  }
+}
+
+:deep(.p-sidebar-content) {
+  @apply p-4 sm:p-8;
+}
+
+:deep(.p-fileupload-content) {
+  @apply p-4;
+}
+
+:deep(.p-datepicker) {
+  @apply w-full;
+}
+
+:deep(.p-dropdown) {
+  @apply w-full sm:w-auto;
+}
+
+:deep(.p-button) {
+  @apply justify-center;
+}
+
+:deep(.p-inputtext) {
+  @apply w-full;
+}
+
+:deep(.p-checkbox) {
+  @apply mr-2;
+}
+
+:deep(.p-textarea) {
+  @apply w-full;
 }
 </style>

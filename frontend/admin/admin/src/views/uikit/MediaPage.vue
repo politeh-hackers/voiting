@@ -15,58 +15,59 @@
         </template>
         
         
-          <div class="h1">
+          <div class="flex flex-col mb-4">
               <label>URL страницы (slug)</label>
               <InputText
                 v-model="post.slug"
                 placeholder="Введите URL страницы"
-                class="h1__input"
+                class="w-full"
               />
           </div>
-          <div class="h1">
+          <div class="flex flex-col mb-4">
               <label>H1 заголовок</label>
               <InputText
                 v-model="post.h1"
                 placeholder="Введите H1 заголовок"
-                class="h1__input"
+                class="w-full"
               />
           </div>
-          <div class="title">
+          <div class="flex flex-col mb-4">
               <label>Title страницы</label>
               <InputText
                 v-model="post.title"
                 placeholder="Введите title страницы"
-                class="title__input"
+                class="w-full"
               />
           </div>
-          <div class="description">
+          <div class="flex flex-col mb-4">
               <label>Meta description</label>
               <InputText
                 v-model="post.description"
                 placeholder="Введите meta description"
-                class="description__input"
+                class="w-full"
               />
           </div>
-          <div class="header">
+          <div class="flex flex-col mb-4">
             <label>Заголовок новости</label>
             <InputText
               v-model="post.header"
               placeholder="Введите заголовок новости"
-              class="header__input"
+              class="w-full"
             />
           </div>
-          <div class="summary">
+          <div class="flex flex-col mb-4">
             <label>Краткое описание</label>
             <InputText
               v-model="post.summary"
               placeholder="Введите краткое описание"
-              class="summary_input"
+              class="w-full"
             />
           </div>
   
-          <div class="image-upload">
-            <label for="image-upload">Загрузить изображение:</label>
+          <div class="mt-4">
+            <label for="image-upload" class="mb-2 block">Загрузить изображение:</label>
             <FileUpload
+              ref="fileUpload"
               name="main_photo"
               :url="'http://localhost:8000/admin/image'"
               accept="image/*"
@@ -79,32 +80,34 @@
               chooseLabel="Выбрать изображение"
             >
               <template #content>
-                <div class="custom-file-upload">
-                  <!-- Отображение выбранного изображения -->
+                <div class="flex flex-col">
+                  <div class="flex gap-2 mb-4">
+                    <Button
+                      v-if="post.main_photo"
+                      class="p-button-danger"
+                      icon="pi pi-times"
+                      label="Удалить"
+                      @click="onImageRemove"
+                    />
+                  </div>
                   <img
                     v-if="post.main_photo"
                     :src="`http://localhost:8000/static/image/${post.main_photo}`"
                     alt="Preview"
-                    class="image-preview"
-                  />
-                  <Button
-                    class="p-button-danger"
-                    icon="pi pi-times"
-                    @click="onImageRemove"
+                    class="max-w-[150px] max-h-[150px] object-cover border border-gray-300 rounded"
                   />
                 </div>
               </template>
             </FileUpload>
           </div>
   
-          <div ref="editorContainer" class="content-editor"></div>
+          <div ref="editorContainer" class="mt-4"></div>
   
-          <div class="date__picker">
+          <div class="mt-4">
             <DatePicker v-model="post.date_created" dateFormat="yy-mm-dd" />
           </div>
   
-          <Button icon="pi pi-check" @click="addPost" />
-        
+          <Button icon="pi pi-check" @click="addPost" class="mt-4" />
         
       </Sidebar>
 
@@ -119,59 +122,60 @@
           <h2>Изменить новость</h2>
         </template>
         
-        
-          <div class="h1">
-              <label>URL страницы (slug)</label>
+        <div class="flex flex-col gap-6">
+          <div class="flex flex-col">
+              <label class="mb-2">URL страницы (slug)</label>
               <InputText
                 v-model="post.slug"
                 placeholder="Введите URL страницы"
-                class="h1__input"
+                class="w-full"
               />
           </div>
-          <div class="h1">
-              <label>H1 заголовок</label>
+          <div class="flex flex-col">
+              <label class="mb-2">H1 заголовок</label>
               <InputText
                 v-model="post.h1"
                 placeholder="Введите H1 заголовок"
-                class="h1__input"
+                class="w-full"
               />
           </div>
-          <div class="title">
-              <label>Title страницы</label>
+          <div class="flex flex-col">
+              <label class="mb-2">Title страницы</label>
               <InputText
                 v-model="post.title"
                 placeholder="Введите title страницы"
-                class="title__input"
+                class="w-full"
               />
           </div>
-          <div class="description">
-              <label>Meta description</label>
+          <div class="flex flex-col">
+              <label class="mb-2">Meta description</label>
               <InputText
                 v-model="post.description"
                 placeholder="Введите meta description"
-                class="description__input"
+                class="w-full"
               />
           </div>
-          <div class="header">
-            <label>Заголовок новости</label>
+          <div class="flex flex-col">
+            <label class="mb-2">Заголовок новости</label>
             <InputText
               v-model="post.header"
               placeholder="Введите заголовок новости"
-              class="header__input"
+              class="w-full"
             />
           </div>
-          <div class="summary">
-            <label>Краткое описание</label>
+          <div class="flex flex-col">
+            <label class="mb-2">Краткое описание</label>
             <InputText
               v-model="post.summary"
               placeholder="Введите краткое описание"
-              class="summary_input"
+              class="w-full"
             />
           </div>
   
-          <div class="image-upload">
-            <label for="image-upload">Изменить изображение:</label>
+          <div class="flex flex-col">
+            <label class="mb-2" for="image-upload">Изменить изображение:</label>
             <FileUpload
+              ref="fileUpload2"
               name="main_photo"
               :url="'http://localhost:8000/admin/image'"
               accept="image/*"
@@ -180,106 +184,113 @@
               :showCancelButton="false"
               @upload="onImageUpload"
               @remove="onImageRemove"
-              chooseLabel="Выбрать изображение" 
+              chooseLabel="Выбрать изображение"
             >
               <template #content>
-                <div class="custom-file-upload">
-                  <!-- Отображение выбранного изображения -->
+                <div class="flex flex-col">
+                  <div class="flex gap-2 mb-4">
+                    <Button
+                      v-if="post.main_photo"
+                      class="p-button-danger"
+                      icon="pi pi-times"
+                      label="Удалить"
+                      @click="onImageRemove"
+                    />
+                  </div>
                   <img
                     v-if="post.main_photo"
                     :src="`http://localhost:8000/static/image/${post.main_photo}`"
                     alt="Preview"
-                    class="image-preview"
-                  />
-                  <Button
-                    class="p-button-danger"
-                    @click="onImageRemove"
-                    icon="pi pi-times"
+                    class="max-w-[150px] max-h-[150px] object-cover border border-gray-300 rounded"
                   />
                 </div>
               </template>
             </FileUpload>
           </div>
   
-          <div ref="editorContainer" class="content-editor"></div>
+          <div ref="editorContainer" class="mt-4"></div>
   
-          <div class="date__picker">
+          <div class="flex flex-col">
+            <label class="mb-2">Дата публикации</label>
             <DatePicker v-model="post.date_created" dateFormat="" />
           </div>
   
-          <Button icon="pi pi-check" @click="SaveEditedPost" />
-        
+          <Button icon="pi pi-check" @click="SaveEditedPost" class="mt-4" />
+        </div>
         
       </Sidebar>
       
       <DataView
         :value="filteredNewsList"
         paginator
-        :rows="5"
+        :rows="10"
         dataKey="'id'"
-        class="main-dataview"
+        class="w-full"
       >
         <template #header>
-          <div class="header__content">
-          <Button
-            class="content__view"
-            icon="pi pi-plus"
-            @click="visible = true"
-          />
-          <Dropdown
-            v-model="sortOrder"
-            :options="sortOptions"
-            optionLabel="label"
-            optionValue="value"
-            class="p-dropdown"
-          /><InputText
-            v-model="searchQuery"
-            placeholder="Поиск по описанию"
-            class="search-input"
-          />
-        </div>
+          <div class="flex flex-col sm:flex-row w-full gap-4">
+            <div class="flex flex-col sm:flex-row flex-1 gap-4">
+              <Dropdown
+                v-model="sortOrder"
+                :options="sortOptions"
+                optionLabel="label"
+                optionValue="value"
+                class="w-full sm:w-auto"
+              />
+              <InputText
+                v-model="searchQuery"
+                placeholder="Поиск по описанию"
+                class="w-full"
+              />
+            </div>
+            <Button
+              icon="pi pi-plus"
+              label="Добавить"
+              class="p-button-warning w-full sm:w-auto"
+              @click="visible = true"
+            />
+          </div>
         </template>
         <template #list="slotProps">
-          <div class="news-container">
+          <div class="flex flex-col w-full">
             <div
               v-for="newsItem in slotProps.items"
               :key="newsItem.id"
-              class="news-item"
+              class="flex flex-col sm:flex-row items-start sm:items-center p-4 sm:p-6 gap-4 border-b border-gray-200"
             >
-              <div class="image-block">
+              <div class="w-full sm:w-auto sm:flex-none sm:mr-4 sm:border-r sm:border-gray-200 sm:pr-4">
                 <img
                   v-if="newsItem.main_photo"
-                  class="news-image"
+                  class="w-full sm:w-[100px] h-[100px] object-cover rounded-lg"
                   :src="`http://localhost:8000/static/image/${newsItem.main_photo}`"
                   :alt="newsItem.header"
                 />
               </div>
-              <div class="title-block">
-                <div class="news-title">{{ newsItem.header }}</div>
+              <div class="w-full sm:flex-1 sm:border-r sm:border-gray-200 sm:pr-4">
+                <div class="text-xl font-semibold">{{ newsItem.header }}</div>
               </div>
-              <div class="date-block">
-                <span class="news-date">
+              <div class="w-full sm:w-auto text-sm text-gray-500 sm:border-r sm:border-gray-200 sm:pr-4">
+                <span>
                   {{ new Date(newsItem.date_created).toLocaleDateString() }}
                 </span>
               </div>
-              <div class="action-buttons">
+              <div class="flex flex-col w-full sm:w-auto gap-2.5">
                 <Button
                   icon="pi pi-pencil"
                   label="Редактировать"
-                  class="p-button-warning p-mr-2"
+                  class="p-button-warning w-full sm:w-[150px]"
                   @click="editPost(newsItem)"
                 />
                 <Button
                   icon="pi pi-trash"
                   label="Удалить"
-                  class="p-button-danger"
+                  class="p-button-danger w-full sm:w-[150px]"
                   @click="deletePost(newsItem.id)"
                 />
               </div>
             </div>
           </div>
         </template>
-        
       </DataView>
     </div>
   
@@ -620,144 +631,45 @@
   });
   </script>
     
-  <style scoped lang="scss">
-  
-  input {
-    width: 100%; /* Ширина инпутов и текстовых полей */
+  <style scoped>
+  .media-page {
+    @apply p-4;
   }
-  
-  
-  
-  .content__main{
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem; 
-  }
-  // .news-header {
-  //   display: grid;
-  //   grid-template-columns: 1fr 2fr 1fr 1fr;
-  //   gap: 20px;
-  //   font-weight: bold;
-  //   padding: 10px 0;
-  //   border-bottom: 2px solid #e0e0e0;
-  // }
-  .image-preview {
-    max-width: 150px;
-    max-height: 150px;
-    object-fit: cover;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  .news-header .image-label,
-  .news-header .title-label,
-  .news-header .date-label,
-  .news-header .actions-label {
-    text-align: center;
-  }
-  
-  .news-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .news-item {
-    display: flex;
-    align-items: center;
-    padding: 1.5rem;
-    gap: 1rem;
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  .image-block {
-    flex: 0 0 auto;
-    margin-right: 1rem;
-    border-right: 1px solid #e0e0e0;
-    padding-right: 1rem;
-  }
-  
-  .title-block {
-    flex: 1;
-    border-right: 1px solid #e0e0e0;
-    padding-right: 1rem;
-  }
-  
-  .date-block {
-    font-size: 0.875rem;
-    color: #888;
-    border-right: 1px solid #e0e0e0;
-    padding-right: 1rem;
-  }
-  
-  .news-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
-  }
-  
-  .news-date {
-    font-size: 0.875rem;
-    color: #888;
-  }
-  
-  .action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .news-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 0.5rem;
-  }
-  
-  .image-upload {
-    margin-top: 10px;
-  }
-  .p-dataview {
-    width: 100%;
-  }
-  .tag-overlay {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 0.25rem;
-    padding: 0.5rem;
-  }
-  
-  .image-label,
-  .title-label,
-  .date-label,
-  .actions-label {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  .content-editor{ 
-  }
-  .search-input {
-  }
-  .p-dropdown{
-    align-items: center;
-  }
-  .header__content {
-    display: flex;
-    flex-direction: row;
-    gap: 3px;
-    height: 30px;
-  }
+
   .sidebar-main,
   .sidebar-edit {
-    .p-sidebar-content {
-      padding: 2rem;
+    @apply w-full;
+  }
+
+  @media (min-width: 640px) {
+    .sidebar-main,
+    .sidebar-edit {
+      width: 60rem !important;
     }
-    
-    .content__main {
-      height: calc(100vh - 6rem);
-      overflow-y: auto;
-    }
+  }
+
+  :deep(.p-sidebar-content) {
+    @apply p-4 sm:p-8;
+  }
+
+  :deep(.p-fileupload-content) {
+    @apply p-4;
+  }
+
+  :deep(.p-datepicker) {
+    @apply w-full;
+  }
+
+  :deep(.p-dropdown) {
+    @apply w-full sm:w-auto;
+  }
+
+  :deep(.p-button) {
+    @apply justify-center;
+  }
+
+  :deep(.p-inputtext) {
+    @apply w-full;
   }
   </style>
     

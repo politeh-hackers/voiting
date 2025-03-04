@@ -9,6 +9,7 @@ import { ref } from "vue";
 import Drawer from "primevue/drawer";
 import { useRouter } from "vue-router";
 import { getToken, isAuthenticated } from "../../utils/auth"; // Импортируем утилиту для проверки токена
+import Dropdown from "primevue/dropdown";
 
 const router = useRouter();
 const postService = new PostService();
@@ -19,7 +20,15 @@ const post = ref<Post>({ name: "" });
 const editingPostId = ref<string | null>(null);
 const editingPostName = ref<string>(""); 
 const visible = ref(false); 
+const visibleEdit = ref(false); // Добавляем новую переменную для окна редактирования
 const token = getToken()
+const sortOrder = ref<{ label: string; value: string } | null>(null);
+const sortOptions = [
+  { label: 'По возрастанию', value: 'asc' },
+  { label: 'По убыванию', value: 'desc' },
+];
+const searchQuery = ref("");
+
 const UpdateTable = async () => {
   if (!isAuthenticated(token)) {
     router.push({ name: 'Login' }); // Перенаправляем на страницу входа, если пользователь не авторизован
@@ -41,6 +50,7 @@ const addPost = async () => {
 
   await postService.create(post.value, prefix);
   post.value.name = "";
+  visible.value = false; // Закрываем сайдбар после добавления
   await UpdateTable();
 };
 
@@ -63,7 +73,7 @@ const startEditing = (id: string, name: string) => {
 
   editingPostId.value = id; 
   editingPostName.value = name; 
-  visible.value = true; 
+  visibleEdit.value = true; // Используем новую переменную
 };
 
 const saveEditedPost = async () => {
@@ -78,62 +88,163 @@ const saveEditedPost = async () => {
     });
     editingPostId.value = null; 
     editingPostName.value = ""; 
-    visible.value = false; 
+    visibleEdit.value = false; // Используем новую переменную
     await UpdateTable();
   }
 };
 </script>
 
 <template>
-  <div>
-    <h1>Категории</h1>
-    <DataTable :value="posts" tableStyle="min-width: 50rem">
-      <Column field="name" header="Имя категории">
+  <div class="category-page">
+    <h1 class="text-2xl font-bold mb-4">Категории</h1>
+    <DataTable 
+      :value="posts" 
+      class="main-datatable"
+      :paginator="true"
+      :rows="10"
+      :rowsPerPageOptions="[10, 20, 30]"
+    >
+      <Column field="name">
         <template #body="slotProps">
           {{ slotProps.data.name }}
         </template>
       </Column>
       
-      <Column header="Действия">
+      <Column>
+        <template #header>
+          <div class="flex flex-col sm:flex-row w-full gap-4">
+            <div class="flex flex-1">
+              <InputText
+                v-model="searchQuery"
+                placeholder="Поиск"
+                class="w-full"
+              />
+            </div>
+            <Button
+              icon="pi pi-plus"
+              label="Добавить"
+              class="p-button-warning w-full sm:w-auto"
+              @click="visible = true"
+            />
+          </div>
+        </template>
         <template #body="slotProps">
-          <Button
-            label="Изменить"
-            class="p-button-warning"
-            @click="startEditing(slotProps.data.id, slotProps.data.name)"
-          />
-          
-          <Button
-            label="Удалить"
-            class="p-button-danger"
-            @click="deletePost(slotProps.data.id)"
-          />
+          <div class="flex flex-col gap-2.5">
+            <Button
+              icon="pi pi-pencil"
+              label="Изменить"
+              class="p-button-warning w-full sm:w-[150px]"
+              @click="startEditing(slotProps.data.id, slotProps.data.name)"
+            />
+            <Button
+              icon="pi pi-trash"
+              label="Удалить"
+              class="p-button-danger w-full sm:w-[150px]"
+              @click="deletePost(slotProps.data.id)"
+            />
+          </div>
         </template>
       </Column>
     </DataTable>
     
-    <Drawer v-model:visible="visible" header="Редактировать категорию" position="right" style="width: 30vw;">
-      <div>
-        <h3>Редактирование</h3>
-        <InputText
-          v-model="editingPostName"
-          placeholder="Введите новое имя категории"
-          class="p-mb-3"
-        />
-        <Button label="Сохранить" @click="saveEditedPost" />
-        <Button label="Отмена" class="p-button-secondary" @click="visible = false" />
+    <Drawer v-model:visible="visibleEdit" header="Редактировать категорию" position="right" class="sidebar-edit">
+      <div class="p-4">
+        <h3 class="text-lg font-semibold mb-4">Редактирование</h3>
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col">
+            <label class="mb-2">Название категории</label>
+            <InputText
+              v-model="editingPostName"
+              placeholder="Введите новое имя категории"
+              class="w-full"
+            />
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <Button label="Сохранить" class="p-button-warning w-full sm:w-auto" @click="saveEditedPost" />
+            <Button label="Отмена" class="p-button-secondary w-full sm:w-auto" @click="visibleEdit = false" />
+          </div>
+        </div>
       </div>
     </Drawer>
 
-    <div>
-      <InputText
-        class="name_post"
-        placeholder="Имя категории"
-        v-model="post.name"
-      />
-      <Button @click="addPost">Добавить категорию</Button>
-    </div>
+    <Drawer v-model:visible="visible" header="Добавить категорию" position="right" class="sidebar-main">
+      <div class="p-4">
+        <h3 class="text-lg font-semibold mb-4">Добавление</h3>
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col">
+            <label class="mb-2">Название категории</label>
+            <InputText
+              v-model="post.name"
+              placeholder="Введите имя категории"
+              class="w-full"
+            />
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <Button label="Сохранить" class="p-button-warning w-full sm:w-auto" @click="addPost" />
+            <Button label="Отмена" class="p-button-secondary w-full sm:w-auto" @click="visible = false" />
+          </div>
+        </div>
+      </div>
+    </Drawer>
   </div>
 </template>
 
 <style scoped>
+.category-page {
+  @apply p-4;
+}
+
+.main-datatable {
+  @apply w-full;
+}
+
+.sidebar-main,
+.sidebar-edit {
+  @apply w-full;
+}
+
+@media (min-width: 640px) {
+  .sidebar-main,
+  .sidebar-edit {
+    width: 30rem !important;
+  }
+}
+
+:deep(.p-sidebar-content) {
+  @apply p-4 sm:p-8;
+}
+
+:deep(.p-datatable) {
+  @apply overflow-x-auto;
+}
+
+:deep(.p-column-header-content) {
+  @apply w-full;
+}
+
+:deep(.p-inputtext) {
+  @apply w-full;
+}
+
+:deep(.p-button) {
+  @apply justify-center;
+}
+
+:deep(.p-paginator) {
+  @apply flex-wrap justify-center;
+}
+
+@media (max-width: 640px) {
+  :deep(.p-datatable-wrapper) {
+    @apply overflow-x-auto;
+  }
+  
+  :deep(.p-datatable table) {
+    @apply w-full;
+  }
+  
+  :deep(.p-column-title) {
+    @apply whitespace-normal;
+  }
+}
 </style>

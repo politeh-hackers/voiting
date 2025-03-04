@@ -1,49 +1,127 @@
 <template>
-    <h1>Биография</h1>
-      <div class="card flex flex-column">
-        <Dialog
-          v-model:visible="visible"
-          @show="initializeEditor"
-          @hide="handleDialogClose"
-          
-          modal
-          header="Добавить новость"
-          :style="{ width: '60rem' }"
-          class="dialog-main"
-        >
-          <div class="content__main">
-              <div class="h1">
-              <InputText
-                v-model="post.h1"
-                placeholder="h1"
-                class="h1__input"
+    <div class="biography-page">
+      <h1 class="text-4xl font-bold mb-4">Биография</h1>
+      <DataView
+        :value="filteredNewsList"
+        paginator
+        :rows="10"
+        dataKey="'id'"
+        class="w-full"
+      >
+        <template #header>
+          <div class="flex flex-col sm:flex-row w-full gap-4">
+            <div class="flex flex-col sm:flex-row flex-1 gap-4">
+              <Dropdown
+                v-model="sortOrder"
+                :options="sortOptions"
+                optionLabel="label"
+                optionValue="value"
+                class="w-full sm:w-auto"
               />
-              </div>
-              <div class="title">
               <InputText
-                v-model="post.title"
-                placeholder="title"
-                class="title__input"
-              />
-              </div>
-              <div class="description">
-              <InputText
-                v-model="post.description"
-                placeholder="description"
-                class="description__input"
-              />
-              </div>
-            <div class="header">
-              <InputText
-                v-model="post.header"
-                placeholder="Заголовок"
-                class="header__input"
+                v-model="searchQuery"
+                placeholder="Поиск по описанию"
+                class="w-full"
               />
             </div>
-            
+            <Button
+              icon="pi pi-plus"
+              label="Добавить"
+              class="p-button-warning w-full sm:w-auto"
+              @click="visible = true"
+            />
+          </div>
+        </template>
+        <template #list="slotProps">
+          <div class="flex flex-col w-full">
+            <div
+              v-for="newsItem in slotProps.items"
+              :key="newsItem.id"
+              class="flex flex-col sm:flex-row items-start sm:items-center p-4 sm:p-6 gap-4 border-b border-gray-200"
+            >
+              <div class="w-full sm:w-auto sm:flex-none sm:mr-4 sm:border-r sm:border-gray-200 sm:pr-4">
+                <img
+                  v-if="newsItem.main_photo"
+                  class="w-full sm:w-[100px] h-[100px] object-cover rounded-lg"
+                  :src="`http://localhost:8000/static/image/${newsItem.main_photo}`"
+                  :alt="newsItem.header"
+                />
+              </div>
+              <div class="w-full sm:flex-1 sm:border-r sm:border-gray-200 sm:pr-4">
+                <div class="text-xl font-semibold">{{ newsItem.header }}</div>
+              </div>
+              <div class="w-full sm:w-auto text-sm text-gray-500 sm:border-r sm:border-gray-200 sm:pr-4">
+                <span>
+                  {{ new Date(newsItem.date_created).toLocaleDateString() }}
+                </span>
+              </div>
+              <div class="flex flex-col w-full sm:w-auto gap-2.5">
+                <Button
+                  icon="pi pi-pencil"
+                  label="Редактировать"
+                  class="p-button-warning w-full sm:w-[150px]"
+                  @click="editPost(newsItem)"
+                />
+                <Button
+                  icon="pi pi-trash"
+                  label="Удалить"
+                  class="p-button-danger w-full sm:w-[150px]"
+                  @click="deletePost(newsItem.id)"
+                />
+              </div>
+            </div>
+          </div>
+        </template>
+      </DataView>
+
+      <Sidebar
+        v-model:visible="visible"
+        @show="initializeEditor"
+        @hide="handleDialogClose"
+        position="right"
+        :style="{ width: '60rem' }"
+        class="sidebar-main"
+      >
+        <template #header>
+          <h2 class="text-xl font-bold">Добавить новость</h2>
+        </template>
+        
+        <div class="flex flex-col gap-6">
+            <div class="flex flex-col">
+              <label class="text-base font-medium text-gray-700 mb-2">H1 заголовок</label>
+              <InputText
+                v-model="post.h1"
+                placeholder="Введите H1 заголовок"
+                class="w-full"
+              />
+            </div>
+            <div class="flex flex-col">
+              <label class="text-base font-medium text-gray-700 mb-2">Title страницы</label>
+              <InputText
+                v-model="post.title"
+                placeholder="Введите title страницы"
+                class="w-full"
+              />
+            </div>
+            <div class="flex flex-col">
+              <label class="text-base font-medium text-gray-700 mb-2">Meta description</label>
+              <InputText
+                v-model="post.description"
+                placeholder="Введите meta description"
+                class="w-full"
+              />
+            </div>
+            <div class="flex flex-col">
+              <label class="text-base font-medium text-gray-700 mb-2">Заголовок новости</label>
+              <InputText
+                v-model="post.header"
+                placeholder="Введите заголовок новости"
+                class="w-full"
+              />
+            </div>
     
-            <div class="image-upload">
-              <label for="image-upload">Загрузить изображение:</label>
+            <div class="flex flex-col">
+              <label class="mb-2">Загрузить изображение:</label>
               <FileUpload
                 name="main_photo"
                 :url="'http://localhost:8000/admin/image'"
@@ -57,74 +135,88 @@
                 chooseLabel="Выбрать изображение"
               >
                 <template #content>
-                  <div class="custom-file-upload">
-                    <!-- Отображение выбранного изображения -->
+                  <div class="flex flex-col">
+                    <div class="flex gap-2 mb-4">
+                      <Button
+                        v-if="post.main_photo"
+                        class="p-button-danger"
+                        icon="pi pi-times"
+                        label="Удалить"
+                        @click="onImageRemove"
+                      />
+                    </div>
                     <img
                       v-if="post.main_photo"
                       :src="`http://localhost:8000/static/image/${post.main_photo}`"
                       alt="Preview"
-                      class="image-preview"
-                    />
-                    <Button
-                      class="p-button-danger"
-                      icon="pi pi-times"
-                      @click="onImageRemove"
+                      class="max-w-[150px] max-h-[150px] object-cover mb-2.5 border border-gray-300 rounded"
                     />
                   </div>
                 </template>
               </FileUpload>
             </div>
     
-            <div ref="editorContainer" class="content-editor"></div>
+            <div class="flex flex-col">
+              <label class="mb-2">Содержание новости</label>
+              <div ref="editorContainer"></div>
+            </div>
     
-            <div class="date__picker">
+            <div class="flex flex-col">
+              <label class="mb-2">Дата публикации</label>
               <DatePicker v-model="post.date_created" dateFormat="" />
             </div>
     
-            <Button icon="pi pi-check" @click="addPost" />
-          </div>
-        </Dialog>
-        <Dialog
-          v-model:visible="visibledt"
-          @show="initializeEditor"
-          modal
-          header="Изменить новость"
-          :style="{ width: '60rem' }"
-          class="dialog-edit"
-        >
-          <div class="content__main">
-              <div class="h1">
+            <Button icon="pi pi-check" @click="addPost" class="mt-4" />
+        </div>
+      </Sidebar>
+
+      <Sidebar
+        v-model:visible="visibledt"
+        @show="initializeEditor"
+        position="right"
+        :style="{ width: '60rem' }"
+        class="sidebar-edit"
+      >
+        <template #header>
+          <h2 class="text-xl font-bold">Изменить новость</h2>
+        </template>
+        
+        <div class="flex flex-col gap-6">
+            <div class="flex flex-col">
+              <label class="text-base font-medium text-gray-700 mb-2">H1 заголовок</label>
               <InputText
                 v-model="post.h1"
-                placeholder="h1"
-                class="h1__input"
-              />
-              </div>
-              <div class="title">
-              <InputText
-                v-model="post.title"
-                placeholder="title"
-                class="title__input"
-              />
-              </div>
-              <div class="description">
-              <InputText
-                v-model="post.description"
-                placeholder="description"
-                class="description__input"
-              />
-              </div>
-            <div class="header">
-              <InputText
-                v-model="post.header"
-                placeholder="Заголовок"
-                class="header__input"
+                placeholder="Введите H1 заголовок"
+                class="w-full"
               />
             </div>
-            
+            <div class="flex flex-col">
+              <label class="text-base font-medium text-gray-700 mb-2">Title страницы</label>
+              <InputText
+                v-model="post.title"
+                placeholder="Введите title страницы"
+                class="w-full"
+              />
+            </div>
+            <div class="flex flex-col">
+              <label class="text-base font-medium text-gray-700 mb-2">Meta description</label>
+              <InputText
+                v-model="post.description"
+                placeholder="Введите meta description"
+                class="w-full"
+              />
+            </div>
+            <div class="flex flex-col">
+              <label class="text-base font-medium text-gray-700 mb-2">Заголовок новости</label>
+              <InputText
+                v-model="post.header"
+                placeholder="Введите заголовок новости"
+                class="w-full"
+              />
+            </div>
     
-            <div class="image-upload">
-              <label for="image-upload">Изменить изображение:</label>
+            <div class="flex flex-col">
+              <label class="mb-2">Изменить изображение:</label>
               <FileUpload
                 name="main_photo"
                 :url="'http://localhost:8000/admin/image'"
@@ -134,106 +226,44 @@
                 :showCancelButton="false"
                 @upload="onImageUpload"
                 @remove="onImageRemove"
-                chooseLabel="Выбрать изображение" 
+                chooseLabel="Выбрать изображение"
               >
                 <template #content>
-                  <div class="custom-file-upload">
-                    <!-- Отображение выбранного изображения -->
+                  <div class="flex flex-col">
+                    <div class="flex gap-2 mb-4">
+                      <Button
+                        v-if="post.main_photo"
+                        class="p-button-danger"
+                        icon="pi pi-times"
+                        label="Удалить"
+                        @click="onImageRemove"
+                      />
+                    </div>
                     <img
                       v-if="post.main_photo"
                       :src="`http://localhost:8000/static/image/${post.main_photo}`"
                       alt="Preview"
-                      class="image-preview"
-                    />
-                    <Button
-                      class="p-button-danger"
-                      @click="onImageRemove"
-                      icon="pi pi-times"
+                      class="max-w-[150px] max-h-[150px] object-cover mb-2.5 border border-gray-300 rounded"
                     />
                   </div>
                 </template>
               </FileUpload>
             </div>
     
-            <div ref="editorContainer" class="content-editor"></div>
+            <div class="flex flex-col">
+              <label class="mb-2">Содержание новости</label>
+              <div ref="editorContainer"></div>
+            </div>
     
-            <div class="date__picker">
+            <div class="flex flex-col">
+              <label class="mb-2">Дата публикации</label>
               <DatePicker v-model="post.date_created" dateFormat="" />
             </div>
     
-            <Button icon="pi pi-check" @click="SaveEditedPost" />
-          </div>
-        </Dialog>
-    
-        <DataView
-          :value="filteredNewsList"
-          paginator
-          :rows="5"
-          dataKey="'id'"
-          class="main-dataview"
-        >
-          <template #header>
-            <div class="header__content">
-            <Button
-              class="content__view"
-              icon="pi pi-plus"
-              @click="visible = true"
-            />
-            <Dropdown
-              v-model="sortOrder"
-              :options="sortOptions"
-              optionLabel="label"
-              optionValue="value"
-              class="p-dropdown"
-            /><InputText
-              v-model="searchQuery"
-              placeholder="Поиск по описанию"
-              class="search-input"
-            />
-          </div>
-          </template>
-          <template #list="slotProps">
-            <div class="news-container">
-              <div
-                v-for="newsItem in slotProps.items"
-                :key="newsItem.id"
-                class="news-item"
-              >
-                <div class="image-block">
-                  <img
-                    v-if="newsItem.main_photo"
-                    class="news-image"
-                    :src="`http://localhost:8000/static/image/${newsItem.main_photo}`"
-                    :alt="newsItem.header"
-                  />
-                </div>
-                <div class="title-block">
-                  <div class="news-title">{{ newsItem.header }}</div>
-                </div>
-                <div class="date-block">
-                  <span class="news-date">
-                    {{ new Date(newsItem.date_created).toLocaleDateString() }}
-                  </span>
-                </div>
-                <div class="action-buttons">
-                  <Button
-                    icon="pi pi-pencil"
-                    label="Редактировать"
-                    class="p-button-warning p-mr-2"
-                    @click="editPost(newsItem)"
-                  />
-                  <Button
-                    icon="pi pi-trash"
-                    label="Удалить"
-                    class="p-button-danger"
-                    @click="deletePost(newsItem.id)"
-                  />
-                </div>
-              </div>
-            </div>
-          </template>
-        </DataView>
-      </div>
+            <Button icon="pi pi-check" @click="SaveEditedPost" class="mt-4" />
+        </div>
+      </Sidebar>
+    </div>
     </template>
       
       
@@ -243,7 +273,7 @@
     import InputText from "primevue/inputtext";
     import DatePicker from "primevue/datepicker";
     import Button from "primevue/button";
-    import Dialog from "primevue/dialog";
+    import Sidebar from "primevue/sidebar";
     import DataView from "primevue/dataview";
     import FileUpload from "primevue/fileupload";
     import { PostService, Post } from "../../api/serviceforbiography";
@@ -568,129 +598,45 @@
     });
     </script>
       
-    <style scoped lang="scss">
-    
-    input {
-      width: 100%; /* Ширина инпутов и текстовых полей */
+    <style scoped>
+    .biography-page {
+      @apply p-4;
     }
-    
-    .content__main{
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem; 
+
+    .sidebar-main,
+    .sidebar-edit {
+      @apply w-full;
     }
-    // .news-header {
-    //   display: grid;
-    //   grid-template-columns: 1fr 2fr 1fr 1fr;
-    //   gap: 20px;
-    //   font-weight: bold;
-    //   padding: 10px 0;
-    //   border-bottom: 2px solid #e0e0e0;
-    // }
-    .image-preview {
-      max-width: 150px;
-      max-height: 150px;
-      object-fit: cover;
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+
+    @media (min-width: 640px) {
+      .sidebar-main,
+      .sidebar-edit {
+        width: 60rem !important;
+      }
     }
-    .news-header .image-label,
-    .news-header .title-label,
-    .news-header .date-label,
-    .news-header .actions-label {
-      text-align: center;
+
+    :deep(.p-sidebar-content) {
+      @apply p-4 sm:p-8;
     }
-    
-    .news-container {
-      display: flex;
-      flex-direction: column;
+
+    :deep(.p-fileupload-content) {
+      @apply p-4;
     }
-    
-    .news-item {
-      display: flex;
-      align-items: center;
-      padding: 1.5rem;
-      gap: 1rem;
-      border-bottom: 1px solid #e0e0e0;
+
+    :deep(.p-datepicker) {
+      @apply w-full;
     }
-    
-    .image-block {
-      flex: 0 0 auto;
-      margin-right: 1rem;
-      border-right: 1px solid #e0e0e0;
-      padding-right: 1rem;
+
+    :deep(.p-dropdown) {
+      @apply w-full sm:w-auto;
     }
-    
-    .title-block {
-      flex: 1;
-      border-right: 1px solid #e0e0e0;
-      padding-right: 1rem;
+
+    :deep(.p-button) {
+      @apply justify-center;
     }
-    
-    .date-block {
-      font-size: 0.875rem;
-      color: #888;
-      border-right: 1px solid #e0e0e0;
-      padding-right: 1rem;
-    }
-    
-    .news-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-top: 0.5rem;
-    }
-    
-    .news-date {
-      font-size: 0.875rem;
-      color: #888;
-    }
-    
-    .action-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    
-    .news-image {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 0.5rem;
-    }
-    
-    .image-upload {
-      margin-top: 10px;
-    }
-    
-    .tag-overlay {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 0.25rem;
-      padding: 0.5rem;
-    }
-    
-    .image-label,
-    .title-label,
-    .date-label,
-    .actions-label {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .content-editor{ 
-    }
-    .search-input {
-    }
-    .p-dropdown{
-      align-items: center;
-    }
-    .header__content {
-      display: flex;
-      flex-direction: row;
-      gap: 3px;
-      height: 30px;
+
+    :deep(.p-inputtext) {
+      @apply w-full;
     }
     </style>
       
