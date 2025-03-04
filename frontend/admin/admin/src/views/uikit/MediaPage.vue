@@ -1,49 +1,65 @@
 <template>
+  <div class="media-page">
     <h1>Медиа</h1>
-    <div class="card flex flex-column">
-      <Dialog
+    
+      <Sidebar
         v-model:visible="visible"
         @show="initializeEditor"
         @hide="handleDialogClose"
-        
-        modal
-        header="Добавить новость"
+        position="right"
         :style="{ width: '60rem' }"
-        class="dialog-main"
+        class="sidebar-main"
       >
-        <div class="content__main">
+        <template #header>
+          <h2>Добавить новость</h2>
+        </template>
+        
+        
           <div class="h1">
+              <label>URL страницы (slug)</label>
               <InputText
-                v-model="post.h1"
-                placeholder="h1"
+                v-model="post.slug"
+                placeholder="Введите URL страницы"
                 class="h1__input"
               />
-              </div>
-              <div class="title">
+          </div>
+          <div class="h1">
+              <label>H1 заголовок</label>
+              <InputText
+                v-model="post.h1"
+                placeholder="Введите H1 заголовок"
+                class="h1__input"
+              />
+          </div>
+          <div class="title">
+              <label>Title страницы</label>
               <InputText
                 v-model="post.title"
-                placeholder="title"
+                placeholder="Введите title страницы"
                 class="title__input"
               />
-              </div>
-              <div class="description">
+          </div>
+          <div class="description">
+              <label>Meta description</label>
               <InputText
                 v-model="post.description"
-                placeholder="description"
+                placeholder="Введите meta description"
                 class="description__input"
               />
-              </div>
+          </div>
           <div class="header">
+            <label>Заголовок новости</label>
             <InputText
               v-model="post.header"
-              placeholder="Заголовок"
+              placeholder="Введите заголовок новости"
               class="header__input"
             />
           </div>
           <div class="summary">
+            <label>Краткое описание</label>
             <InputText
               v-model="post.summary"
-              placeholder="Краткое описание"
+              placeholder="Введите краткое описание"
               class="summary_input"
             />
           </div>
@@ -88,49 +104,67 @@
           </div>
   
           <Button icon="pi pi-check" @click="addPost" />
-        </div>
-      </Dialog>
-      <Dialog
+        
+        
+      </Sidebar>
+
+      <Sidebar
         v-model:visible="visibledt"
         @show="initializeEditor"
-        modal
-        header="Изменить новость"
+        position="right"
         :style="{ width: '60rem' }"
-        class="dialog-edit"
+        class="sidebar-edit"
       >
-        <div class="content__main">
+        <template #header>
+          <h2>Изменить новость</h2>
+        </template>
+        
+        
           <div class="h1">
+              <label>URL страницы (slug)</label>
               <InputText
-                v-model="post.h1"
-                placeholder="h1"
+                v-model="post.slug"
+                placeholder="Введите URL страницы"
                 class="h1__input"
               />
-              </div>
-              <div class="title">
+          </div>
+          <div class="h1">
+              <label>H1 заголовок</label>
+              <InputText
+                v-model="post.h1"
+                placeholder="Введите H1 заголовок"
+                class="h1__input"
+              />
+          </div>
+          <div class="title">
+              <label>Title страницы</label>
               <InputText
                 v-model="post.title"
-                placeholder="title"
+                placeholder="Введите title страницы"
                 class="title__input"
               />
-              </div>
-              <div class="description">
+          </div>
+          <div class="description">
+              <label>Meta description</label>
               <InputText
                 v-model="post.description"
-                placeholder="description"
+                placeholder="Введите meta description"
                 class="description__input"
               />
-              </div>
+          </div>
           <div class="header">
+            <label>Заголовок новости</label>
             <InputText
               v-model="post.header"
-              placeholder="Заголовок"
+              placeholder="Введите заголовок новости"
               class="header__input"
             />
           </div>
           <div class="summary">
+            <label>Краткое описание</label>
             <InputText
               v-model="post.summary"
-              placeholder="Краткое описание"
+              placeholder="Введите краткое описание"
               class="summary_input"
             />
           </div>
@@ -174,8 +208,9 @@
           </div>
   
           <Button icon="pi pi-check" @click="SaveEditedPost" />
-        </div>
-      </Dialog>
+        
+        
+      </Sidebar>
       
       <DataView
         :value="filteredNewsList"
@@ -247,7 +282,8 @@
         
       </DataView>
     </div>
-  </template>
+  
+</template>
     
     
     <script setup lang="ts">
@@ -256,7 +292,7 @@
   import InputText from "primevue/inputtext";
   import DatePicker from "primevue/datepicker";
   import Button from "primevue/button";
-  import Dialog from "primevue/dialog";
+  import Sidebar from "primevue/sidebar";
   import DataView from "primevue/dataview";
   import FileUpload from "primevue/fileupload";
   import { PostService, Post } from "../../api/serviceformedia";
@@ -711,6 +747,17 @@
     flex-direction: row;
     gap: 3px;
     height: 30px;
+  }
+  .sidebar-main,
+  .sidebar-edit {
+    .p-sidebar-content {
+      padding: 2rem;
+    }
+    
+    .content__main {
+      height: calc(100vh - 6rem);
+      overflow-y: auto;
+    }
   }
   </style>
     

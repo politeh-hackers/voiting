@@ -1,7 +1,7 @@
 <template>
   <div class="actual-page">
     <h1>Актуальное</h1>
-    <div class="card flex flex-column">
+    
       <Sidebar
         v-model:visible="visible"
         @show="initializeEditor"
@@ -13,93 +13,101 @@
         <template #header>
           <h2>Добавить новость</h2>
         </template>
-        <div class="content__main">
-          <div class="slug">
-            
-            <InputText
-              v-model="post.slug"
-              placeholder="slug"
-              class="slug__input"
-            />
+        
+          
+            <div class="slug">
+              <label>URL страницы (slug)</label>
+              <InputText
+                v-model="post.slug"
+                placeholder="Введите URL страницы"
+                class="slug__input"
+              />
             </div>
-          <div class="h1">
-  
+            <div class="h1">
+              <label>H1 заголовок</label>
               <InputText
                 v-model="post.h1"
-                placeholder="h1"
+                placeholder="Введите H1 заголовок"
                 class="h1__input"
               />
-              </div>
-              <div class="title">
+            </div>
+            <div class="title">
+              <label>Title страницы</label>
               <InputText
                 v-model="post.title"
-                placeholder="title"
+                placeholder="Введите title страницы"
                 class="title__input"
               />
-              </div>
-              <div class="description">
+            </div>
+            <div class="description">
+              <label>Meta description</label>
               <InputText
                 v-model="post.description"
-                placeholder="description"
+                placeholder="Введите meta description"
                 class="description__input"
               />
-              </div>
-          <div class="header">
-            <InputText
-              v-model="post.header"
-              placeholder="Заголовок"
-              class="header__input"
-            />
-          </div>
-          <div class="summary">
-            <InputText
-              v-model="post.summary"
-              placeholder="Краткое описание"
-              class="summary_input"
-            />
-          </div>
+            </div>
+            <div class="header">
+              <label>Заголовок новости</label>
+              <InputText
+                v-model="post.header"
+                placeholder="Введите заголовок новости"
+                class="header__input"
+              />
+            </div>
+            <div class="summary">
+              <label>Краткое описание</label>
+              <InputText
+                v-model="post.summary"
+                placeholder="Введите краткое описание"
+                class="summary_input"
+              />
+            </div>
   
-          <div class="image-upload">
-            <label for="image-upload">Загрузить изображение:</label>
-            <FileUpload
-              name="main_photo"
-              :url="'http://localhost:8000/admin/image'"
-              accept="image/*"
-              :auto="true"
-              :showUploadButton="false"
-              :showCancelButton="false"
-              @upload="onImageUpload"
-              @remove="onImageRemove"
-              :before-upload="uploadHeaders"
-              chooseLabel="Выбрать изображение"
-            >
-              <template #content>
-                <div class="custom-file-upload">
-                  <!-- Отображение выбранного изображения -->
-                  <img
-                    v-if="post.main_photo"
-                    :src="`http://localhost:8000/static/image/${post.main_photo}`"
-                    alt="Preview"
-                    class="image-preview"
-                  />
-                  <Button
-                    class="p-button-danger"
-                    icon="pi pi-times"
-                    @click="onImageRemove"
-                  />
-                </div>
-              </template>
-            </FileUpload>
-          </div>
+            <div class="image-upload">
+              <label>Изображение новости</label>
+              <FileUpload
+                name="main_photo"
+                :url="'http://localhost:8000/admin/image'"
+                accept="image/*"
+                :auto="true"
+                :showUploadButton="false"
+                :showCancelButton="false"
+                @upload="onImageUpload"
+                @remove="onImageRemove"
+                :before-upload="uploadHeaders"
+                chooseLabel="Выбрать изображение"
+              >
+                <template #content>
+                  <div class="custom-file-upload">
+                    <img
+                      v-if="post.main_photo"
+                      :src="`http://localhost:8000/static/image/${post.main_photo}`"
+                      alt="Preview"
+                      class="image-preview"
+                    />
+                    <Button
+                      class="p-button-danger"
+                      icon="pi pi-times"
+                      @click="onImageRemove"
+                    />
+                  </div>
+                </template>
+              </FileUpload>
+            </div>
   
-          <div ref="editorContainer" class="content-editor"></div>
+            <div class="content">
+              <label>Содержание новости</label>
+              <div ref="editorContainer" class="content-editor"></div>
+            </div>
   
-          <div class="date__picker">
-            <DatePicker v-model="post.date_created" dateFormat="" />
-          </div>
+            <div class="date__picker">
+              <label>Дата публикации</label>
+              <DatePicker v-model="post.date_created" dateFormat="" />
+            </div>
   
-          <Button icon="pi pi-check" @click="addPost" />
-        </div>
+            <Button icon="pi pi-check" @click="addPost" />
+          
       </Sidebar>
       <Sidebar
         v-model:visible="visibledt"
@@ -111,91 +119,100 @@
         <template #header>
           <h2>Изменить новость</h2>
         </template>
-        <div class="content__main">
-          <div class="slug">
-            
-            <InputText
-              v-model="post.slug"
-              placeholder="slug"
-              class="slug__input"
-            />
+        
+          
+            <div class="slug">
+              <label>URL страницы (slug)</label>
+              <InputText
+                v-model="post.slug"
+                placeholder="Введите URL страницы"
+                class="slug__input"
+              />
             </div>
-          <div class="h1">
+            <div class="h1">
+              <label>H1 заголовок</label>
               <InputText
                 v-model="post.h1"
-                placeholder="h1"
+                placeholder="Введите H1 заголовок"
                 class="h1__input"
               />
-              </div>
-              <div class="title">
+            </div>
+            <div class="title">
+              <label>Title страницы</label>
               <InputText
                 v-model="post.title"
-                placeholder="title"
+                placeholder="Введите title страницы"
                 class="title__input"
               />
-              </div>
-              <div class="description">
+            </div>
+            <div class="description">
+              <label>Meta description</label>
               <InputText
                 v-model="post.description"
-                placeholder="description"
+                placeholder="Введите meta description"
                 class="description__input"
               />
-              </div>
-          <div class="header">
-            <InputText
-              v-model="post.header"
-              placeholder="Заголовок"
-              class="header__input"
-            />
-          </div>
-          <div class="summary">
-            <InputText
-              v-model="post.summary"
-              placeholder="Краткое описание"
-              class="summary_input"
-            />
-          </div>
+            </div>
+            <div class="header">
+              <label>Заголовок новости</label>
+              <InputText
+                v-model="post.header"
+                placeholder="Введите заголовок новости"
+                class="header__input"
+              />
+            </div>
+            <div class="summary">
+              <label>Краткое описание</label>
+              <InputText
+                v-model="post.summary"
+                placeholder="Введите краткое описание"
+                class="summary_input"
+              />
+            </div>
   
-          <div class="image-upload">
-            <label for="image-upload">Изменить изображение:</label>
-            <FileUpload
-              name="main_photo"
-              :url="'http://localhost:8000/admin/image'"
-              accept="image/*"
-              :auto="true"
-              :showUploadButton="false"
-              :showCancelButton="false"
-              @upload="onImageUpload"
-              @remove="onImageRemove"
-              chooseLabel="Выбрать изображение" 
-            >
-              <template #content>
-                <div class="custom-file-upload">
-                  <!-- Отображение выбранного изображения -->
-                  <img
-                    v-if="post.main_photo"
-                    :src="`http://localhost:8000/static/image/${post.main_photo}`"
-                    alt="Preview"
-                    class="image-preview"
-                  />
-                  <Button
-                    class="p-button-danger"
-                    @click="onImageRemove"
-                    icon="pi pi-times"
-                  />
-                </div>
-              </template>
-            </FileUpload>
-          </div>
+            <div class="image-upload">
+              <label>Изображение новости</label>
+              <FileUpload
+                name="main_photo"
+                :url="'http://localhost:8000/admin/image'"
+                accept="image/*"
+                :auto="true"
+                :showUploadButton="false"
+                :showCancelButton="false"
+                @upload="onImageUpload"
+                @remove="onImageRemove"
+                chooseLabel="Выбрать изображение" 
+              >
+                <template #content>
+                  <div class="custom-file-upload">
+                    <img
+                      v-if="post.main_photo"
+                      :src="`http://localhost:8000/static/image/${post.main_photo}`"
+                      alt="Preview"
+                      class="image-preview"
+                    />
+                    <Button
+                      class="p-button-danger"
+                      @click="onImageRemove"
+                      icon="pi pi-times"
+                    />
+                  </div>
+                </template>
+              </FileUpload>
+            </div>
   
-          <div ref="editorContainer" class="content-editor"></div>
+            <div class="content">
+              <label>Содержание новости</label>
+              <div ref="editorContainer" class="content-editor"></div>
+            </div>
   
-          <div class="date__picker">
-            <DatePicker v-model="post.date_created" dateFormat="" />
-          </div>
+            <div class="date__picker">
+              <label>Дата публикации</label>
+              <DatePicker v-model="post.date_created" dateFormat="" />
+            </div>
   
-          <Button icon="pi pi-check" @click="SaveEditedPost" />
-        </div>
+            <Button icon="pi pi-check" @click="SaveEditedPost" />
+          
       </Sidebar>
   
       <DataView
@@ -267,7 +284,7 @@
         </template>
       </DataView>
     </div>
-  </div>
+
 </template>
     
     
