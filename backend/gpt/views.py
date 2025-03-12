@@ -7,13 +7,14 @@ def validate_generated_content(content):
     lines = content.split('\n')
     if len(lines) < 3:
         return False 
-    if not (lines[0].startswith("1. H1:") and
-            lines[1].startswith("2. Title:") and
-            lines[2].startswith("3. Description:")):
+    if not (lines[0].startswith("1. Slug:") and
+            lines[1].startswith("2. H1:") and
+            lines[2].startswith("3. Title:") and
+            lines[3].startswith("4. Description:")):
         return False
     return True
 
-def generate_with_retry(client, formatted_request, max_retries=3):
+def generate_with_retry(client, formatted_request, max_retries=10):
     for attempt in range(max_retries):
         try:
             response = client.chat.completions.create(
@@ -25,6 +26,7 @@ def generate_with_retry(client, formatted_request, max_retries=3):
             if validate_generated_content(generated_content):
                 return generated_content
             else:
+                print(generated_content)
                 print(f"Попытка {attempt + 1}: Ответ GPT не соответствует формату. Повторная генерация...")
         except Exception as e:
             print(f"Попытка {attempt + 1}: Ошибка при генерации: {e}")
@@ -34,8 +36,9 @@ def generate_with_retry(client, formatted_request, max_retries=3):
 def generations_for_news(validated_data):
     print("генерация...")
     formatted_request = (
-        "На основе следующего текста новости сгенерируйте:\n"
-        "1. H1 (заголовок): Напишите заголовок H1 от {min_h1} до {max_h1} символов, используя транслит через дефисы (например: 'primer-teksta-dlya-zagolovka').\n"
+        "На основе следующего текста новости сгенерируйте без спец-символов:\n"
+        "1. Slug (текст для URL): Напишите slug от {min_h1} до {max_h1} символов, используя транслит через дефисы (например: 'primer-teksta-dlya-zagolovka').\n"
+        "1. H1 (заголовок): Напишите заголовок H1 от {min_h1} до {max_h1} символов.\n"
         "2. Title (заголовок для SEO): Напишите заголовок Title на русском языке, длиной от {min_title} до {max_title} символов.\n"
         "3. Description (описание): Напишите описание на русском языке, длиной от {min_description} до {max_description} символов.\n"
         "\nТекст новости:\n{content}"
@@ -52,17 +55,17 @@ def generations_for_news(validated_data):
     client = Client()
     try:
         generated_content = generate_with_retry(client, formatted_request)
-        quote_pattern = r"^.*?:\s*[\"']?(.*?)[\"']?$"
+        quote_pattern = r"^.*?:\s*[^a-zA-Zа-яА-Я\-]*(.*?)[^a-zA-Zа-яА-Я\-]*$"
         lines = generated_content.split('\n')
         for line in lines:
             match = re.search(quote_pattern, line)
-            if line.startswith("1. H1:") and match:
-                h1 = match.group(1).strip().replace('"', '').replace("'", "")
-                validated_data['h1'] = h1
-                validated_data['slug'] = h1 
-            elif line.startswith("2. Title:") and match:
+            if line.startswith("1. Slug:") and match:
+                validated_data['slug'] = match.group(1).strip().replace('"', '').replace("'", "")
+            elif line.startswith("2. H1:") and match:
+                validated_data['h1'] = match.group(1).strip().replace('"', '').replace("'", "")
+            elif line.startswith("3. Title:") and match:
                 validated_data['title'] = match.group(1).strip().replace('"', '').replace("'", "")
-            elif line.startswith("3. Description:") and match:
+            elif line.startswith("4. Description:") and match:
                 validated_data['description'] = match.group(1).strip().replace('"', '').replace("'", "")
         
         print("генерация прошла успешно!")
@@ -77,9 +80,11 @@ def generations_for_news(validated_data):
         return validated_data
 
 def generations_for_appeals(validated_data):
+    print("генерация...")
     formatted_request = (
-        "На основе следующего текста обращения сгенерируйте:\n"
-        "1. H1 (заголовок): Напишите заголовок H1 от {min_h1} до {max_h1} символов, используя транслит через дефисы (например: 'primer-teksta-dlya-zagolovka').\n"
+        "На основе следующего текста обращения сгенерируйте без спец-символов:\n"
+        "1. Slug (текст для URL): Напишите slug от {min_h1} до {max_h1} символов, используя транслит через дефисы (например: 'primer-teksta-dlya-zagolovka').\n"
+        "1. H1 (заголовок): Напишите заголовок H1 от {min_h1} до {max_h1} символов.\n"
         "2. Title (заголовок для SEO): Напишите заголовок Title на русском языке, длиной от {min_title} до {max_title} символов.\n"
         "3. Description (описание): Напишите описание на русском языке, длиной от {min_description} до {max_description} символов.\n"
         "\nТекст обращения:\n{content}"
@@ -90,22 +95,23 @@ def generations_for_appeals(validated_data):
         max_title=Constants.MAX_LEN_TITLE,
         min_description=Constants.MIN_LEN_DESCRIPTION,
         max_description=Constants.MAX_LEN_DESCRIPTION,
-        content=validated_data.get('text', '') 
-    ) 
+        content=validated_data.get('content', '')
+    )
+    
     client = Client()
     try:
         generated_content = generate_with_retry(client, formatted_request)
-        quote_pattern = r"^.*?:\s*[\"']?(.*?)[\"']?$"
+        quote_pattern = r"^.*?:\s*[^a-zA-Zа-яА-Я\-]*(.*?)[^a-zA-Zа-яА-Я\-]*$"
         lines = generated_content.split('\n')
         for line in lines:
             match = re.search(quote_pattern, line)
-            if line.startswith("1. H1:") and match:
-                h1 = match.group(1).strip().replace('"', '').replace("'", "")
-                validated_data['h1'] = h1
-                validated_data['slug'] = h1 
-            elif line.startswith("2. Title:") and match:
+            if line.startswith("1. Slug:") and match:
+                validated_data['slug'] = match.group(1).strip().replace('"', '').replace("'", "")
+            elif line.startswith("2. H1:") and match:
+                validated_data['h1'] = match.group(1).strip().replace('"', '').replace("'", "")
+            elif line.startswith("3. Title:") and match:
                 validated_data['title'] = match.group(1).strip().replace('"', '').replace("'", "")
-            elif line.startswith("3. Description:") and match:
+            elif line.startswith("4. Description:") and match:
                 validated_data['description'] = match.group(1).strip().replace('"', '').replace("'", "")
         
         print("генерация прошла успешно!")
@@ -122,8 +128,9 @@ def generations_for_appeals(validated_data):
 def generations_for_biography(validated_data):
     print("генерация...")
     formatted_request = (
-        "На основе следующего текста биографии сгенерируйте:\n"
-        "1. H1 (заголовок): Напишите заголовок H1 от {min_h1} до {max_h1} символов, используя транслит через дефисы (например: 'primer-teksta-dlya-zagolovka').\n"
+        "На основе следующего текста биографии сгенерируйте без спец-символов:\n"
+        "1. Slug (текст для URL): Напишите slug от {min_h1} до {max_h1} символов, используя транслит через дефисы (например: 'primer-teksta-dlya-zagolovka').\n"
+        "1. H1 (заголовок): Напишите заголовок H1 от {min_h1} до {max_h1} символов.\n"
         "2. Title (заголовок для SEO): Напишите заголовок Title на русском языке, длиной от {min_title} до {max_title} символов.\n"
         "3. Description (описание): Напишите описание на русском языке, длиной от {min_description} до {max_description} символов.\n"
         "\nТекст биографии:\n{content}"
@@ -140,17 +147,18 @@ def generations_for_biography(validated_data):
     client = Client()
     try:
         generated_content = generate_with_retry(client, formatted_request)
-        quote_pattern = r"^.*?:\s*[\"']?(.*?)[\"']?$"
+        print(generated_content)
+        quote_pattern = r"^.*?:\s*[^a-zA-Zа-яА-Я\-]*(.*?)[^a-zA-Zа-яА-Я\-]*$"
         lines = generated_content.split('\n')
         for line in lines:
             match = re.search(quote_pattern, line)
-            if line.startswith("1. H1:") and match:
-                h1 = match.group(1).strip().replace('"', '').replace("'", "")
-                validated_data['h1'] = h1
-                validated_data['slug'] = h1 
-            elif line.startswith("2. Title:") and match:
+            if line.startswith("1. Slug:") and match:
+                validated_data['slug'] = match.group(1).strip().replace('"', '').replace("'", "")
+            elif line.startswith("2. H1:") and match:
+                validated_data['h1'] = match.group(1).strip().replace('"', '').replace("'", "")
+            elif line.startswith("3. Title:") and match:
                 validated_data['title'] = match.group(1).strip().replace('"', '').replace("'", "")
-            elif line.startswith("3. Description:") and match:
+            elif line.startswith("4. Description:") and match:
                 validated_data['description'] = match.group(1).strip().replace('"', '').replace("'", "")
         
         print("генерация прошла успешно!")

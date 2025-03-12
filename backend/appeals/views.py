@@ -100,7 +100,7 @@ class AppealView(View):
                 counter += 1
             main_data["slug"] = slug
 
-        # Создаем запись Appeal и сохраняем данные
+        main_data["status"] = "Без статуса"
         appeal_instance = self.test_service.create(main_data)
 
         # Если создание успешно, сохраняем изображения
