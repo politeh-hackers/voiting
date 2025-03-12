@@ -1,0 +1,258 @@
+[class*="ground-pane"] {
+    filter: grayscale(1);
+}
+
+.quote {
+    display: flex;
+    justify-content: center;
+
+}
+
+.quote_content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 527px;
+}
+
+.quote .quote_text {
+    display: flex;
+    font-size: 20px;
+    font-weight: 550;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    text-align: center;
+}
+
+.quote .quote_name {
+    color: #868693;
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: -0.02em;
+}
+
+.quote_content::before,
+.quote_content::after {
+    content: '';
+    display: block;
+    max-width: 156px;
+    width: 100%;
+    height: 1px;
+    background-color: #868693;
+    margin: 26px 0;
+}
+
+.paragraph {
+    font-size: 20px;
+    font-weight: 500px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+}
+
+.embed-block iframe {
+    width: 100%;
+    margin: 0;
+    object-fit: cover;
+    max-height: 439px;
+    height: 100%;
+}
+.image {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    max-width: 967px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.embed-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    max-width: 967px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.media__page-data {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+}
+
+.caption {
+    width: 100%;
+    color: #868693;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+}
+
+figcaption {
+    font-size: 16px;
+    letter-spacing: -0.02em;
+    line-height: 16px;
+    color: #868693;
+    padding-top: 8px;
+}
+
+.media__page-header {
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 48px;
+    border-bottom: 1px solid #868693;
+    padding-bottom: 44px;
+    margin-bottom: 44px;
+}
+
+.media__page-date {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #EA424C;
+}
+
+.media__page-top {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 24px;
+}
+
+.media__page-content {
+    padding-top: 58px;
+    
+    max-width: 1300px;
+    width: 100%;
+    display: flex;
+    gap:30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.chevron-down {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: -0.02em;
+    color: #868693;
+    gap: 10px;
+}
+
+a i {
+    rotate: 90deg;
+    font-size: 15px;
+}
+
+.image img {
+    width: 100%;
+    margin: 0;
+    object-fit: cover;
+    max-height: 439px;
+    height: 100%;
+
+}
+
+.media__page-container {
+    max-width: 967px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+h2{
+    margin: 0;
+    font-size: var(--font-size-header);
+    line-height: var(--font-size-header);
+}
+h3{
+    margin: 0;
+    font-size: var(--font-size-large);
+    line-height: var(--font-size-large);
+}
+.swiper-container {
+    width: 967px;
+    height: 425px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.swiper-slide {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+.map__container{
+    flex:1;
+    width: 100%;
+    max-width: 967px;
+    box-sizing: border-box;
+}
+.swiper-pagination {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.map-block {
+    width: 100%;
+    height: 400px;
+    margin: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+@media(max-width:768px){
+    .popular__cards{
+        display: none;
+    }
+    .media__page-header{
+        font-size: var(--font-size-header);
+        line-height: var(--font-size-header);
+    }
+    .media__page-date{
+        font-size: var(--font-size-13);
+    }
+    .fa-solid{
+        font-size: var(--font-size-small);
+    }
+    .chevron-down{
+        font-size: var(--font-size-13);
+    }
+    .media__page-container{
+        padding: 0 24px;
+    }
+    .map-block {
+        height: 300px;
+    }
+    .paragraph{
+    }
+}

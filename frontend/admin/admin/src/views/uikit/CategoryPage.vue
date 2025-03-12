@@ -149,7 +149,6 @@ const saveEditedPost = async () => {
     
     <Drawer v-model:visible="visibleEdit" header="Редактировать категорию" position="right" class="sidebar-edit">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-4">Редактирование</h3>
         <div class="flex flex-col gap-4">
           <div class="flex flex-col">
             <label class="mb-2">Название категории</label>

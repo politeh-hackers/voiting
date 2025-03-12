@@ -13,7 +13,12 @@ import { getToken, isAuthenticated } from '../utils/auth';
 
 export const initEditor = (element: HTMLElement, data: any = null) => {
   let previousData: any = { blocks: [] };
-  const deleteImage = (fileUrl: string) => {const imageName = fileUrl.split('/').pop(); // например, если fileUrl = 'http://localhost:8000/uploads/myimage.jpg', то imageName будет 'myimage.jpg'
+  
+  if (data?.blocks) {
+    previousData = JSON.parse(JSON.stringify(data)); // Копируем изначальные данные
+  }
+  const deleteImage = (fileUrl: string) => {
+  const imageName = fileUrl.split('/').pop(); // например, если fileUrl = 'http://localhost:8000/uploads/myimage.jpg', то imageName будет 'myimage.jpg'
   const token = getToken()
     return fetch(`http://127.0.0.1:8000/admin/image/${imageName}`, {
       method: 'DELETE',
@@ -66,6 +71,9 @@ export const initEditor = (element: HTMLElement, data: any = null) => {
   const editor = new EditorJS({
     holder: element,
     logLevel: 'ERROR' as LogLevels,
+    onReady: () => {
+      console.log("editor ready")
+    },
     tools: {
       header: {
         class: HeaderTool,
@@ -142,6 +150,7 @@ export const initEditor = (element: HTMLElement, data: any = null) => {
         }
       },
     },
+   
     data: data?.blocks ? data : { blocks: [] },
     onChange() {
       editor.save().then((currentData) => {
@@ -162,6 +171,7 @@ export const initEditor = (element: HTMLElement, data: any = null) => {
   
         // Обновляем предыдущее состояние
         previousData = currentData;
+        console.log("previousData", previousData);
           });
     },
     

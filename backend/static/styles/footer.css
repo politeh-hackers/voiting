@@ -60,7 +60,9 @@ main {
 
 }
 
-.footer__list {
+.footer__list li:hover {
+    opacity: 0.3;
+    transition: opacity 0.3s;
 
 }
 

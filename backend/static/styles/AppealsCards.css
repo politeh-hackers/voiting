@@ -82,6 +82,7 @@
 .appeals_photos {
     display: flex;
     gap: 10px;
+    height: 106px;
     overflow-x: auto;
     max-width: min-content;
     position: relative;

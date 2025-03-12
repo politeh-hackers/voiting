@@ -181,14 +181,33 @@ function initMap(): void {
             lastValidPosition = position;
         }
     });
-
+    function showSuccessModal(): void {
+        const modal = document.getElementById("successModal") as HTMLElement;
+        if (!modal) return;
+    
+        modal.style.display = "flex";
+        modal.classList.add("show");
+    
+        // Скрыть модальное окно через 3 секунды
+        setTimeout(() => {
+            modal.classList.remove("show");
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 500); // Ждём, пока пройдет анимация скрытия
+        }, 3000);
+    }
+    
     const saveButton = document.getElementById('saveBtn') as HTMLButtonElement;
+    const spinner = document.getElementById('spinner') as HTMLDivElement;
+    const btnText = document.getElementById('btnText') as HTMLSpanElement;
     if (saveButton) {
         saveButton.addEventListener('click', function () {
             if (isMarkerInPolygon()) {
                 if(validateStep2()){
                 console.log("Кнопка нажата");
-    
+                spinner.style.display = "inline-block";
+                btnText.style.display = "none";
+                saveButton.disabled = true;
                 const position = marker.geometry.getCoordinates();
                 const photosInput = document.getElementById('fileInput') as HTMLInputElement;
                 const categorySelect = document.getElementById('category') as HTMLSelectElement;
@@ -207,7 +226,17 @@ function initMap(): void {
                 });
     
                 console.log('Отправляемые данные:', formData);
-                sendDataToServer(formData);
+                sendDataToServer(formData).then(response => {
+                    showSuccessModal();
+                }).catch(error => {
+                    alert("Ошибка отправки!");
+                }).finally(() => {
+                    // Убираем спиннер и разблокируем кнопку
+                    spinner.style.display = "none";
+                    btnText.textContent = "Отправить обращение";
+                    saveButton.disabled = false;
+                    btnText.style.display = "block";
+                });
             } else {
                 alert('Маркер находится вне полигона. Переместите его внутрь полигона перед сохранением.');
             }
@@ -352,9 +381,37 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
-
+    function showCodeModal(): void {
+        const modal = document.getElementById("codeModal") as HTMLElement;
+        if (!modal) return;
+    
+        modal.style.display = "flex";
+        modal.classList.add("show");
+    
+        // Скрыть модальное окно через 3 секунды
+        setTimeout(() => {
+            modal.classList.remove("show");
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 500); // Ждём, пока пройдет анимация скрытия
+        }, 3000);
+    }
+    function showSubmitCodeModal(): void {
+        const modal = document.getElementById("submitCodeModal") as HTMLElement;
+        if (!modal) return;
+        modal.style.display = "flex";
+        modal.classList.add("show");
+    
+        // Скрыть модальное окно через 3 секунды
+        setTimeout(() => {
+            modal.classList.remove("show");
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 500); // Ждём, пока пройдет анимация скрытия
+        }, 3000);
+    }
     sendCodeBtn?.addEventListener("click", () => {
-        alert("Код отправлен! Введите его ниже.");
+        showCodeModal();
         startCountdown(60);
         confirmCodeBtn.disabled = false;
     });
@@ -370,13 +427,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Подтверждение кода
     confirmCodeBtn?.addEventListener("click", () => {
-        alert("Телефон подтвержден!");
+        showSubmitCodeModal();
         
         confirmBtn.disabled = false;
     });
     confirmBtn?.addEventListener("click", () => {
         if (validateStep1()) {
-        alert("Телефон подтвержден!");
         document.getElementById("step1")!.style.display = "none";
         sendCodeBtn.disabled = false;
         const step2 = document.getElementById("step2") as HTMLElement;

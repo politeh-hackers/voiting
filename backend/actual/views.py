@@ -23,7 +23,7 @@ def ActualClientView(request: HttpRequest):
     popular_actuals = Actual.objects.order_by('-count')[:4]
     categories = Category.objects.all()
     page = request.GET.get('page', 1)  
-    per_page = int(request.GET.get('per_page', 9))
+    per_page = int(request.GET.get('per_page', 8))
     actuals = Actual.objects.all()  
     paginator = Paginator(actuals, per_page)
     try:

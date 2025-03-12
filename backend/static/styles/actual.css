@@ -230,7 +230,10 @@ body {
     height: var(--popular-card-height);
     min-height: var(--popular-card-height);
 }
-
+.card__actual__imagecontainer {
+    max-width: var(--card-image-max-width);
+    width: 100%;
+}
 .card__popular__imagecontainer {
     padding-bottom: var(--padding-large);
 }

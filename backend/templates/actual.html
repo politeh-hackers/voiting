@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{% static 'styles/actual.css' %}">
     <link rel="stylesheet" href="{% static 'styles/header.css' %}">
     <link rel="stylesheet" href="{% static 'styles/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/Pagination.css' %}">
     <script src="{% static 'header/index.js' %}" type="module"></script>
     <meta name = "description" content="Актуальные новости Павла Николаевича Мартынова">
     <meta property = "og:title" content="Мартынов Павел - Актуальное">
@@ -35,8 +36,9 @@
                 </div>
                 <div class="actual__content">
                 {% include 'actualCards.html' %}
-                
+                {% if total_items > 8 %}
                 {% include 'pagination.html' %}
+                {% endif %}
             </div>
             </div>
             <div class="right__side">

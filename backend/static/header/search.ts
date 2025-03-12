@@ -1,6 +1,7 @@
 interface SearchResult {
     type: 'biography' | 'media' | 'actual' | 'appeals';
     id: number;
+    slug: string;
     header?: string;
     summary?: string;
     text?: string;
@@ -89,7 +90,7 @@ document.addEventListener('DOMContentLoaded', (): void => {
                 }
 
                 resultItem.addEventListener('click', (): void => {
-                    window.location.href = `/${result.type}/${result.id}`;
+                    window.location.href = `/${result.type}/${result.slug}`;
                 });
                 resultsContainer.appendChild(resultItem);
             });

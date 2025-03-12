@@ -6,7 +6,7 @@
 
 .left__side {
     margin-top: 59px;
-    max-width: 525px;
+    max-width: 40%;
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -119,14 +119,14 @@ main.content {
 .biography__container {
     margin-left: auto;
     display: flex;
-    max-width: 1259px;
+    max-width: 80%;
     width: 100%;
     gap: 30px;
 }
 
 .right__side {
     position: relative; /* Сделать фото фиксированным при прокрутке */
-    max-width: 700px;
+    max-width: 60%;
     width: 100%;
     flex: 1;
 }
@@ -134,7 +134,7 @@ main.content {
 .main-photo-container {
     position: sticky;
     top: var(--sticky-top); /* Указываем, где элемент должен "прилипнуть" */
-    max-width: 700px;
+    max-width: 100%;
     width: 100%;
     height: 100vh;
     overflow: hidden;
@@ -370,7 +370,9 @@ a i {
     .right__side {
         display: none; /* Скрываем правую сторону на мобильных устройствах */
     }
-
+    .biography__container{
+        max-width: 100%;
+    }
     .media__page-header {
         position: relative;
         color: white; /* Чтобы текст был читаемым */

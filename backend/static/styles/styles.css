@@ -8,6 +8,7 @@
     --color-error: #f44336;
     --color-time: #555555;
     --color-tg: #27A7E7;
+    --color-green: #009739;
     --color-active-bullet: #28a745;
     --color-primary: #EA424C; /* Цвет для активных элементов */
     --color-hover: #c9303a;  /* Цвет при наведении */
@@ -62,7 +63,7 @@
     --font-size-date-month: 20px;
 
     /* Прочие переменные */
-    --sticky-top: 100px; /* Стандартная позиция для sticky */
+    --sticky-top: 110px; /* Стандартная позиция для sticky */
     --scrollbar-height: 6px;
     --scrollbar-track-color: #f1f1f1;
     --scrollbar-thumb-color: #888;

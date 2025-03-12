@@ -1,6 +1,6 @@
 .media_gallery__content {
     flex-direction: column;
-    width: 513px;
+    width: 400px;
     word-break: break-word;
     
 }
@@ -127,6 +127,8 @@
     .media_swiper-container{
         height: 250px;
     }
+    
+    
     .media__gallery-block{
         height: 250px;
     }
@@ -161,6 +163,7 @@
     .swiper-container {
         height:250px;
         overflow: hidden;
+        border-radius: 0px;
     }
     .gallery__date{
         background-image: url("/static/media/Vector 1.svg ");
@@ -171,12 +174,12 @@
     justify-content: center;
     }
     .date-flag__day {
-        font-size: 16px;
+        font-size: 20px;
         
     }
     
     .date-flag__month {
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 400;
     }
     .gallery_card-button {

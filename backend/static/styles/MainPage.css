@@ -147,11 +147,8 @@ main.mainPage-content {
     gap: 10px;
     cursor: pointer;
     width: 100%;
-    /* Растягиваем на всю ширину */
     max-width: 100%;
-    /* Убираем ограничения */
     box-sizing: border-box;
-    /* Учитываем padding */
 }
 
 .actual-tg__button a {

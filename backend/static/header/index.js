@@ -193,12 +193,31 @@ function initMap() {
             lastValidPosition = position;
         }
     });
+    function showSuccessModal() {
+        var modal = document.getElementById("successModal");
+        if (!modal)
+            return;
+        modal.style.display = "flex";
+        modal.classList.add("show");
+        // Скрыть модальное окно через 3 секунды
+        setTimeout(function () {
+            modal.classList.remove("show");
+            setTimeout(function () {
+                modal.style.display = "none";
+            }, 500); // Ждём, пока пройдет анимация скрытия
+        }, 3000);
+    }
     var saveButton = document.getElementById('saveBtn');
+    var spinner = document.getElementById('spinner');
+    var btnText = document.getElementById('btnText');
     if (saveButton) {
         saveButton.addEventListener('click', function () {
             if (isMarkerInPolygon()) {
                 if (validateStep2()) {
                     console.log("Кнопка нажата");
+                    spinner.style.display = "inline-block";
+                    btnText.style.display = "none";
+                    saveButton.disabled = true;
                     var position = marker.geometry.getCoordinates();
                     var photosInput = document.getElementById('fileInput');
                     var categorySelect = document.getElementById('category');
@@ -214,7 +233,17 @@ function initMap() {
                         formData_1.append("photos", file);
                     });
                     console.log('Отправляемые данные:', formData_1);
-                    sendDataToServer(formData_1);
+                    sendDataToServer(formData_1).then(function (response) {
+                        showSuccessModal();
+                    }).catch(function (error) {
+                        alert("Ошибка отправки!");
+                    }).finally(function () {
+                        // Убираем спиннер и разблокируем кнопку
+                        spinner.style.display = "none";
+                        btnText.textContent = "Отправить обращение";
+                        saveButton.disabled = false;
+                        btnText.style.display = "block";
+                    });
                 }
                 else {
                     alert('Маркер находится вне полигона. Переместите его внутрь полигона перед сохранением.');
@@ -344,8 +373,36 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+    function showCodeModal() {
+        var modal = document.getElementById("codeModal");
+        if (!modal)
+            return;
+        modal.style.display = "flex";
+        modal.classList.add("show");
+        // Скрыть модальное окно через 3 секунды
+        setTimeout(function () {
+            modal.classList.remove("show");
+            setTimeout(function () {
+                modal.style.display = "none";
+            }, 500); // Ждём, пока пройдет анимация скрытия
+        }, 3000);
+    }
+    function showSubmitCodeModal() {
+        var modal = document.getElementById("submitCodeModal");
+        if (!modal)
+            return;
+        modal.style.display = "flex";
+        modal.classList.add("show");
+        // Скрыть модальное окно через 3 секунды
+        setTimeout(function () {
+            modal.classList.remove("show");
+            setTimeout(function () {
+                modal.style.display = "none";
+            }, 500); // Ждём, пока пройдет анимация скрытия
+        }, 3000);
+    }
     sendCodeBtn === null || sendCodeBtn === void 0 ? void 0 : sendCodeBtn.addEventListener("click", function () {
-        alert("Код отправлен! Введите его ниже.");
+        showCodeModal();
         startCountdown(60);
         confirmCodeBtn.disabled = false;
     });
@@ -359,12 +416,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     // Подтверждение кода
     confirmCodeBtn === null || confirmCodeBtn === void 0 ? void 0 : confirmCodeBtn.addEventListener("click", function () {
-        alert("Телефон подтвержден!");
+        showSubmitCodeModal();
         confirmBtn.disabled = false;
     });
     confirmBtn === null || confirmBtn === void 0 ? void 0 : confirmBtn.addEventListener("click", function () {
         if (validateStep1()) {
-            alert("Телефон подтвержден!");
             document.getElementById("step1").style.display = "none";
             sendCodeBtn.disabled = false;
             var step2 = document.getElementById("step2");

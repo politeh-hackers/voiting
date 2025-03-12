@@ -85,7 +85,9 @@
         <template #header>
           <h2 class="text-xl font-bold">Добавить новость</h2>
         </template>
-        
+        <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+          <i class="pi pi-spin pi-spinner text-4xl text-white"></i>
+        </div>
         <div class="flex flex-col gap-6">
             <div class="flex flex-col">
               <label class="text-base font-medium text-gray-700 mb-2">H1 заголовок</label>
@@ -118,6 +120,9 @@
                 placeholder="Введите заголовок новости"
                 class="w-full"
               />
+              <span v-if="post.header && post.header.length < 4" class="text-red-500 text-sm">
+                Заголовок должен содержать минимум 4 символа
+              </span>
             </div>
     
             <div class="flex flex-col">
@@ -152,6 +157,7 @@
                       class="max-w-[150px] max-h-[150px] object-cover mb-2.5 border border-gray-300 rounded"
                     />
                   </div>
+                  <span v-if="!post.main_photo" class="text-red-500">Пожалуйста, выберите изображение</span>
                 </template>
               </FileUpload>
             </div>
@@ -160,9 +166,10 @@
               <label class="mb-2">Содержание новости</label>
               <div ref="editorContainer"></div>
             </div>
+            <span v-if="post.content && post.content.length < 500" class="text-red-500 text-sm"></span>
     
             <div class="flex flex-col">
-              <label class="mb-2">Дата публикации</label>
+              <label class="mb-2">Дата </label>
               <DatePicker v-model="post.date_created" dateFormat="" />
             </div>
     
@@ -193,7 +200,9 @@
         <template #header>
           <h2 class="text-xl font-bold">Изменить новость</h2>
         </template>
-        
+        <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+          <i class="pi pi-spin pi-spinner text-4xl text-white"></i>
+        </div>
         <div class="flex flex-col gap-6">
             <div class="flex flex-col">
               <label class="text-base font-medium text-gray-700 mb-2">H1 заголовок</label>
@@ -226,6 +235,9 @@
                 placeholder="Введите заголовок новости"
                 class="w-full"
               />
+              <span v-if="post.header && post.header.length < 4" class="text-red-500 text-sm">
+                Заголовок должен содержать минимум 4 символа
+              </span>
             </div>
     
             <div class="flex flex-col">
@@ -259,6 +271,7 @@
                       class="max-w-[150px] max-h-[150px] object-cover mb-2.5 border border-gray-300 rounded"
                     />
                   </div>
+                  <span v-if="!post.main_photo" class="text-red-500">Пожалуйста, выберите изображение</span>
                 </template>
               </FileUpload>
             </div>
@@ -267,7 +280,8 @@
               <label class="mb-2">Содержание новости</label>
               <div ref="editorContainer"></div>
             </div>
-    
+            <span v-if="post.content && post.content.length < 500" class="text-red-500 text-sm"></span>
+
             <div class="flex flex-col">
               <label class="mb-2">Дата публикации</label>
               <DatePicker v-model="post.date_created" dateFormat="" />
@@ -322,6 +336,7 @@
     let previousPhoto = ""; //
     const visible = ref(false);
     const visibledt = ref(false);
+    const loading = ref(false);
     const editorContainer = ref<HTMLElement | null>(null);
     let editorInstance: any = null;
     const newsList = ref<Post[]>([]);
@@ -390,6 +405,7 @@
     };
     
     const SaveEditedPost = async () => {
+      loading.value = true;
       if (!isAuthenticated(token)) {
         router.push({ name: 'Home' }); 
         return;
@@ -412,11 +428,11 @@
           main_photo: post.value.main_photo,
       };
     
-      const formattedDate = post.value.date_created.toLocaleDateString("en-CA");
+      const formattedDate = new Date(post.value.date_created).toLocaleDateString("en-CA");
     
       try {
         const response = await fetch(
-          `http://localhost:8000/biography/biography/${post.value.id}`,
+          `http://localhost:8000/biography/${post.value.id}`,
           {
             method: "PATCH",
             headers: {
@@ -447,6 +463,9 @@
       } catch (error) {
         console.error("Ошибка:", error);
       }
+      finally {
+        loading.value = false; // Скрываем спиннер
+      }
     };
     
     const loadNews = async () => {
@@ -472,6 +491,7 @@
     };
     
     const addPost = async () => {
+      loading.value = true;
       if (!isAuthenticated(token)) {
         router.push({ name: 'Home' }); 
         return;
@@ -524,6 +544,9 @@
       } catch (error) {
         console.error("Ошибка:", error);
       }
+      finally {
+        loading.value = false; // Скрываем спиннер
+      }
     };
     
     // Редактирование новости
@@ -573,7 +596,7 @@
       }
       try {
         const response = await fetch(
-          `http://localhost:8000/biography/biography/${postId}`,
+          `http://localhost:8000/biography/${postId}`,
           {
             method: "DELETE",
             headers:{

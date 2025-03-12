@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     resultItem.innerHTML = "\n                        <h3>".concat(result.title, "</h3>\n                        <p>").concat(result.text, "</p>\n                    ");
                 }
                 resultItem.addEventListener('click', function () {
-                    window.location.href = "/".concat(result.type, "/").concat(result.id);
+                    window.location.href = "/".concat(result.type, "/").concat(result.slug);
                 });
                 resultsContainer.appendChild(resultItem);
             });

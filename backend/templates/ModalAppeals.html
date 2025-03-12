@@ -1,5 +1,22 @@
 {% load static %}
-<!-- Добавляем Font Awesome -->
+<div id="successModal" class="success-modal" style="display: none;">
+  <div class="success-content">
+      <i class="fa-solid fa-circle-check"></i>
+      <p>Ваше обращение успешно отправлено!</p>
+  </div>
+</div>
+<div id="codeModal" class="success-modal" style="display: none;">
+  <div class="success-content">
+      <i class="fa-solid fa-circle-check"></i>
+      <p>Код подтверждения отправлен на ваш номер телефона</p>
+  </div>
+</div>
+<div id="submitCodeModal" class="success-modal" style="display: none;">
+  <div class="success-content">
+      <i class="fa-solid fa-circle-check"></i>
+      <p>Код подтверждён!</p>
+  </div>
+</div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <div id="appealForm" class="modal" style="display: none;">
   <div class="modal-content">
@@ -99,7 +116,10 @@
         </div>
         <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
         <div class="post-Button">
-          <button class="postButton" id="saveBtn">Отправить обращение</button></form>
+          <button class="postButton" id="saveBtn">
+            <span id="btnText">Отправить обращение</span>
+            <div id="spinner" class="spinner" style="display: none;"></div>
+          </button></form>
         </div>
         </form>
       </div>

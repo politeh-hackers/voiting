@@ -8,7 +8,7 @@ urlpatterns = [
     path('media', MediaView.as_view()),  # Обработчик для MediaView
     path('<uuid:model_id>', MediaView.as_view()),  # Обработчик для MediaView с параметром model_id
     path('', MediaClientView),  # Обработчик для MediaClientView
-    path('<slug:slug>', MediaCard)
+    path('<slug:slug>', MediaCard)  
 ]
 
 # Настройка обслуживания медиафайлов в режиме DEBUG

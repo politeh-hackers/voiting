@@ -14,7 +14,9 @@
           <h2>Добавить новость</h2>
         </template>
         
-        
+        <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+          <i class="pi pi-spin pi-spinner text-4xl text-white"></i>
+        </div>
           <div class="flex flex-col mb-4">
               <label>URL страницы (slug)</label>
               <InputText
@@ -54,6 +56,9 @@
               placeholder="Введите заголовок новости"
               class="w-full"
             />
+            <span v-if="post.header && post.header.length < 4" class="text-red-500 text-sm">
+              Заголовок новости должно содержать минимум 4 символа
+            </span>
           </div>
           <div class="flex flex-col mb-4">
             <label>Краткое описание</label>
@@ -62,6 +67,10 @@
               placeholder="Введите краткое описание"
               class="w-full"
             />
+            <span v-if="post.summary && post.summary.length < 4" class="text-red-500 text-sm">
+              Краткое описание должно содержать минимум 4 символа
+            </span>
+
           </div>
   
           <div class="mt-4">
@@ -96,12 +105,19 @@
                     alt="Preview"
                     class="max-w-[150px] max-h-[150px] object-cover border border-gray-300 rounded"
                   />
+                  <span v-if="!post.main_photo" class="text-red-500">Пожалуйста, выберите изображение</span>
                 </div>
               </template>
             </FileUpload>
           </div>
   
-          <div ref="editorContainer" class="mt-4"></div>
+          <div ref="editorContainer" class="mt-4">
+            
+          </div>
+          <span v-if="post.content && post.content.length < 500" class="text-red-500 text-sm">
+              Содержание должно содержать минимум 500 символов
+            </span>
+
   
           <div class="mt-4">
             <DatePicker v-model="post.date_created" dateFormat="yy-mm-dd" />
@@ -121,7 +137,7 @@
               class="p-button-secondary w-full sm:w-[200px]" 
             />
           </div>
-        
+          
       </Sidebar>
 
       <Sidebar
@@ -134,7 +150,9 @@
         <template #header>
           <h2>Изменить новость</h2>
         </template>
-        
+        <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+          <i class="pi pi-spin pi-spinner text-4xl text-white"></i>
+        </div>
         <div class="flex flex-col gap-6">
           <div class="flex flex-col">
               <label class="mb-2">URL страницы (slug)</label>
@@ -175,6 +193,9 @@
               placeholder="Введите заголовок новости"
               class="w-full"
             />
+            <span v-if="post.header && post.header.length < 4" class="text-red-500 text-sm">
+              Заголовок должен содержать минимум 4 символа
+            </span>
           </div>
           <div class="flex flex-col">
             <label class="mb-2">Краткое описание</label>
@@ -182,7 +203,11 @@
               v-model="post.summary"
               placeholder="Введите краткое описание"
               class="w-full"
+
             />
+            <span v-if="post.summary && post.summary.length < 4" class="text-red-500 text-sm">
+              Краткое описание должно содержать минимум 4 символа
+            </span>
           </div>
   
           <div class="flex flex-col">
@@ -216,16 +241,19 @@
                     alt="Preview"
                     class="max-w-[150px] max-h-[150px] object-cover border border-gray-300 rounded"
                   />
+                  <span v-if="!post.main_photo" class="text-red-500">Пожалуйста, выберите изображение</span>
                 </div>
               </template>
             </FileUpload>
           </div>
   
           <div ref="editorContainer" class="mt-4"></div>
-  
+          <span v-if="post.content && post.content.length < 500" class="text-red-500 text-sm">
+            Содержание должно содержать минимум 500 символов
+          </span>
           <div class="flex flex-col">
             <label class="mb-2">Дата публикации</label>
-            <DatePicker v-model="post.date_created" dateFormat="" />
+            <DatePicker v-model="post.date_created" dateFormat="yy-mm-dd" />
           </div>
   
           <div class="flex flex-col sm:flex-row gap-4 mt-4">
@@ -238,7 +266,7 @@
             <Button 
               icon="pi pi-times" 
               label="Отмена"
-              @click="visibledt = false" 
+              @click=closeModal()
               class="p-button-secondary w-full sm:w-[200px]" 
             />
           </div>
@@ -358,6 +386,7 @@
   let editorInstance: any = null;
   const newsList = ref<Post[]>([]);
   const postService = new PostService();
+  const loading = ref(false);
   const searchQuery = ref("");
   const sortOptions = [
     { label: "По дате (по возрастанию)", value: "asc" },
@@ -422,23 +451,26 @@
   };
   
   const SaveEditedPost = async () => {
+    
     if (!isAuthenticated(token)) {
       router.push({ name: 'Home' }); 
       return;
     }
+
     if (!post.value.id) {
       console.error("Отсутствует ID поста");
       return;
     }
-  
+    loading.value = true;
     post.value.content = await editorInstance
       .save()
       .then((data) => JSON.stringify(data));
   
     const postData = {
-      h1:post.value.content,
-      title:post.value.content,
-      description:post.value.content,
+      slug:post.value.slug,
+      h1:post.value.h1,
+      title:post.value.title,
+      description:post.value.description,
       content: post.value.content,
       header: post.value.header,
       summary: post.value.summary,
@@ -464,6 +496,7 @@
         console.log("Пост успешно отредактирован");
         loadNews();
         post.value = {
+          slug:"",
           h1:"",
           title: "",
           description:"",
@@ -481,8 +514,23 @@
     } catch (error) {
       console.error("Ошибка:", error);
     }
+    finally {
+      console.log("Отправляемые данные:", JSON.stringify({ ...postData, date_created: formattedDate }));
+      loading.value = false; // Скрываем спиннер
+    }
   };
-  
+  const closeModal = () => {
+    post.value.slug = "";
+        post.value.h1 = "";
+        post.value.title = "";
+        post.value.description = "";
+        post.value.header = "";
+        post.value.summary = "";
+        post.value.main_photo = "";
+        post.value.content = "";
+        editorInstance = null
+        visibledt.value = false;
+  }
   const loadNews = async () => {
     if (!isAuthenticated(token)) {
       router.push({ name: 'Home' }); 
@@ -506,6 +554,7 @@
   };
   
   const addPost = async () => {
+    loading.value = true;
     if (!isAuthenticated(token)) {
       router.push({ name: 'Home' }); 
       return;
@@ -518,6 +567,7 @@
   
     // Преобразуем дату в формат 'YYYY-MM-DD'
     const formattedDate = post.value.date_created.toLocaleDateString("en-CA");
+    content.append("slug", post.value.slug);
     content.append("h1", post.value.h1);
     content.append("title", post.value.title);
     content.append("description", post.value.description);
@@ -542,6 +592,7 @@
       if (response.ok) {
         console.log("Пост успешно добавлен");
         loadNews();
+        post.value.slug = "";
         post.value.h1 = "";
         post.value.title = "";
         post.value.description = "";
@@ -558,6 +609,9 @@
     } catch (error) {
       console.error("Ошибка:", error);
     }
+    finally {
+    loading.value = false; // Скрываем спиннер
+    }
   };
   
   // Редактирование новости
@@ -567,6 +621,7 @@
       return;
     }
     post.value.id = newsItem.id;
+    post.value.slug = newsItem.slug;
     post.value.h1 = newsItem.h1;
     post.value.title = newsItem.title;
     post.value.description = newsItem.description;
@@ -575,10 +630,11 @@
     previousPhoto = newsItem.main_photo;
     post.value.main_photo = newsItem.main_photo;
     post.value.content = newsItem.content;
-    post.value.date_created = newsItem.date_created;
+    post.value.date_created = new Date(newsItem.date_created);
   
     visibledt.value = true;
-  
+
+    
     setTimeout(() => {
       try {
         const editorData = {
@@ -586,16 +642,14 @@
         };
   
         if (editorInstance) {
-          editorInstance.clear();
           editorInstance.render(editorData);
         } else {
-          initializeEditor();
           editorInstance.render(editorData);
         }
       } catch (error) {
         console.error("Error rendering editor data:", error);
       }
-    }, 100);
+    }, 600);
   };
   
   // Удаление новости
@@ -650,6 +704,7 @@
     if (editorContainer.value) {
       editorInstance = initEditor(editorContainer.value, {});
     }
+    console.log("ddddd")
   };
   
   onMounted(() => {

@@ -1,26 +1,28 @@
-document.addEventListener('DOMContentLoaded', function () {
-    var loadMoreButton = document.getElementById('load-more-button');
-    var gradientContainer = document.querySelector('.gradient-container');
-    var appealCards = document.querySelectorAll('.card__appeal');
-    var visibleCount = 8;
-    var showNextCards = function () {
-        for (var i = visibleCount; i < visibleCount + 8 && i < appealCards.length; i++) {
-            appealCards[i].style.display = 'flex';
-            appealCards[i].offsetHeight;
+document.addEventListener("DOMContentLoaded", function () {
+    var loadMoreButton = document.getElementById("load-more-button");
+    var gradientContainer = document.querySelector(".gradient-container");
+    var appealCards = document.querySelectorAll(".card__appeal");
+    var INITIAL_VISIBLE_CARDS = 8;
+    // Скрываем все карточки после 8-й
+    appealCards.forEach(function (card, index) {
+        if (index >= INITIAL_VISIBLE_CARDS) {
+            card.style.display = "none";
         }
-        visibleCount += 8;
-        if (visibleCount >= appealCards.length) {
-            loadMoreButton.style.display = 'none';
-            gradientContainer.style.display = 'none'; // Скрываем градиент, когда кнопка скрыта
-        }
+    });
+    // Показываем все карточки при клике на кнопку
+    var showAllCards = function () {
+        appealCards.forEach(function (card) {
+            card.style.display = "flex";
+        });
+        // Скрываем кнопку и градиент
+        loadMoreButton.style.display = "none";
+        gradientContainer.style.display = "none";
     };
-    for (var i = 0; i < visibleCount && i < appealCards.length; i++) {
-        appealCards[i].style.display = 'flex';
-        appealCards[i].offsetHeight;
-    }
-    loadMoreButton.addEventListener('click', showNextCards);
-    if (appealCards.length <= visibleCount) {
-        loadMoreButton.style.display = 'none';
-        gradientContainer.style.display = 'none'; // Скрываем градиент, если кнопка скрыта
+    // Назначаем обработчик на кнопку
+    loadMoreButton.addEventListener("click", showAllCards);
+    // Если карточек 8 или меньше, скрываем кнопку сразу
+    if (appealCards.length <= INITIAL_VISIBLE_CARDS) {
+        loadMoreButton.style.display = "none";
+        gradientContainer.style.display = "none";
     }
 });

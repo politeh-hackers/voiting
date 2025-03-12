@@ -311,6 +311,51 @@ button:disabled {
 .mobile-close {
     display: none;
 }
+.spinner {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid black;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* Стили модального окна */
+.success-modal {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50; /* Зеленый цвет */
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000000;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+/* Иконка */
+.success-content i {
+    font-size: 20px;
+}
+
+/* Анимация появления */
+.success-modal.show {
+    opacity: 1;
+    transform: translateY(0);
+}
 
 @media(max-width:768px){
     .fa-solid.fa-xmark.desktop-icon{

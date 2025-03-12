@@ -13,21 +13,22 @@ def search(request):
     
     # Поиск по медиа
     media_results = Media.objects.filter(
-    ).values('id', 'header', 'summary')[:5]
+    ).values('id', 'slug', 'header', 'summary')[:5]
     
     # Поиск по актуальному
     actual_results = Actual.objects.filter(
-    ).values('id', 'header', 'summary')[:5]
+    ).values('id', 'slug', 'header', 'summary')[:5]
     
     # Поиск по обращениям
     appeals_results = Appeal.objects.filter(
-    ).values('id', 'title', 'text')[:5]
+    ).values('id', 'slug', 'title', 'text')[:5]
     
     
     for item in media_results:
         results.append({
             'type': 'media',
             'id': item['id'],
+            'slug': item['slug'],
             'header': item['header'],
             'summary': item['summary'][:200] + '...' 
         })
@@ -36,6 +37,7 @@ def search(request):
         results.append({
             'type': 'actual',
             'id': item['id'],
+            'slug': item['slug'],
             'header': item['header'][:200] + '...',
             'summary': item['summary'] 
         })
@@ -44,6 +46,7 @@ def search(request):
         results.append({
             'type': 'appeals',
             'id': item['id'],
+            'slug': item['slug'],
             'title': item['title'][:200] + '...',
             'text': item['text'][:100] + '...' 
         })

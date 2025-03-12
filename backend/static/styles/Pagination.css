@@ -1,0 +1,94 @@
+.pagination {
+    margin-top: 114px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555555;
+    gap: 12px;
+}
+
+.pagination a {
+    text-decoration: none;
+    color: #555555;
+    padding: 6px 6px;
+    border-radius: 5px;
+}
+
+.pagination a:hover {
+    background-color: #f0f0f0;
+}
+
+.pagination .active {
+    background-color: #EA424C;
+    color: white;
+    padding: 6px 6px;
+    border-radius: 5px;
+}
+
+.pagination-mobile {
+    display: none;
+    margin-top: 32px;
+}
+
+.pagination-container {
+    display: flex;
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.next-page {
+    flex-grow: 1;
+    padding: 12px 24px;
+    background-color: #EA424C;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: left;
+    padding-right: 50px;
+}
+
+.next-page.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+.page-select {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    padding: 0;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: white;
+    font-size: 14px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor: pointer;
+}
+
+.page-select option {
+    background-color: white;
+    color: #555555;
+}
+
+@media (max-width: 768px) {
+    .page-select,
+    .next-page {
+        background-color: transparent;
+        color: var(--color-black);
+        border: 1px solid var(--color-gray);
+    }
+    .pagination {
+        display: none;
+    }
+    
+    .pagination-mobile {
+        display: block;
+    }
+}

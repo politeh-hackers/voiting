@@ -13,7 +13,9 @@
         <template #header>
           <h2>Добавить новость</h2>
         </template>
-        
+        <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+          <i class="pi pi-spin pi-spinner text-4xl text-white"></i>
+        </div>
         <div class="flex flex-col gap-6">
             <div class="flex flex-col">
               <label class="mb-2">URL страницы (slug)</label>
@@ -22,6 +24,7 @@
                 placeholder="Введите URL страницы"
                 class="w-full"
               />
+              
             </div>
             <div class="flex flex-col">
               <label class="mb-2">H1 заголовок</label>
@@ -54,6 +57,9 @@
                 placeholder="Введите заголовок новости"
                 class="w-full"
               />
+              <span v-if="post.header && post.header.length < 4" class="text-red-500 text-sm">
+              Заголовок должен содержать минимум 4 символа
+            </span>
             </div>
             <div class="flex flex-col">
               <label class="mb-2">Краткое описание</label>
@@ -62,8 +68,10 @@
                 placeholder="Введите краткое описание"
                 class="w-full"
               />
+              <span v-if="post.summary && post.summary.length < 4" class="text-red-500 text-sm">
+              Краткое описание должно содержать минимум 4 символа
+            </span>
             </div>
-  
             <div class="flex flex-col">
               <label class="mb-2">Изображение новости</label>
               <FileUpload
@@ -96,6 +104,7 @@
                       class="max-w-[150px] max-h-[150px] object-cover border border-gray-300 rounded"
                     />
                   </div>
+                  <span v-if="!post.main_photo" class="text-red-500">Пожалуйста, выберите изображение</span>
                 </template>
               </FileUpload>
             </div>
@@ -104,10 +113,12 @@
               <label class="mb-2">Содержание новости</label>
               <div ref="editorContainer"></div>
             </div>
-  
+            <span v-if="post.content && post.content.length < 500" class="text-red-500 text-sm">
+              Содержание должно содержать минимум 500 символов
+            </span>
             <div class="flex flex-col">
               <label class="mb-2">Дата публикации</label>
-              <DatePicker v-model="post.date_created" dateFormat="" />
+              <DatePicker v-model="post.date_created" dateFormat="yy-mm-dd" />
             </div>
   
             <div class="flex flex-col sm:flex-row gap-4 mt-4">
@@ -136,7 +147,9 @@
         <template #header>
           <h2>Изменить новость</h2>
         </template>
-        
+        <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+          <i class="pi pi-spin pi-spinner text-4xl text-white"></i>
+        </div>
         <div class="flex flex-col gap-6">
             <div class="flex flex-col">
               <label class="mb-2">URL страницы (slug)</label>
@@ -177,6 +190,9 @@
                 placeholder="Введите заголовок новости"
                 class="w-full"
               />
+              <span v-if="post.header && post.header.length < 4" class="text-red-500 text-sm"> 
+                Заголовок должен содержать минимум 4 символа
+              </span>
             </div>
             <div class="flex flex-col">
               <label class="mb-2">Краткое описание</label>
@@ -185,6 +201,9 @@
                 placeholder="Введите краткое описание"
                 class="w-full"
               />
+              <span v-if="post.summary && post.summary.length < 4" class="text-red-500 text-sm">
+                Краткое описание должно содержать минимум 4 символа
+              </span>
             </div>
   
             <div class="flex flex-col">
@@ -218,6 +237,7 @@
                       class="max-w-[150px] max-h-[150px] object-cover border border-gray-300 rounded"
                     />
                   </div>
+                  <span v-if="!post.main_photo" class="text-red-500">Пожалуйста, выберите изображение</span>
                 </template>
               </FileUpload>
             </div>
@@ -226,10 +246,12 @@
               <label class="mb-2">Содержание новости</label>
               <div ref="editorContainer"></div>
             </div>
-  
+            <span v-if="post.content && post.content.length < 500" class="text-red-500 text-sm">
+              Содержание должно содержать минимум 500 символов
+            </span>
             <div class="flex flex-col">
               <label class="mb-2">Дата публикации</label>
-              <DatePicker v-model="post.date_created" dateFormat="" />
+              <DatePicker v-model="post.date_created" dateFormat="yy-mm-dd" />
             </div>
   
             <div class="flex flex-col sm:flex-row gap-4 mt-4">
@@ -276,7 +298,7 @@
               icon="pi pi-plus"
               label="Добавить"
               class="p-button-warning w-full sm:w-auto"
-              @click="visible = true"
+              @click="openSidebar" 
             />
           </div>
         </template>
@@ -340,6 +362,9 @@
   import Dropdown from "primevue/dropdown";
   import { getToken, isAuthenticated } from "../../utils/auth";
   import { title } from "process";
+
+  // CONSTANTS
+
   const router = useRouter()
   const post = ref<Post>({
     slug:"",
@@ -352,6 +377,16 @@
     content: "",
     date_created: new Date(),
   });
+  const postData = {
+      slug:post.value.slug,
+      h1:post.value.h1,
+      title:post.value.title,
+      description:post.value.description,
+      content: post.value.content,
+      header: post.value.header,
+      summary: post.value.summary,
+      main_photo: post.value.main_photo,
+    };
   const token = getToken()
   const sortOrder = ref("asc");
   let previousPhoto = ""; //
@@ -359,6 +394,7 @@
   const visibledt = ref(false);
   const editorContainer = ref<HTMLElement | null>(null);
   let editorInstance: any = null;
+  const loading = ref(false);
   const newsList = ref<Post[]>([]);
   const postService = new PostService();
   const searchQuery = ref("");
@@ -369,7 +405,9 @@
   const uploadHeaders = ref({
         'Authorization': `${token}`
       });
-  // Вычисляемое свойство для фильтрации
+  
+  // FUNCTIONS
+
   const filteredNewsList = computed(() => {
     const filtered = newsList.value.filter(
       (newsItem) =>
@@ -378,8 +416,7 @@
           .includes(searchQuery.value.toLowerCase()) ||
         newsItem.header.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
-  
-    // Сортировка по дате
+
     return filtered.sort((a, b) => {
       const dateA = new Date(a.date_created).getTime();
       const dateB = new Date(b.date_created).getTime();
@@ -388,6 +425,19 @@
   });
   const toggleSortOrder = () => {
     sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
+  };
+  const resetPost = () => {
+    post.value = {
+      slug:"",
+      h1:"",
+      title:"",
+      description:"",
+      summary: "",
+      main_photo: "",
+      header: "",
+      content: "",
+      date_created: new Date(),
+    };
   };
   const onImageUpload = (event: any) => {
     const uploadedImage = event.files[0];
@@ -408,23 +458,25 @@
           console.error("Ошибка при удалении изображения с сервера:", error);
         });
     } else {
-      // Если файл не загружен, просто сбрасываем его в состоянии
       post.value.main_photo = "";
     }
   };
   const handleDialogClose = () => {
-    
-    // Проверяем, что окно было закрыто через крестик и поле изображения не пустое
     if (!visible.value && post.value.main_photo) {
       deleteImage(`http://localhost:8000/static/image/${post.value.main_photo}`);
-      post.value.main_photo = ""; // Очищаем ссылку на фото
+      post.value.main_photo = ""; 
     }
     if (editorInstance) {
     editorInstance.clear();
     }
   };
-  
+  const openSidebar = () => {
+    visible.value = true;
+    resetPost();
+
+  };
   const SaveEditedPost = async () => {
+    loading.value = true;
     if (!isAuthenticated(token)) {
       router.push({ name: 'Home' }); 
       return;
@@ -437,7 +489,7 @@
     post.value.content = await editorInstance
       .save()
       .then((data) => JSON.stringify(data));
-  
+    const formattedDate = post.value.date_created.toLocaleDateString("en-CA");
     const postData = {
       slug:post.value.slug,
       h1:post.value.h1,
@@ -447,10 +499,7 @@
       header: post.value.header,
       summary: post.value.summary,
       main_photo: post.value.main_photo,
-    };
-  
-    const formattedDate = post.value.date_created.toLocaleDateString("en-CA");
-  
+  };
     try {
       const response = await fetch(
         `http://localhost:8000/actual/${post.value.id}`,
@@ -467,17 +516,7 @@
       if (response.ok) {
         console.log("Пост успешно отредактирован");
         loadNews();
-        post.value = {
-          slug:"",
-          h1:"",
-          title:"",
-          description:"",
-          summary: "",
-          main_photo: "",
-          header: "",
-          content: "",
-          date_created: new Date(),
-        };
+        resetPost();
         visibledt.value = false;
       } else {
         const errorData = await response.json();
@@ -485,6 +524,9 @@
       }
     } catch (error) {
       console.error("Ошибка:", error);
+    }
+    finally {
+      loading.value = false; // Скрываем спиннер
     }
   };
   
@@ -511,17 +553,15 @@
   };
   
   const addPost = async () => {
+    loading.value = true;
     if (!isAuthenticated(token)) {
       router.push({ name: 'Home' }); 
       return;
     }
-    post.value.content = await editorInstance
-      .save()
-      .then((data) => JSON.stringify(data));
+    post.value.content = await editorInstance.save().then((data: any) => JSON.stringify(data))
   
     const content = new FormData();
   
-    // Преобразуем дату в формат 'YYYY-MM-DD'
     const formattedDate = post.value.date_created.toLocaleDateString("en-CA");
     content.append("slug", post.value.slug);
     content.append("h1", post.value.h1);
@@ -565,6 +605,9 @@
     } catch (error) {
       console.error("Ошибка:", error);
     }
+    finally {
+      loading.value = false; // Скрываем спиннер
+    }
   };
   
   // Редактирование новости
@@ -583,27 +626,25 @@
     previousPhoto = newsItem.main_photo;
     post.value.main_photo = newsItem.main_photo;
     post.value.content = newsItem.content;
-    post.value.date_created = newsItem.date_created;
+    post.value.date_created = new Date(newsItem.date_created);
   
     visibledt.value = true;
-  
+    initializeEditor();
     setTimeout(() => {
       try {
         const editorData = {
           blocks: JSON.parse(newsItem.content).blocks,
         };
-  
+        console.log("editorData", editorData);
         if (editorInstance) {
-          editorInstance.clear();
           editorInstance.render(editorData);
         } else {
-          initializeEditor();
           editorInstance.render(editorData);
         }
       } catch (error) {
         console.error("Error rendering editor data:", error);
       }
-    }, 100);
+    }, 600);
   };
   
   // Удаление новости
@@ -614,7 +655,7 @@
     }
     try {
       const response = await fetch(
-        `http://localhost:8000/actual/actual/${postId}`,
+        `http://localhost:8000/actual/${postId}`,
         {
           method: "DELETE",
           headers:{
