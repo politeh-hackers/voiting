@@ -15,7 +15,7 @@
 }
 
 .main__container {
-    max-width: var(--max-width-container);
+    max-width: 1300px;
     width: 100%;
     margin: auto;
     padding: 0;
@@ -50,7 +50,7 @@ body {
     transform: translateX(-50%);
     padding: 10px 20px;
     background-color:transparent;
-    color: white;
+    color: var(--color-white);
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -91,7 +91,7 @@ body {
     }
     #chevron-icon {
         transition: transform 0.3s ease; /* Плавный переход для переворота */
-        color: black;
+        color: var(--color-black);
     }
     #chevron-icon.rotate {
         transform: rotate(180deg); /* Переворачивает стрелку */

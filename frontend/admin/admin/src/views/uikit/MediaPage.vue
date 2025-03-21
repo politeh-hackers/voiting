@@ -395,7 +395,13 @@
   const uploadHeaders = ref({
         'Authorization': `${token}`
       });
-  // Вычисляемое свойство для фильтрации
+  const checkAuth = () => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'auth' });
+    return false;
+  }
+  return true;
+};
   const filteredNewsList = computed(() => {
     const filtered = newsList.value.filter(
       (newsItem) =>
@@ -452,10 +458,7 @@
   
   const SaveEditedPost = async () => {
     
-    if (!isAuthenticated(token)) {
-      router.push({ name: 'Home' }); 
-      return;
-    }
+    if (!checkAuth()) return;
 
     if (!post.value.id) {
       console.error("Отсутствует ID поста");
@@ -532,10 +535,7 @@
         visibledt.value = false;
   }
   const loadNews = async () => {
-    if (!isAuthenticated(token)) {
-      router.push({ name: 'Home' }); 
-      return;
-    }
+    if (!checkAuth()) return;
     try {
       console.log(uploadHeaders)
       const response = await fetch("http://localhost:8000/media/media",{
@@ -555,10 +555,7 @@
   
   const addPost = async () => {
     loading.value = true;
-    if (!isAuthenticated(token)) {
-      router.push({ name: 'Home' }); 
-      return;
-    }
+    if (!checkAuth()) return;
     post.value.content = await editorInstance
       .save()
       .then((data) => JSON.stringify(data));
@@ -616,10 +613,7 @@
   
   // Редактирование новости
   const editPost = (newsItem) => {
-    if (!isAuthenticated(token)) {
-      router.push({ name: 'Home' }); 
-      return;
-    }
+    if (!checkAuth()) return;
     post.value.id = newsItem.id;
     post.value.slug = newsItem.slug;
     post.value.h1 = newsItem.h1;
@@ -654,10 +648,7 @@
   
   // Удаление новости
   const deletePost = async (postId: string) => {
-    if (!isAuthenticated(token)) {
-      router.push({ name: 'Home' }); 
-      return;
-    }
+    if (!checkAuth()) return;
     try {
       const response = await fetch(
         `http://localhost:8000/media/${postId}`,
@@ -681,10 +672,7 @@
     }
   };
   const deleteImage = (fileUrl: string) => {
-    if (!isAuthenticated(token)) {
-      router.push({ name: 'Home' }); 
-      return;
-    }
+    if (!checkAuth()) return;
     const imageName = fileUrl.split("/").pop();
   
     return fetch(`http://127.0.0.1:8000/admin/image/${imageName}`, {

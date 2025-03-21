@@ -39,7 +39,7 @@ const login = async () => {
       formState.value.successMessage = 'Авторизация успешна!';
       formState.value.errorMessage = '';
       setTimeout(() => {
-        router.push({ name: 'dashboard' });
+        router.push({ name: 'media' });
       }, 1000);
     } else {
       formState.value.errorMessage = 'Неверный логин или пароль';

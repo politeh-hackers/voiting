@@ -7,12 +7,12 @@ export const getToken = () => {
 export const isTokenExpired = (token: string): boolean => {
   try {
     const decoded: any = jwtDecode(token);
-    const expirationDate = decoded.exp * 1000; // Токен хранит дату истечения в секундах, преобразуем в миллисекунды
+    const expirationDate = decoded.exp * 1000; 
     const currentDate = new Date().getTime();
-    return currentDate > expirationDate; // Возвращаем true, если токен истёк
+    return currentDate > expirationDate; 
   } catch (e) {
     console.error('Не удалось декодировать токен:', e);
-    return true; // Если токен повреждён или недействителен
+    return true; 
   }
 };
 

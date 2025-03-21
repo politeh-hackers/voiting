@@ -2,12 +2,12 @@
 
 <div class="cards__actual">
     {% for actual in actuals %}
-    <div class="card__actual">
-        <div class="card__actual__imagecontainer">
+    <div class="card__actual" onclick="window.location.href='http://127.0.0.1:8000/actual/{{actual.slug}}'">
+        
             <div class="card__actual__image">
                 <img src="{% static 'image/' %}{{ actual.main_photo }}" alt="" class="card__photo__actual">
             </div>
-        </div>
+        
         <div class="card__actual__content">
             <div class="card__actual__time">
                 <img src="{% static 'appeals/clock.svg' %}" alt="" class="time__image">

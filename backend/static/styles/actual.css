@@ -7,9 +7,9 @@ body {
 }
 
 .actual__header {
-    font-size: var(--font-size-header);
+    font-size: var(--font-size-36);
     font-weight: 500;
-    line-height: var(--font-size-header);
+    line-height: var(--font-size-36);
     letter-spacing: -0.02em;
     padding-top: var(--padding-xl);
     padding-bottom: var(--padding-xl);
@@ -37,7 +37,7 @@ body {
 }
 
 .container {
-    max-width: var(--max-width-container);
+    max-width: 1300px;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
@@ -59,16 +59,25 @@ body {
     width: 100%;
     border-bottom: 1px solid var(--color-border);
     padding-bottom: var(--padding-xl);
-
+    cursor: pointer;
 }
 
 .card__actual__image {
+    border-radius: 6px;
+    overflow: hidden;
+    transition: transform 0.4s ease;
     max-width: var(--card-image-max-width);
     width: 100%;
-    max-height: var(--card-image-max-height);
-    height: 100%;
+    height: var(--card-image-max-height);
 }
-
+.card__actual__image img{
+    transform: scale(1);
+    transition: transform 0.4s ease;
+}
+.card__actual__image img:hover{
+    transform: scale(1.05);
+    transition: transform 0.4s ease;
+}
 .card__photo__actual {
     width: 100%;
     height: 100%;
@@ -78,7 +87,7 @@ body {
 
 .card__actual__time {
     color: var(--color-time);
-    font-size: var(--font-size-card-time);
+    font-size: var(--font-size-11);
     margin-bottom: var(--margin-small);
     display: flex;
     align-items: center;
@@ -94,21 +103,21 @@ body {
 
 .card__actual__header {
     font-weight: 500;
-    font-size: var(--font-size-card-header);
+    font-size: var(--font-size-24);
     margin-bottom: var(--margin-medium);
     letter-spacing: -0.02em;
-    line-height: var(--font-size-card-header);
+    line-height: var(--font-size-24);
 }
 
 .card__actual__summary {
     font-weight: 400;
-    font-size: var(--font-size-small);
-    line-height: var(--font-size-small);
+    font-size: var(--font-size-13);
+    line-height: var(--font-size-13);
     letter-spacing: -0.02em;
 }
 
 .card__actual__button {
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-13);
     display: flex;
     justify-content: flex-end;
     margin-top: auto;
@@ -203,9 +212,9 @@ body {
 
 .gallery_card-button {
     border: 1px solid var(--color-white);
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-12);
     font-weight: 400;
-    line-height: var(--font-size-small);
+    line-height: var(--font-size-12);
     letter-spacing: -0.02em;
     padding: var(--padding-small) var(--padding-medium);
     display: inline-block;
@@ -215,88 +224,6 @@ body {
     color: var(--color-white);
 }
 
-/* Популярные карточки */
-.popular__cards {
-    display: flex;
-    flex-direction: column;
-    gap: var(--margin-xl);
-}
-
-.popular__card {
-    display: flex;
-    flex-direction: column;
-    max-width: var(--popular-card-max-width);
-    width: 100%;
-    height: var(--popular-card-height);
-    min-height: var(--popular-card-height);
-}
-.card__actual__imagecontainer {
-    max-width: var(--card-image-max-width);
-    width: 100%;
-}
-.card__popular__imagecontainer {
-    padding-bottom: var(--padding-large);
-}
-
-.card__popular__image {
-    max-width: var(--popular-card-max-width);
-    width: 100%;
-    height: 125px;
-    min-height: auto;
-}
-
-.card__photo__popular {
-    width: 100%;
-    max-height: 100%;
-    border-radius: 6px;
-    object-fit: cover;
-}
-
-.card__popular__content {
-    display: flex;
-    flex-direction: column;
-    max-width: var(--popular-card-max-width);
-    width: 100%;
-}
-
-.card__popular__header {
-    max-width: var(--popular-card-max-width);
-    width: 100%;
-    font-size: var(--font-size-card-header);
-    font-weight: 500;
-    line-height: var(--font-size-card-header);
-    padding-bottom: var(--padding-small);
-    word-wrap: break-word;
-}
-
-.card__popular__time {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    font-size: var(--font-size-card-time);
-    line-height: var(--font-size-card-time);
-    font-weight: 400;
-    color: var(--color-time);
-    letter-spacing: -0.02em;
-    padding-bottom: var(--padding-medium);
-}
-
-.card__popular__summary {
-    max-width: var(--popular-card-max-width);
-    font-size: var(--font-size-small);
-    font-weight: 400;
-    word-wrap: break-word;
-}
-
-.card__popular__button {
-    font-size: var(--font-size-small);
-    display: flex;
-    position: relative;
-    justify-content: flex-start;
-    margin-top: auto;
-    padding-top: var(--padding-small);
-    padding-bottom: var(--padding-small);
-}
 
 @media(max-width:768px){
     .right__side{
@@ -314,8 +241,8 @@ body {
     }
     
     .card__actual__summary{
-        font-size: var(--font-size-small);
-        line-height: var(--font-size-small);
+        font-size: var(--font-size-11);
+        line-height: var(--font-size-11);
         display: -webkit-box;
         -webkit-line-clamp: 3; /* Ограничение в 3 строки */
         -webkit-box-orient: vertical;

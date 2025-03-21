@@ -2,7 +2,7 @@
 
 <div class="main__cards">
     {% for item in medias %}
-    <div class="main__card">
+    <div class="main__card" onclick="window.location.href='http://127.0.0.1:8000/media/{{item.slug}}'">
         <div class="main__card-date">
             <div class="main__date-flag">
                 <div class="main__date-flag__day">{{ item.date_created|date:"d" }}</div>

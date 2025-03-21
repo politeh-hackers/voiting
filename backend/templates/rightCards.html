@@ -3,7 +3,7 @@
 {% for item1 in medias1|slice:"1:3" %}
 <div class="right__card" style="background: linear-gradient(0deg, rgba(35, 35, 35, 0.6), rgba(35, 35, 35, 0.6)),
                             linear-gradient(179.55deg, rgba(35, 35, 35, 0) 65.29%, rgba(35, 35, 35, 0.5) 99.62%),
-                            url('{% static 'image/' %}{{ item1.main_photo }}');">
+                            url('{% static 'image/' %}{{ item1.main_photo }}');" onclick="window.location.href='http://127.0.0.1:8000/media/{{item1.slug}}'">
     <div class="right__card-info">
         <div class="right__card-content">
             <div class="right_card-header">

@@ -62,7 +62,9 @@ main.mainPage-content {
 }
 
 .right-card__actual {
-
+    transform: scale(1);
+    transition: transform 0.4s ease;
+    cursor: pointer;
     max-width: 1300px;
     width: 100%;
     max-height: 191px;
@@ -71,7 +73,10 @@ main.mainPage-content {
     gap: 16px;
 
 }
-
+.right-card__actual:hover{
+    transform: scale(0.95);
+    transition: transform 0.4s ease;
+}
 .card__actual__imagecontainer {
     width: 100%;
     max-width: 40%;
@@ -100,17 +105,17 @@ main.mainPage-content {
 .card__actual__time {
     display: flex;
     align-items: center;
-    color: #555555;
-    font-size: 12px;
+    color: var(--color-gray);
+    font-size: var(--font-size-12);
     gap: 4px;
 }
 
 .time__image {}
 
 .card__actual__header {
-    font-size: 28px;
+    font-size: var(--font-size-26);
     font-weight: 500;
-    line-height: 28px;
+    line-height: var(--font-size-26);
     letter-spacing: -0.02em;
 }
 .card__info{
@@ -120,16 +125,16 @@ main.mainPage-content {
     padding-top: 12px;
 }
 .card__actual__summary {
-    font-size: 14px;
+    font-size: var(--font-size-14);
     font-weight: 400;
-    line-height: 14px;
+    line-height: var(--font-size-14);
     letter-spacing: -0.02em;
 }
 
 .card__actual__button {
-    font-size: 14px;
+    font-size: var(--font-size-14);
     font-weight: 400;
-    line-height: 14px;
+    line-height: var(--font-size-14);
     letter-spacing: -0.02em;
     display: flex;
     justify-content: flex-end;
@@ -137,8 +142,9 @@ main.mainPage-content {
 }
 
 .actual-tg__button {
-    background: #27A7E7;
-    font-size: 12px;
+    background: var(--color-tg);
+    color: var(--color-white);
+    font-size: var(--font-size-12);
     border: none;
     display: flex;
     align-items: center;
@@ -149,10 +155,15 @@ main.mainPage-content {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    transition: background 0.3s, outline 0.3s, color 0.3s;
 }
-
+.actual-tg__button:hover {
+    background: var(--color-white);
+    outline: 1px solid var(--color-black);
+    color: var(--color-black);
+}
 .actual-tg__button a {
-    color: white;
+    color: var(--color-white);
 }
 
 .MediaGallery-block {
@@ -166,16 +177,16 @@ main.mainPage-content {
     content: "";
     flex-grow: 1;
     height: 1px;
-    background-color: #868693;
+    background-color: var(--color-gray);
     margin-left: 24px;
 }
 
 .main__cards-header {
     padding-left: 24px;
     font-weight: 500;
-    font-size: 36px;
+    font-size: var(--font-size-36);
     letter-spacing: -0.02em;
-    line-height: 36px;
+    line-height: var(--font-size-36);
     display: flex;
     position: relative;
     align-items: center;
@@ -203,7 +214,7 @@ main.mainPage-content {
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    font-size: 16px;
+    font-size: var(--font-size-16);
     cursor: pointer;
 }
 /* media */
@@ -224,6 +235,9 @@ object-fit: cover;
     
 }
 .main__card {
+    transform: scale(1);
+    transition: transform 0.4s ease;
+    cursor: pointer;
     max-width: auto;
     height: 281px;
     word-wrap: break-word;
@@ -231,10 +245,14 @@ object-fit: cover;
     flex-direction: column;
     position: relative;
 }
+.main__card:hover{
+    transform: scale(0.95);
+    transition: transform 0.4s ease;
+}
 .main__card-date {
     position: absolute; /* Размещаем поверх изображения */
     right: 29px;
-    color: white; /* Белый текст */
+    color: var(--color-white); /* Белый текст */
 
 
 }
@@ -251,21 +269,21 @@ align-items: center;
 justify-content: center;
 width: 39px;
 height: 56px;
-background-color: green;
+background-color: var(--color-green);
 position: relative;
 clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 75%, 0% 100%);
 }
 .main__date-flag__day {
     font-weight: 400;
-    font-size: 20px;
+    font-size: var(--font-size-20);
     letter-spacing: -0,02em;
-    line-height: 20px;
+    line-height: var(--font-size-20);
 }
 .main__date-flag__month {
     font-weight: 400;
-    font-size: 12px;
+    font-size: var(--font-size-12);
     letter-spacing: -0,02em;
-    line-height: 12px;
+    line-height: var(--font-size-12);
 }
 .main__card-image {
     max-width: auto;
@@ -274,20 +292,20 @@ clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 75%, 0% 100%);
 }
 .main__card-header {
     font-weight: 500;
-    font-size: 20px;
+    font-size: var(--font-size-20);
     letter-spacing: -0,02em;
-    line-height: 20px;
+    line-height: var(--font-size-20);
     padding-top: 24px;
     padding-bottom: 16px;
 }
 .main__card-summary {
     font-weight: 400;
-    font-size: 12px;
+    font-size: var(--font-size-12);
     letter-spacing: -0,02em;
-    line-height: 12px;
+    line-height: var(--font-size-12);
 }
 .main__card-button {
-    font-size: 12px;
+    font-size: var(--font-size-12);
     display: flex;
     justify-content: flex-start;
     margin-top: auto;
@@ -308,6 +326,7 @@ clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 75%, 0% 100%);
     .right-card__actual{
         height: 160px;
     }
+    
     .card__actual__header{
         font-size: var(--font-size-20);
         line-height: var(--font-size-20);
@@ -319,8 +338,8 @@ clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 75%, 0% 100%);
         word-wrap: break-word;
     }
     .card__actual__summary{
-        font-size: var(--font-size-small);
-        line-height: var(--font-size-small);
+        font-size: var(--font-size-12);
+        line-height: var(--font-size-12);
         display: -webkit-box;
         -webkit-line-clamp: 3; /* Ограничение в 3 строки */
         -webkit-box-orient: vertical;

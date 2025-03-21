@@ -453,6 +453,24 @@ fileInput.addEventListener("change", function (event) {
         reader.readAsDataURL(file);
     });
 });
+document.addEventListener("DOMContentLoaded", function () {
+    var cards = document.querySelectorAll(".card__appeal");
+    cards.forEach(function (card) {
+        card.addEventListener("click", function (event) {
+            if (event instanceof MouseEvent) {
+                var target = event.target;
+                if (target.closest(".appeals_photos-container")) {
+                    event.stopPropagation(); // Останавливаем всплытие клика
+                    return;
+                }
+                var url = card.getAttribute("data-url");
+                if (url) {
+                    window.location.href = url;
+                }
+            }
+        });
+    });
+});
 // Обработчик удаления файла с сервера
 // deleteButton.addEventListener("click", async () => {
 //     console.log(uploadedFileUrl)

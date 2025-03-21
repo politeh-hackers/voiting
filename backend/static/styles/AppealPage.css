@@ -5,7 +5,8 @@
     .commentaryBlock {
         display: flex;
         gap: 20px;
-        font-size: 20px;
+        font-size: var(--font-size-20);
+        line-height: var(--font-size-20);
 }
 .logoContainer {
 }
@@ -22,7 +23,8 @@
     word-break: break-all;
 }
     .card__status {
-        font-size: 20px;
+        font-size: var(--font-size-20);
+        line-height: var(--font-size-20);
         border: 1px solid var(--color-black);
         padding: 8px 16px;
         border-radius: 30px;
@@ -30,24 +32,23 @@
     }
 
     .status--completed {
-        color: #ffffff;
+        color: var(--color-white);
         background-color: var(--color-green);
         border-color: var(--color-green);
     }
 
     .status--rejected {
-        color: #ffffff;
+        color: var(--color-white);
         background-color: var(--color-primary);
         border-color: var(--color-primary);
     }
 
     .appealCommentary {
-        font-size: 36px;
+        font-size: var(--font-size-36);
         font-style: normal;
         font-weight: 500;
-        line-height: 36px;
+        line-height: var(--font-size-36);
         letter-spacing: -0.02em;
-
         display: flex;
         align-items: center;
         position: relative;
@@ -63,7 +64,8 @@
 
     .appealText {
         word-break: break-all;
-        font-size: 20px;
+        font-size: var(--font-size-20);
+        line-height: var(--font-size-20);
     }
 
     .appealPage_photos {
@@ -110,7 +112,8 @@
     .scroll-btn {
         border: none;
         color: var(--color-black);
-        font-size: 18px;
+        font-size: var(--font-size-20);
+        line-height: var(--font-size-20);
         background: none;
         background-color: transparent;
         display: flex;
@@ -135,9 +138,7 @@
         z-index: 1;
     }
 
-    [class*="ground-pane"] {
-        filter: grayscale(1);
-    }
+    
 
     .quote {
         display: flex;
@@ -156,17 +157,17 @@
 
     .quote .quote_text {
         display: flex;
-        font-size: 20px;
+        font-size: var(--font-size-20);
         font-weight: 550;
-        line-height: 24px;
+        line-height: var(--font-size-24);
         letter-spacing: -0.02em;
         text-align: center;
     }
 
     .quote .quote_name {
         color: #868693;
-        font-size: 16px;
-        line-height: 16px;
+        font-size: var(--font-size-16);
+        line-height: var(--font-size-16);
         letter-spacing: -0.02em;
     }
 
@@ -181,9 +182,9 @@
     }
 
     .paragraph {
-        font-size: 36px;
+        font-size: var(--font-size-36);
         font-weight: 500px;
-        line-height: 36px;
+        line-height: var(--font-size-36);
         letter-spacing: -0.02em;
     }
 
@@ -214,34 +215,34 @@
 
     .caption {
         color: var(--color-gray);
-        font-size: 16px;
-        font-weight: 400;
+        font-size: var(--font-size-16);
+        line-height: var(--font-size-16);
         letter-spacing: -0.02em;
         padding-top: 8px;
     }
 
     figcaption {
-        font-size: 16px;
+        font-size: var(--font-size-16);
         letter-spacing: -0.02em;
-        line-height: 16px;
+        line-height: var(--font-size-16);
         color: var(--color-gray);
         padding-top: 8px;
     }
 
     .media__page-header {
-        font-size: 48px;
+        font-size: var(--font-size-48);
         font-weight: 500;
         letter-spacing: -0.02em;
-        line-height: 48px;
+        line-height: var(--font-size-48);
         border-bottom: 1px solid var(--color-gray);
         padding-bottom: 44px;
         margin-bottom: 44px;
     }
 
     .media__page-date {
-        font-size: 20px;
+        font-size: var(--font-size-20);
         font-weight: 500;
-        line-height: 20px;
+        line-height: var(--font-size-20);
         letter-spacing: -0.02em;
         display: flex;
         align-items: center;
@@ -274,9 +275,9 @@
     .chevron-down {
         display: flex;
         align-items: center;
-        font-size: 16px;
+        font-size: var(--font-size-16);
         font-weight: 400;
-        line-height: 16px;
+        line-height: var(--font-size-16);
         letter-spacing: -0.02em;
         color: var(--color-gray);
         gap: 10px;
@@ -284,7 +285,7 @@
 
     a i {
         rotate: 90deg;
-        font-size: 15px;
+        font-size: var(--font-size-16);
     }
 
     .image img {
