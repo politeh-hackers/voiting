@@ -175,7 +175,6 @@ import Image from "primevue/image";
 import FloatLabel from "primevue/floatlabel";
 import { getToken, isAuthenticated } from "../../utils/auth";
 import { title } from "process";
-  
 const checked = ref(false);
 const phone_number = ref("");
 const selectedCategory = ref();
@@ -216,7 +215,13 @@ const sortOptions = [
   { label: "По дате (новые)", value: "date_desc" },
   { label: "По дате (старые)", value: "date_asc" },
 ];
-
+const checkAuth = () => {
+  if (!isAuthenticated(token)) {
+    router.push({ name: 'auth' });
+    return false;
+  }
+  return true;
+};
 const loadAppeals = async () => {
   try {
     const response = await fetch("http://localhost:8000/appeals/appeals", {
@@ -245,10 +250,7 @@ const loadCategories = async () => {
   items.value = await response.json();
 };
 const deletePost = async (postId: string) => {
-  if (!isAuthenticated(token)) {
-    router.push({ name: 'Home' });
-    return;
-  }
+  if (!checkAuth()) return;
   try {
     const response = await fetch(
       `http://localhost:8000/appeals/${postId}`,
@@ -291,10 +293,7 @@ const editPost = (newsItem) => {
 };
   
 const SavePost = async () => {
-  if (!isAuthenticated(token)) {
-    router.push({ name: 'Home' });
-    return;
-  }
+  if (!checkAuth()) return;
   console.log(post.value);
   const postData = {
     category: post.value.category,

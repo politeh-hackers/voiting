@@ -10,17 +10,15 @@ import Drawer from "primevue/drawer";
 import { useRouter } from "vue-router";
 import { getToken, isAuthenticated } from "../../utils/auth"; // Импортируем утилиту для проверки токена
 import Dropdown from "primevue/dropdown";
-
 const router = useRouter();
 const postService = new PostService();
 const prefix = "category";
-
 const posts = ref<Post[]>([]);
 const post = ref<Post>({ name: "" });
 const editingPostId = ref<string | null>(null);
 const editingPostName = ref<string>(""); 
 const visible = ref(false); 
-const visibleEdit = ref(false); // Добавляем новую переменную для окна редактирования
+const visibleEdit = ref(false); 
 const token = getToken()
 const sortOrder = ref<{ label: string; value: string } | null>(null);
 const sortOptions = [
@@ -28,12 +26,15 @@ const sortOptions = [
   { label: 'По убыванию', value: 'desc' },
 ];
 const searchQuery = ref("");
-
-const UpdateTable = async () => {
+const checkAuth = () => {
   if (!isAuthenticated(token)) {
-    router.push({ name: 'Login' }); // Перенаправляем на страницу входа, если пользователь не авторизован
-    return;
+    router.push({ name: 'auth' });
+    return false;
   }
+  return true;
+};
+const UpdateTable = async () => {
+  if (!checkAuth()) return;
 
   const results = await postService.getAll(prefix);
   posts.value = results;
@@ -42,11 +43,7 @@ const UpdateTable = async () => {
 onMounted(UpdateTable);
 
 const addPost = async () => {
-  if (!isAuthenticated(token)) {
-    router.push({ name: 'Home' });
-    console.log("pizda")
-    return;
-  }
+  if (!checkAuth()) return;
 
   await postService.create(post.value, prefix);
   post.value.name = "";
@@ -55,10 +52,7 @@ const addPost = async () => {
 };
 
 const deletePost = async (id: string) => {
-  if (!isAuthenticated(token)) {
-    router.push({ name: 'Home' });
-    return;
-  }
+  if (!checkAuth()) return;
 
   await postService.delete(prefix, id);
   posts.value = posts.value.filter((post) => post.id !== id);
@@ -66,10 +60,7 @@ const deletePost = async (id: string) => {
 };
 
 const startEditing = (id: string, name: string) => {
-  if (!isAuthenticated(token)) {
-    router.push({ name: 'Home' });
-    return;
-  }
+  if (!checkAuth()) return;
 
   editingPostId.value = id; 
   editingPostName.value = name; 
@@ -77,10 +68,7 @@ const startEditing = (id: string, name: string) => {
 };
 
 const saveEditedPost = async () => {
-  if (!isAuthenticated(token)) {
-    router.push({ name: 'Home' });
-    return;
-  }
+  if (!checkAuth()) return;
 
   if (editingPostId.value) {
     await postService.patch(prefix, editingPostId.value ,{
@@ -129,7 +117,7 @@ const saveEditedPost = async () => {
           </div>
         </template>
         <template #body="slotProps">
-          <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-2 justify-end items-end">
             <Button
               icon="pi pi-pencil"
               label="Изменить"

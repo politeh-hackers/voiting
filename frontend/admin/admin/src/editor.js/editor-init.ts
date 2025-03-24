@@ -15,10 +15,10 @@ export const initEditor = (element: HTMLElement, data: any = null) => {
   let previousData: any = { blocks: [] };
   
   if (data?.blocks) {
-    previousData = JSON.parse(JSON.stringify(data)); // Копируем изначальные данные
+    previousData = JSON.parse(JSON.stringify(data));
   }
   const deleteImage = (fileUrl: string) => {
-  const imageName = fileUrl.split('/').pop(); // например, если fileUrl = 'http://localhost:8000/uploads/myimage.jpg', то imageName будет 'myimage.jpg'
+  const imageName = fileUrl.split('/').pop(); 
   const token = getToken()
     return fetch(`http://127.0.0.1:8000/admin/image/${imageName}`, {
       method: 'DELETE',

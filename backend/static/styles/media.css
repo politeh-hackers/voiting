@@ -3,14 +3,14 @@
     content: "";
     flex-grow: 1;
     height: 1px;
-    background-color: #868693;
+    background-color: var(--color-gray);
     margin-left: 44px;
 }
 .main__cards-header {
     font-weight: 500;
-    font-size: 36px;
+    font-size: var(--font-size-36);
     letter-spacing: -0,02em;
-    line-height: 36px;
+    line-height: var(--font-size-36);
     display: flex;
     position: relative;
     align-items: center;
@@ -51,7 +51,7 @@ main.content {
 
     
 .right_card-button {
-    font-size: 12px;
+    font-size: var(--font-size-12);
     display: flex;
     justify-content: flex-start;
     margin-top: auto;
@@ -73,16 +73,16 @@ main.content {
 }
 .right_card-header {
     font-weight: 500;
-    font-size: 28px;
+    font-size: var(--font-size-30);
     margin-bottom: 16px;
     letter-spacing: -0.02em;
-    line-height: 28px;
+    line-height: var(--font-size-30);
 }
 .right_card-summary {
     font-weight: 400;
-    font-size: 12px;
+    font-size: var(--font-size-12);
     letter-spacing: -0.02em;
-    line-height: 12px;
+    line-height: var(--font-size-12);
 }
 .right_card-button {
 }
@@ -103,15 +103,15 @@ main.content {
     padding-bottom: 12px;
 }
 .right__date-flag__day {
-    font-size: 20px;
+    font-size: var(--font-size-20);
     font-weight: 400;
-    line-height: 20px;
+    line-height: var(--font-size-20);
     letter-spacing: 0,02em;
 }
 .right__date-flag__month {
-    font-size: 12px;
+    font-size: var(--font-size-12);
     font-weight: 400;
-    line-height: 12px;
+    line-height: var(--font-size-12);
     letter-spacing: 0,02em;
 }
 .right__cards {
@@ -122,10 +122,12 @@ main.content {
     justify-content: space-between;
 }
 .right__card a{
-   color: white;
+   color: var(--color-white);
 }
 .right__card {
-    color: white;
+    transform: scale(1);
+    transition: transform 0.4s ease;
+    color: var(--color-white);
     border-radius: 6px;
     max-width: 1300px;
     padding: 44px 42px;
@@ -137,8 +139,11 @@ main.content {
     background-size: cover !important;
     background-position: center !important;
 }
+.right__card:hover{
+    transform: scale(0.95);
+    transition: transform 0.4s ease;
+}
 .left_main-content {
-    
     min-width: 745px;
     max-width: 100%;
     max-height: 480px;
@@ -171,6 +176,9 @@ object-fit: cover;
     
 }
 .main__card {
+    cursor: pointer;
+    transform: scale(1);
+    transition: transform 0.4s ease;
     max-width: auto;
     height: 281px;
     word-wrap: break-word;
@@ -178,10 +186,14 @@ object-fit: cover;
     flex-direction: column;
     position: relative;
 }
+.main__card:hover{
+    transform: scale(0.95);
+    transition: transform 0.4s ease;
+}
 .main__card-date {
     position: absolute; /* Размещаем поверх изображения */
     right: 29px;
-    color: white; /* Белый текст */
+    color: var(--color-white); /* Белый текст */
 
 
 }
@@ -199,21 +211,21 @@ object-fit: cover;
     justify-content: center;
     width: 39px;
     height: 56px;
-    background-color: green;
+    background-color: var(--color-green);
     position: relative;
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 75%, 0% 100%);
 }
 .main__date-flag__day {
     font-weight: 400;
-    font-size: 20px;
+    font-size: var(--font-size-20);
     letter-spacing: -0,02em;
-    line-height: 20px;
+    line-height: var(--font-size-20);
 }
 .main__date-flag__month {
     font-weight: 400;
-    font-size: 12px;
+    font-size: var(--font-size-12);
     letter-spacing: -0,02em;
-    line-height: 12px;
+    line-height: var(--font-size-12);
 }
 .main__card-image {
     max-width: auto;
@@ -222,20 +234,20 @@ object-fit: cover;
 }
 .main__card-header {
     font-weight: 500;
-    font-size: 20px;
+    font-size: var(--font-size-20);
     letter-spacing: -0,02em;
-    line-height: 20px;
+    line-height: var(--font-size-20);
     padding-top: 24px;
     padding-bottom: 16px;
 }
 .main__card-summary {
     font-weight: 400;
-    font-size: 12px;
+    font-size: var(--font-size-12);
     letter-spacing: -0,02em;
-    line-height: 12px;
+    line-height: var(--font-size-12);
 }
 .main__card-button {
-    font-size: 12px;
+    font-size: var(--font-size-12);
     display: flex;
     justify-content: flex-start;
     margin-top: auto;

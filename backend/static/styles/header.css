@@ -15,13 +15,16 @@ ul {
     list-style: none;
     margin: 0;
     padding: 0;
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-14);
     display: flex;
     gap: 24px;
 }
 a:hover {
     opacity: 0.3;
     transition: opacity 0.3s;
+}
+[class*="ground-pane"] {
+    filter: grayscale(1);
 }
 .header__list li:hover {
     opacity: 0.3;
@@ -47,13 +50,13 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: var(--max-width-container);
+    max-width: 1384px;
     margin: 0 auto;
     padding-top: 13px;
 }
 
 .header__left {
-    background-color: white;
+    background-color: var(--color-white);
     z-index: 10000;
     display: flex;
     gap: 23px;
@@ -72,7 +75,7 @@ header {
 
 .header__text {
     font-weight: 500;
-    font-size: var(--font-size-medium);
+    font-size: var(--font-size-15);
 }
 
 .header__text span {
@@ -117,7 +120,7 @@ header {
     border: none;
     border-bottom: 2px solid var(--color-black);
     outline: none;
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-12);
     padding: 8px 0;
     width: 100%;
     box-sizing: border-box;
@@ -138,13 +141,11 @@ header {
 .clear-btn {
     position: absolute;
     right: 28px;
-    font-size: 22px;
+    font-size: var(--font-size-20);
 }
 
 .appeals__button {
-    font-size: var(--font-size-small);
-    font-weight: 400;
-    
+    font-size: var(--font-size-13);
     border: 1px solid var(--color-black);
     display: flex;
     align-items: center;
@@ -161,31 +162,31 @@ header {
 
 .search-result-item {
     padding: 15px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-white);
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .search-result-item:hover {
-    background-color: #f5f5f5;
+    background-color: var(--color-white);
 }
 
 .search-result-item h3 {
     margin: 0 0 10px 0;
-    color: #333;
+    color: var(--color-black);
 }
 
 .search-result-item p {
     margin: 0;
-    color: #666;
-    font-size: 14px;
+    color: var(--color-gray);
+    font-size: var(--font-size-14);
 }
 
 .no-results {
     text-align: center;
     padding: 20px;
-    color: #666;
-    font-size: 16px;
+    color: var(--color-gray);
+    font-size: var(--font-size-16);
 } 
 .close-search {
     background-color: var(--color-error);
@@ -198,7 +199,7 @@ header {
 
 .burger-menu {
     display: none;
-    font-size: 24px;
+    font-size: var(--font-size-24);
     cursor: pointer;
 }
 
@@ -221,7 +222,7 @@ header {
         flex-direction: column;
         gap: 10px;
         padding: 20px;
-        font-size: var(--font-size-medium);
+        font-size: var(--font-size-15);
     }
 
     .appeals__button {
@@ -236,7 +237,7 @@ header {
 
     .burger-menu {
         display: block;
-        font-size: 18px;
+        font-size: var(--font-size-18);
     }
 
 }
@@ -258,5 +259,5 @@ header {
     flex-direction: column;
     gap: 10px;
     padding: 20px;
-    font-size: var(--font-size-medium);
+    font-size: var(--font-size-15);
 }

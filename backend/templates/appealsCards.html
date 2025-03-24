@@ -3,7 +3,7 @@
 <div class="cards">
     {% for appeal in appeals %}
     {% if appeal.on_website %}
-    <div class="card__appeal">
+    <div class="card__appeal" data-url="http://127.0.0.1:8000/appeals/{{appeal.slug}}">
         <div class="card-content">
             <div class="card__statustime">
                 <div class="card__status 

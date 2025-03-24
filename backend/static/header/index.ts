@@ -1,7 +1,6 @@
 declare var ymaps: any;
 function validateStep1() {
     let isValid = true;
-
     const lastName = document.getElementById('lastName') as HTMLInputElement;
     const firstName = document.getElementById('firstName') as HTMLInputElement;
     const patronymic = document.getElementById('patronymic') as HTMLInputElement;
@@ -469,6 +468,28 @@ fileInput.addEventListener("change", (event: Event) => {
         reader.readAsDataURL(file);
     });
 });
+document.addEventListener("DOMContentLoaded", () => {
+    const cards = document.querySelectorAll(".card__appeal");
+
+    cards.forEach((card) => {
+        card.addEventListener("click", (event: Event) => {
+            if (event instanceof MouseEvent) {
+                const target = event.target as HTMLElement;
+                if (target.closest(".appeals_photos-container")) {
+                    event.stopPropagation(); // Останавливаем всплытие клика
+                    return;
+                }
+                const url = card.getAttribute("data-url");
+                if (url) {
+                    window.location.href = url;
+                }
+            }
+        });
+    });
+});
+
+
+
 // Обработчик удаления файла с сервера
 // deleteButton.addEventListener("click", async () => {
 //     console.log(uploadedFileUrl)

@@ -10,10 +10,7 @@ const handleLogout = () => {
 };
 
 const model = ref([
-    {
-        label: 'Home',
-        items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
-    },
+    
     {
         label: 'Новости',
         items: [
@@ -58,17 +55,8 @@ const model = ref([
                         label: 'Регистрация',
                         icon: 'pi pi-fw pi-user-plus',
                         to: '/auth/register'
-                    },
-                    {
-                        label: 'Error',
-                        icon: 'pi pi-fw pi-times-circle',
-                        to: '/auth/error'
-                    },
-                    {
-                        label: 'Access Denied',
-                        icon: 'pi pi-fw pi-lock',
-                        to: '/auth/access'
                     }
+                    
                 ]
             },
 
