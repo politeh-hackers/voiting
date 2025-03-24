@@ -36,11 +36,16 @@ def generate_with_retry(client, formatted_request, max_retries=10):
 def generations_for_news(validated_data):
     print("генерация...")
     formatted_request = (
-        "На основе следующего текста новости сгенерируйте без спец-символов:\n"
-        "1. Slug (текст для URL): Напишите slug от {min_h1} до {max_h1} символов, используя транслит через дефисы (например: 'primer-teksta-dlya-zagolovka').\n"
-        "1. H1 (заголовок): Напишите заголовок H1 от {min_h1} до {max_h1} символов.\n"
-        "2. Title (заголовок для SEO): Напишите заголовок Title на русском языке, длиной от {min_title} до {max_title} символов.\n"
-        "3. Description (описание): Напишите описание на русском языке, длиной от {min_description} до {max_description} символов.\n"
+        "На основе следующего текста новости сгенерируйте строго без любых спецсимволов (включая кавычки, звездочки, подчеркивания и т.п.) только:\n"
+        "1. Slug для URL: транслит на латиницу через дефисы, длина {min_h1}-{max_h1} символов. Пример: primer-teksta-dlya-url\n"
+        "2. H1 заголовок: на русском, длина {min_h1}-{max_h1} символов. Пример: Пример заголовка H1\n"
+        "3. Title для SEO: на русском, длина {min_title}-{max_title} символов. Пример: Пример заголовка Title\n"
+        "4. Description: на русском, длина {min_description}-{max_description} символов. Пример: Пример описания для SEO\n"
+        "Формат ответа ТОЛЬКО так:\n"
+        "1. Slug: пример-sluga-dlya-url\n"
+        "2. H1: Пример заголовка H1\n"
+        "3. Title: Пример заголовка Title\n"
+        "4. Description: Пример описания для SEO\n"
         "\nТекст новости:\n{content}"
     ).format(
         min_h1=Constants.MIN_LEN_H1,
@@ -82,12 +87,17 @@ def generations_for_news(validated_data):
 def generations_for_appeals(validated_data):
     print("генерация...")
     formatted_request = (
-        "На основе следующего текста обращения сгенерируйте без спец-символов:\n"
-        "1. Slug (текст для URL): Напишите slug от {min_h1} до {max_h1} символов, используя транслит через дефисы (например: 'primer-teksta-dlya-zagolovka').\n"
-        "1. H1 (заголовок): Напишите заголовок H1 от {min_h1} до {max_h1} символов.\n"
-        "2. Title (заголовок для SEO): Напишите заголовок Title на русском языке, длиной от {min_title} до {max_title} символов.\n"
-        "3. Description (описание): Напишите описание на русском языке, длиной от {min_description} до {max_description} символов.\n"
-        "\nТекст обращения:\n{content}"
+        "На основе следующего текста обращения сгенерируйте строго без любых спецсимволов (включая кавычки, звездочки, подчеркивания и т.п.) только:\n"
+        "1. Slug для URL: транслит на латиницу через дефисы, длина {min_h1}-{max_h1} символов. Пример: primer-teksta-dlya-url\n"
+        "2. H1 заголовок: на русском, длина {min_h1}-{max_h1} символов. Пример: Пример заголовка H1\n"
+        "3. Title для SEO: на русском, длина {min_title}-{max_title} символов. Пример: Пример заголовка Title\n"
+        "4. Description: на русском, длина {min_description}-{max_description} символов. Пример: Пример описания для SEO\n"
+        "Формат ответа ТОЛЬКО так:\n"
+        "1. Slug: пример-sluga-dlya-url\n"
+        "2. H1: Пример заголовка H1\n"
+        "3. Title: Пример заголовка Title\n"
+        "4. Description: Пример описания для SEO\n"
+        "\nТекст обращения:\n{text}"
     ).format(
         min_h1=Constants.MIN_LEN_H1,
         max_h1=Constants.MAX_LEN_H1,
@@ -95,12 +105,13 @@ def generations_for_appeals(validated_data):
         max_title=Constants.MAX_LEN_TITLE,
         min_description=Constants.MIN_LEN_DESCRIPTION,
         max_description=Constants.MAX_LEN_DESCRIPTION,
-        content=validated_data.get('content', '')
+        text=validated_data.get('text', '')
     )
     
     client = Client()
     try:
         generated_content = generate_with_retry(client, formatted_request)
+        print(generated_content)
         quote_pattern = r"^.*?:\s*[^a-zA-Zа-яА-Я\-]*(.*?)[^a-zA-Zа-яА-Я\-]*$"
         lines = generated_content.split('\n')
         for line in lines:
@@ -111,12 +122,12 @@ def generations_for_appeals(validated_data):
                 validated_data['h1'] = match.group(1).strip().replace('"', '').replace("'", "")
             elif line.startswith("3. Title:") and match:
                 validated_data['title'] = match.group(1).strip().replace('"', '').replace("'", "")
-            elif line.startswith("4. Description:") and match:
+            elif line.startswith("4. Desription:") and match:
                 validated_data['description'] = match.group(1).strip().replace('"', '').replace("'", "")
         
         print("генерация прошла успешно!")
         return validated_data
-
+    
     except Exception as e:
         print(f"Ошибка: {e}")
         validated_data['h1'] = "default-h1"
@@ -128,12 +139,17 @@ def generations_for_appeals(validated_data):
 def generations_for_biography(validated_data):
     print("генерация...")
     formatted_request = (
-        "На основе следующего текста биографии сгенерируйте без спец-символов:\n"
-        "1. Slug (текст для URL): Напишите slug от {min_h1} до {max_h1} символов, используя транслит через дефисы (например: 'primer-teksta-dlya-zagolovka').\n"
-        "1. H1 (заголовок): Напишите заголовок H1 от {min_h1} до {max_h1} символов.\n"
-        "2. Title (заголовок для SEO): Напишите заголовок Title на русском языке, длиной от {min_title} до {max_title} символов.\n"
-        "3. Description (описание): Напишите описание на русском языке, длиной от {min_description} до {max_description} символов.\n"
-        "\nТекст биографии:\n{content}"
+        "На основе следующего текста биографии сгенерируйте строго без любых спецсимволов (включая кавычки, звездочки, подчеркивания и т.п.) только:\n"
+        "1. Slug для URL: транслит на латиницу через дефисы, длина {min_h1}-{max_h1} символов. Пример: primer-teksta-dlya-url\n"
+        "2. H1 заголовок: на русском, длина {min_h1}-{max_h1} символов. Пример: Пример заголовка H1\n"
+        "3. Title для SEO: на русском, длина {min_title}-{max_title} символов. Пример: Пример заголовка Title\n"
+        "4. Description: на русском, длина {min_description}-{max_description} символов. Пример: Пример описания для SEO\n"
+        "Формат ответа ТОЛЬКО так:\n"
+        "1. Slug: пример-sluga-dlya-url\n"
+        "2. H1: Пример заголовка H1\n"
+        "3. Title: Пример заголовка Title\n"
+        "4. Description: Пример описания для SEO\n"
+        "\nТекст биографии:\n{text}"
     ).format(
         min_h1=Constants.MIN_LEN_H1,
         max_h1=Constants.MAX_LEN_H1,
