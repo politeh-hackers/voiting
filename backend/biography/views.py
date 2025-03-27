@@ -79,9 +79,12 @@ class BiographyView(View):
 
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
         data = json.loads(request.body)
-        validated_data = BiographySchema.model_validate(data).model_dump() 
-        generations_for_biography(data)
-        self.test_service.update(model_id=model_id, data=validated_data)
+        validated_data = BiographySchema.model_validate(data).model_dump()
+        if data.get("h1") == "" or data.get("title") == "" or data.get("description") == "" or data.get("slug") == "":
+            main_data = generations_for_biography(validated_data)
+        else:
+            main_data = data 
+        self.test_service.update(model_id=model_id, data=main_data)
         return JsonResponse(None, safe=False)
 
 class ImageView(View):
