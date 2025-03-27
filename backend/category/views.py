@@ -30,5 +30,5 @@ class CategoryView(View):
     def patch(self, request: HttpRequest, model_id: uuid.UUID):
         data = json.loads(request.body)
         validation_data = CategorySchema.model_validate(data)  
-        self.test_service.update(model_id=model_id, data=validation_data)
+        self.test_service.update(model_id=model_id, data=validation_data.model_dump())
         return JsonResponse(None, safe=False)
